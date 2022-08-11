@@ -1,1 +1,1 @@
-# openGCAS2
+# openGCAS
