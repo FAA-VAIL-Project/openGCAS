@@ -1,3 +1,6 @@
-//
-// Created by quothbonney on 8/11/22.
-//
+#include <iostream>
+#include "gdal_priv.h" // Testing Linker
+
+int main() {
+    std::cout << "Hello GCAS!";
+}
