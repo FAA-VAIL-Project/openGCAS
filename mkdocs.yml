@@ -18,7 +18,7 @@ nav:
       - C++: best_practises_cpp.md
 # - Code of Conduct: code_of_conduct.md
 # - Contributing Guide: contributing.md
-  - License: LICENSE.md
+  - License: license.md
 
 plugins:
   - search
