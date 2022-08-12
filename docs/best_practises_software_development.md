@@ -5,7 +5,7 @@ In addition, programming language specific guidelines are available in the follo
 
 - [C++ Best Practises](best_practises_cpp.md)
 
-## Documentation
+## 1. Documentation
 
 - the documentation in the repository is usually created using GitHub variant of Markdown - [see here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax){:target="_blank"}
 - the top directory of a repository generally contains the following documentation files:

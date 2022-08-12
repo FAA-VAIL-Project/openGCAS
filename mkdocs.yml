@@ -1,4 +1,4 @@
-copyright: Copyright &copy;2022-2022, TODO.
+copyright: Copyright &copy;2022-2022, Loyd Hook.
 
 edit_uri: ""
 
@@ -18,7 +18,7 @@ nav:
       - C++: best_practises_cpp.md
 # - Code of Conduct: code_of_conduct.md
 # - Contributing Guide: contributing.md
-  - License: ../LICENSE
+  - License: LICENSE.md
 
 plugins:
   - search
@@ -26,7 +26,7 @@ plugins:
 repo_url: https://github.com/FAA-VAIL-Project/openGCAS
 
 site_name: openGCAS
-site_url: TODO
+# site_url: TODO
 site_description: Open Ground Collision Avoidance System
 site_author: FAA-VAIL-Project Team
 
