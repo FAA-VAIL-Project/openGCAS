@@ -49,12 +49,19 @@ cmake_ninja_workdir = /home/quothbonney/forks/openGCAS2/cmake-build-debug/
 
 build cmake_object_order_depends_target_openGCAS: phony || CMakeFiles/openGCAS.dir
 
-build CMakeFiles/openGCAS.dir/main.cpp.o: CXX_COMPILER__openGCAS_Debug /home/quothbonney/forks/openGCAS2/main.cpp || cmake_object_order_depends_target_openGCAS
-  DEP_FILE = CMakeFiles/openGCAS.dir/main.cpp.o.d
+build CMakeFiles/openGCAS.dir/src/main.cpp.o: CXX_COMPILER__openGCAS_Debug /home/quothbonney/forks/openGCAS2/src/main.cpp || cmake_object_order_depends_target_openGCAS
+  DEP_FILE = CMakeFiles/openGCAS.dir/src/main.cpp.o.d
   FLAGS = -g
-  INCLUDES = -I/usr/include/gdal
+  INCLUDES = -isystem /usr/include/gdal
   OBJECT_DIR = CMakeFiles/openGCAS.dir
-  OBJECT_FILE_DIR = CMakeFiles/openGCAS.dir
+  OBJECT_FILE_DIR = CMakeFiles/openGCAS.dir/src
+
+build CMakeFiles/openGCAS.dir/src/Raster.cpp.o: CXX_COMPILER__openGCAS_Debug /home/quothbonney/forks/openGCAS2/src/Raster.cpp || cmake_object_order_depends_target_openGCAS
+  DEP_FILE = CMakeFiles/openGCAS.dir/src/Raster.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -isystem /usr/include/gdal
+  OBJECT_DIR = CMakeFiles/openGCAS.dir
+  OBJECT_FILE_DIR = CMakeFiles/openGCAS.dir/src
 
 
 # =============================================================================
@@ -64,9 +71,10 @@ build CMakeFiles/openGCAS.dir/main.cpp.o: CXX_COMPILER__openGCAS_Debug /home/quo
 #############################################
 # Link the executable openGCAS
 
-build openGCAS: CXX_EXECUTABLE_LINKER__openGCAS_Debug CMakeFiles/openGCAS.dir/main.cpp.o
+build openGCAS: CXX_EXECUTABLE_LINKER__openGCAS_Debug CMakeFiles/openGCAS.dir/src/main.cpp.o CMakeFiles/openGCAS.dir/src/Raster.cpp.o | /usr/lib/libgdal.so
   FLAGS = -g
   LINK_FLAGS = -rdynamic
+  LINK_LIBRARIES = /usr/lib/libgdal.so
   OBJECT_DIR = CMakeFiles/openGCAS.dir
   POST_BUILD = :
   PRE_LINK = :
