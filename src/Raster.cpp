@@ -52,4 +52,3 @@ int** Raster::getArray() {
 double* Raster::getGeoTransform() {
     return adfGeoTransform;
 }
-
