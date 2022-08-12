@@ -1,4 +1,4 @@
-# C++ - Directory **`docs`**
+# openGCAS - Directory **`docs`**
 
 The docs/ directory is designated to contain project documentation. 
 
