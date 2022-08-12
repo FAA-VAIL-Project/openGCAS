@@ -1,10 +1,6 @@
-//
-// Created by quothbonney on 8/11/22.
-//
-
 #include "gdal_priv.h"
 
-#include "Raster.h"
+#include "../include/Raster.h"
 #include <cassert>
 
 

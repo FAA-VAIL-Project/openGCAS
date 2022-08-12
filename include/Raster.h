@@ -1,5 +1,5 @@
 //
-// Created by quothbonney on 8/11/22.
+// Core class for getting array from .tif file
 //
 
 #ifndef OPENGCAS_RASTER_H

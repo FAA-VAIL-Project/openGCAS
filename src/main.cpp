@@ -1,11 +1,10 @@
 #include <iostream>
-#include "gdal_priv.h" // Testing Linker
-#include "cpl_conv.h"
-#include "Raster.h"
+
+#include "../include/Raster.h"
 
 
 int main() {
-    const char* oklahoma = "../n33_w094_1arc_v3.tif";
+    const char* oklahoma = "../gtif/n33_w094_1arc_v3.tif";
 
     Raster okRaster = Raster(oklahoma);
 
