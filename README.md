@@ -5,13 +5,13 @@
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/FAA-VAIL-Project/openGCAS)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/FAA-VAIL-Project/openGCAS/0.9.6)
 
-TODO = short and concise description of what the software openGCAS should do -
+**TODO** = short and concise description of what the software openGCAS should do -
 
 Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)** for more detailed information.
 
 ## 1. Features
 
-TODO = listing of the most important features of the software openGCAS -
+**TODO** = listing of the most important features of the software openGCAS -
 
 ## 2. Directory and File Structure of this Repository
 

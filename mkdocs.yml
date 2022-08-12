@@ -10,9 +10,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-# - Release Documents:
-#     - Release Notes: release_notes.md
-#     - Release History: release_history.md
+  - Release Documents:
+      - Release Notes: release_notes.md
+      - Release History: release_history.md
   - Best Practises:
       - General: best_practises_software_development.md
       - C++: best_practises_cpp.md
