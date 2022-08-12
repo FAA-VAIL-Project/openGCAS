@@ -1,3 +1,8 @@
+# openGCA - Release History
+
+![GitHub (Pre-)Release](https://img.shields.io/github/v/release/FAA-VAIL-Project/openGCAS?include_prereleases)
+![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/FAA-VAIL-Project/openGCAS)
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
