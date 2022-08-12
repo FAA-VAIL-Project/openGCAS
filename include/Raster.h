@@ -33,6 +33,8 @@ public:
     ~Raster();
 
     int** getArray();
+
+    double* getGeoTransform();
 };
 
 
