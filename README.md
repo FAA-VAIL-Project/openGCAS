@@ -5,16 +5,6 @@
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/FAA-VAIL-Project/openGCAS)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/FAA-VAIL-Project/openGCAS/0.9.6)
 
-### Build Instructions (Linux)
-
-```shell
-sudo apt-get install build-essential libgdal-dev
-git clone https://github.com/FAA-VAIL-Project/openGCAS2.git
-cd openGCAS2
-cmake .
-make
-```
-
 TODO
 
 Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)** for more detailed information.
@@ -48,12 +38,12 @@ TODO
 
 If you need help with **openGCA**, do not hesitate to get in contact with us!
 
-- For questions and high-level discussions, use **[Discussions](https://github.com/KonnexionsGmbH/openGCA/discussions)** on GitHub.
-- To report a bug or make a feature request, open an **[Issue](https://github.com/KonnexionsGmbH/openGCA/issues)** on GitHub.
+- For questions and high-level discussions, use **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)** on GitHub.
+- To report a bug or make a feature request, open an **[Issue](https://github.com/FAA-VAIL-Project/openGCA/issues)** on GitHub.
 
 Please note that we may only provide support for problems / questions regarding core features of **openGCA**.
 Any questions or bug reports about features of third-party themes, plugins, extensions or similar should be made to their respective projects.
-But, such questions are **not** banned from the **[Discussions](https://github.com/KonnexionsGmbH/openGCA/discussions)**.
+But, such questions are **not** banned from the **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)**.
 
 Make sure to stick around to answer some questions as well!
 
@@ -61,7 +51,7 @@ Make sure to stick around to answer some questions as well!
 
 - **[Official Documentation](https://FAA-VAIL-Project.github.io/openGCA)**
 - **[Release Notes](https://FAA-VAIL-Project.github.io/openGCA/release_notes)**
-- **[Discussions](https://github.com/KonnexionsGmbH/openGCA/discussions)** (Third-party themes, recipes, plugins and more)
+- **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)** (Third-party themes, recipes, plugins and more)
 
 ## 5. Contributing to openGCA
 
