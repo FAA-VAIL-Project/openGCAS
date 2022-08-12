@@ -49,3 +49,7 @@ int** Raster::getArray() {
     return rasterBandArray;
 }
 
+double* Raster::getGeoTransform() {
+    return adfGeoTransform;
+}
+
