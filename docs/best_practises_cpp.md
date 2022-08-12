@@ -10,11 +10,11 @@ Source: [The Pitchfork Layout (PFL)](https://api.csswg.org/bikeshed/?force=1&url
 
 ### a) Books
 
-TODO
+**TODO**
 
 ### b) Papers
 
-TODO
+**TODO**
 
 ### c) Web Links
 

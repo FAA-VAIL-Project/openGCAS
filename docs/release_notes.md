@@ -5,13 +5,13 @@
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/FAA-VAIL-Project/openGCAS)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/FAA-VAIL-Project/openGCAS/0.9.6)
 
-## 1. Version TODO
+## 1. Version 9.9.9 **TODO**
 
 Release Date: dd.mm.2022
 
 ### 1.1 New Features
 
-- TODO
+- **TODO**
 
 ### 1.4 Applied Software
 
