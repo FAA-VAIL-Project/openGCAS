@@ -3,7 +3,7 @@
 Here we define the standards and best practices we follow when developing software.
 In addition, programming language specific guidelines are available in the following documents:
 
-- [C++ Best Practises](best_practises_cpp.md)
+- [C++ Best Practises](best_practises_cpp.md){:target="_blank"}
 
 ## 1. Documentation
 
@@ -20,4 +20,4 @@ In addition, programming language specific guidelines are available in the follo
     - Who maintains and contributes to the project
 - all subdirectories must contain a file called **README**.md, which briefly describes what is contained in this directory
 - the rest of the project documentation files are located in the `docs` subdirectory
-- the project documentation is created with the tool [MkDocs](https://www.mkdocs.org)
+- the project documentation is created with the tool [MkDocs](https://www.mkdocs.org){:target="_blank"}

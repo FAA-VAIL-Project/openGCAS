@@ -30,13 +30,9 @@ Source: [The Pitchfork Layout (PFL)](https://lefticus.gitbooks.io/cpp-best-pract
 
 ### a) Books
 
-**TODO**
+Cukic, I., "Functional Programming in C++", Manning, Nov. 2018
 
-### b) Papers
-
-**TODO**
-
-### c) Web Links
+### b) Web Links
 
 - [C++ Best Practices - Erik Rigtorp](https://rigtorp.se/cpp-best-practices/){:target="_blank"}
 - [cppbestpractises](https://lefticus.gitbooks.io/cpp-best-practices/content/){:target="_blank"}
