@@ -4,11 +4,11 @@ Here we define the standards and best practices we follow when developing C++ pr
 
 ## 1. Repository Layout - Top-Level Directories
 
-Source: [The Pitchfork Layout (PFL)](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs#tld)
+Source: [The Pitchfork Layout (PFL)](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs#tld){:target="_blank"}
 
 ## 2. Style
 
-Source: [The Pitchfork Layout (PFL)](https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html)
+Source: [cppbestpractises](https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html){:target="_blank"}
 
 ## 3. Quality Ensurance Tools
 

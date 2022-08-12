@@ -2,7 +2,7 @@
 
 ##                                                                            .
 ## ============================================================================
-## openGCAS - GroundCollision Avoidance System.
+## openGCAS - Ground Collision Avoidance System.
 ##       ---------------------------------------------------------------
 ##       The purpose of this Makefile is to support the software
 ##       development process for openGCAS.
