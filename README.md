@@ -1,4 +1,4 @@
-# openGCAS - Open Ground Collision Avoidance System - README
+# openGCAS - Ground Collision Avoidance System - README
 
 ![Coveralls GitHub](https://img.shields.io/coveralls/github/FAA-VAIL-Project/openGCA.svg)
 ![GitHub (Pre-)Release](https://img.shields.io/github/v/release/FAA-VAIL-Project/openGCAS?include_prereleases)

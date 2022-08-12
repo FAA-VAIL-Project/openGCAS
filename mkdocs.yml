@@ -25,9 +25,9 @@ plugins:
 
 repo_url: https://github.com/FAA-VAIL-Project/openGCAS
 
-site_name: openGCAS - Open Ground Collision Avoidance System
+site_name: openGCAS - GroundCollision Avoidance System
 # site_url: TODO
-site_description: Open Ground Collision Avoidance System
+site_description: GroundCollision Avoidance System
 site_author: FAA-VAIL-Project Team
 
 theme:
