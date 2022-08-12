@@ -23,13 +23,17 @@ private:
     */
     double adfGeoTransform[6];
 
-    int xSize, ySize;
     int** rasterBandArray;
 
     int** readFromBand();
 
 public:
+    int xSize, ySize;
+
     Raster(const char* file);
+
+    Raster();
+
     ~Raster();
 
     int** getArray();
