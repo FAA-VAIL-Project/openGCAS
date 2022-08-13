@@ -16,7 +16,8 @@ private:
     point center{};
 
 
-    // Probably a much better way to do this
+    // Ensures that the points are within the array (prevents memory violations)
+    // TODO: Allow for invalid indexes and just create 0's
     void isIndexable() {
         for (const auto &p: points) {
             try {
@@ -32,6 +33,7 @@ private:
         }
     }
 
+    // Define center point for polar coords
     point defineCenter() {
         int workingX = 0, workingY = 0;
 
@@ -64,10 +66,12 @@ int main() {
     Raster okRaster = Raster(oklahoma);
 
     std::vector<point> vec;
-    point point1, point2;
+    point point1, point2, point3;
     point1.x = 0; point1.y = 0;
     point2.x = 10; point2.y = 10;
+    point3.x = 5; point3.y = 20;
     vec.push_back(point1);
-
+    vec.push_back(point2);
+    vec.push_back(point3);
     PolySelect pgon = PolySelect(okRaster, vec);
 }
