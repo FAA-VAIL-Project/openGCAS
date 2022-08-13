@@ -1,4 +1,4 @@
-copyright: Copyright &copy;2022-2022, Loyd Hook.
+copyright: Copyright &copy;2022, Loyd Hook IV.
 
 edit_uri: ""
 
@@ -14,8 +14,8 @@ nav:
       - Release Notes: 'release_notes.md'
 #     - Release History: 'release_history.md'
   - Code of Conduct: 'code_of_conduct.md'
-# - Contributing Guide: 'contributing.md'
-  - License: '../LICENSE.md'
+  - Contributing Guide: 'contributing.md'
+  - License: 'LICENSE.md'
 
 plugins:
   - search
