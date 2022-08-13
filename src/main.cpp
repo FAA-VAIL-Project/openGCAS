@@ -33,13 +33,13 @@ private:
     }
 
     point defineCenter() {
-        int workingX, workingY;
+        int workingX = 0, workingY = 0;
 
         for( const auto &p : points) {
             workingX += p.x;
             workingY += p.y;
         }
-        point c{};
+        point c;
         c.x = workingX / 2;
         c.y = workingY / 2;
         return c;
@@ -53,7 +53,7 @@ public:
         isIndexable();
 
         center = defineCenter();
-
+        std::cout << center.x << "\n" << center.y;
     }
 };
 
@@ -64,9 +64,9 @@ int main() {
     Raster okRaster = Raster(oklahoma);
 
     std::vector<point> vec;
-    point point1;
-    point1.x = 2000;
-    point1.y = 2000;
+    point point1, point2;
+    point1.x = 0; point1.y = 0;
+    point2.x = 10; point2.y = 10;
     vec.push_back(point1);
 
     PolySelect pgon = PolySelect(okRaster, vec);
