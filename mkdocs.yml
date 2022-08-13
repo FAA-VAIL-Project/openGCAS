@@ -16,9 +16,9 @@ nav:
   - Best Practises:
       - General: best_practises_software_development.md
       - C++: best_practises_cpp.md
-# - Code of Conduct: code_of_conduct.md
+  - Code of Conduct: code_of_conduct.md
 # - Contributing Guide: contributing.md
-  - License: license.md
+  - License: ../LICENSE.md
 
 plugins:
   - search
