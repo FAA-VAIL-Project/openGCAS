@@ -1,0 +1,41 @@
+copyright: Copyright &copy;2022, Loyd Hook IV.
+
+edit_uri: ""
+
+extra:
+  generator: false
+
+markdown_extensions:
+  - attr_list
+
+nav:
+  - Home: 'index.md'
+  - Release Documents:
+      - Release Notes: 'release_notes.md'
+#     - Release History: 'release_history.md'
+  - Code of Conduct: 'code_of_conduct.md'
+  - Contributing Guide: 'contributing.md'
+  - License: 'LICENSE.md'
+
+plugins:
+  - search
+
+repo_url: https://github.com/FAA-VAIL-Project/openGCAS
+
+site_name: openGCAS - Ground Collision Avoidance System
+# site_url: **TODO**
+site_description: Ground Collision Avoidance System
+site_author: FAA-VAIL-Project Team
+
+theme:
+  favicon: img/Icon.png
+  features:
+    - search.highlight
+    - search.suggest
+  language: en
+  logo: img/VAILLogo.png
+  name: material
+  palette:
+    primary: blue
+    accent: red
+
