@@ -15,20 +15,19 @@ class PolySelect {
 private:
     Raster* raster;
     std::vector<point> points;
-    point center{};
 
-    // Defined private within class to avoid unnecessary global structs
-    struct polarPoints {
-        double r;
-        double theta;
-    };
+    // Operator predicate passed to std::sort
+    // Calculates the theta in the polar coordinate of point& input
+    // and sorts based on theta without creating a new vector in memory
+    struct sort {
+        point center;
+        bool operator()(point const& lhs, point const& rhs) {
+            float lhsTheta = atan2(lhs.y - center.y, lhs.x - center.x);
+            float rhsTheta = atan2(rhs.y - center.y, rhs.x - center.x);
 
-    // Operator predicate passed to std::sort to sort the polarPoint struct for theta
-    struct {
-        bool operator()(polarPoints const& lhs, polarPoints const& rhs) {
-            return lhs.theta < rhs.theta;
+            return lhsTheta < rhsTheta;
         }
-    } polarVectorSort;
+    };
 
 
     // Ensures that the points are within the array (prevents memory violations)
@@ -63,38 +62,21 @@ private:
     }
 
 
-
-    std::vector<polarPoints> polarVector() {
-        std::vector<polarPoints> pVec;
-        // Polar coordinate conversion
-        // Subtracts center because not centered at Origin
-        for(const point& i : points) {
-            polarPoints nPolar;
-            nPolar.theta = atan2(i.y - center.y, i.x - center.x);
-            nPolar.r = pow((i.x - center.x), 2) + pow((i.y - center.y), 2);
-            pVec.push_back(nPolar);
-        }
-        return pVec;
-    }
-
-
-
 public:
     PolySelect(Raster &r, std::vector<point> pointVec) {
         this->points = pointVec;
         this->raster = &r;
 
+        // Check that all points within raster
         isIndexable();
 
-        center = defineCenter();
+        // Init object referenced in std::sort
+        sort polarVectorSort{defineCenter()};
 
-        auto pVec = polarVector();
+        std::sort(points.begin(), points.end(), polarVectorSort);
 
-        std::cout << center.x << " " << center.y << "\n";
-
-        std::sort(pVec.begin(), pVec.end(), polarVectorSort);
-        for(const auto i : pVec) {
-            std::cout << i.r << " " << i.theta << std::endl;
+        for(const point i : points) {
+            std::cout << i.x << " " << i.y << "\n";
         }
     }
 };
@@ -106,15 +88,17 @@ int main() {
     Raster okRaster = Raster(oklahoma);
 
     std::vector<point> vec;
-    point point1, point2, point3, point4;
-    point1.x = 0; point1.y = 0;
-    point2.x = 80; point2.y = 40;
-    point3.x = 9; point3.y = 2;
-    point4.x = 18; point4.y = 5;
+
+    point point1{10, 23};
+    point point2{18, 43};
+    point point3{24, 28};
+    point point4{56, 2};
+    point point5{46, 99};
 
     vec.push_back(point1);
     vec.push_back(point2);
     vec.push_back(point3);
     vec.push_back(point4);
+    vec.push_back(point5);
     PolySelect pgon = PolySelect(okRaster, vec);
 }
