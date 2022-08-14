@@ -24,14 +24,19 @@ private:
         bool operator()(point const& lhs, point const& rhs) {
             float lhsTheta = atan2(lhs.y - center.y, lhs.x - center.x);
             float rhsTheta = atan2(rhs.y - center.y, rhs.x - center.x);
-
+            // If theta is the same (colinear) pick the larger radius
+            if(lhsTheta == rhsTheta) {
+                float lhsR = pow(lhs.x - center.x, 2) + pow(lhs.y - center.y, 2); // Square of radius
+                float rhsR = pow(rhs.x - center.x, 2) + pow(rhs.y - center.y, 2);
+                return lhsR < rhsR;
+            }
             return lhsTheta < rhsTheta;
         }
     };
 
 
     // Ensures that the points are within the array (prevents memory violations)
-    // TODO: Allow for invalid indexes and just create 0's
+    // TODo: Allow for invalid indexes and just create 0's
     void isIndexable() {
         for (const auto &p: points) {
             try {
@@ -55,9 +60,20 @@ private:
             workingX += p.x;
             workingY += p.y;
         }
-        point c;
-        c.x = workingX / 4;
-        c.y = workingY / 4;
+        point c{workingX / 4, workingY / 4};
+        return c;
+    }
+
+
+    int withinPoly(point p) {
+        // Brilliant algorithm modified from https://wrfranklin.org/Research/Short_Notes/pnpoly.html
+        int c = 0;
+        for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
+            if (
+                    ((points[i].x > p.x) != (points[j].y > p.y)) &&
+                    (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
+                ) c = !c;
+        }
         return c;
     }
 
@@ -67,16 +83,18 @@ public:
         this->points = pointVec;
         this->raster = &r;
 
-        // Check that all points within raster
         isIndexable();
 
         // Init object referenced in std::sort
+        // Sort OVER points (no copy)
         sort polarVectorSort{defineCenter()};
-
         std::sort(points.begin(), points.end(), polarVectorSort);
 
-        for(const point i : points) {
-            std::cout << i.x << " " << i.y << "\n";
+        point test{10, 13};
+        std::cout << withinPoly(test) << std::endl;
+
+        for(const auto p : points) {
+            std::cout << p.x << " " << p.y << std::endl;
         }
     }
 };
