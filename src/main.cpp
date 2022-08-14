@@ -2,19 +2,16 @@
 #include <cmath>
 #include <vector>
 #include <algorithm> // for std::sort
-
 #include "../include/Raster.h"
-
-struct point {
-    int x;
-    int y;
-};
+#include "../include/structs.h"
 
 
 class PolySelect {
 private:
     Raster* raster;
     std::vector<point> points;
+    int** rArray;
+
 
     // Operator predicate passed to std::sort
     // Calculates the theta in the polar coordinate of point& input
@@ -65,9 +62,9 @@ private:
     }
 
 
-    int withinPoly(point p) {
+    bool withinPoly(point p) {
         // Brilliant algorithm modified from https://wrfranklin.org/Research/Short_Notes/pnpoly.html
-        int c = 0;
+        bool c = true;
         for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
             if (
                     ((points[i].y > p.y) != (points[j].y > p.y)) &&
@@ -77,11 +74,41 @@ private:
         return c;
     }
 
+    int polyArea() {
+        area = 0;
+
+        for(int i = 0, j = points.size() - 1; i < points.size(); i++) {
+            area += (points[j].x + points[i].x) * (points[j].y - points[i].y);
+            j = i;
+        }
+
+        area = abs(area / 2);
+        return area;
+    }
 
 public:
+    int area;
+
+    geoPoint* getSelection() {
+        geoPoint* selection = new geoPoint[area];
+        int index = 0;
+        for(int row = 0; row < raster->ySize; row++) {
+            for (int elem = 0; elem < raster->xSize; elem++) {
+                point temp{elem, row};
+                if (!withinPoly(temp)) {
+                    selection[index] = geoPoint{elem, row, rArray[row][elem]};
+                    index++;
+                }
+            }
+        }
+        return selection;
+    }
+
     PolySelect(Raster &r, std::vector<point> pointVec) {
         this->points = pointVec;
         this->raster = &r;
+
+        this->rArray = r.getArray();
 
         isIndexable();
 
@@ -90,11 +117,17 @@ public:
         sort polarVectorSort{defineCenter()};
         std::sort(points.begin(), points.end(), polarVectorSort);
 
-        point test{18, 43};
-        std::cout << withinPoly(test) << std::endl;
-
-        for(const auto p : points) {
-            std::cout << p.x << " " << p.y << std::endl;
+        this->area = polyArea();
+        geoPoint* selection = new geoPoint[area];
+        int index = 0;
+        for(int row = 0; row < r.ySize; row++) {
+            for(int elem = 0; elem < r.xSize; elem++) {
+                point temp{elem, row};
+                if (!withinPoly(temp)) {
+                    selection[index] = geoPoint{elem, row, rArray[row][elem]};
+                    index++;
+                }
+            }
         }
     }
 };
@@ -107,16 +140,20 @@ int main() {
 
     std::vector<point> vec;
 
-    point point1{10, 23};
-    point point2{18, 43};
-    point point3{24, 28};
-    point point4{56, 2};
-    point point5{46, 99};
+    point point1{0, 1000};
+    point point2{0, 0};
+    point point3{1000, 0};
+    point point4{1000, 10};
 
     vec.push_back(point1);
     vec.push_back(point2);
     vec.push_back(point3);
     vec.push_back(point4);
-    vec.push_back(point5);
     PolySelect pgon = PolySelect(okRaster, vec);
+
+    geoPoint* testing = pgon.getSelection();
+    /*
+    for(int i = 0; i < pgon.area; i++) {
+        std::cout << testing[i].x << " " << testing[i].y << " " << testing[i].z << "\n";
+    }*/
 }
