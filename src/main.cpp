@@ -8,7 +8,7 @@
 int main() {
     const char* oklahoma = "../data/n33_w094_1arc_v3.tif";
 
-    Raster okRaster = Raster(oklahoma);
+    Raster& okRaster = Raster::Instance(oklahoma);
 
     std::vector<point> vec;
 
@@ -21,11 +21,11 @@ int main() {
     vec.push_back(point2);
     vec.push_back(point3);
     vec.push_back(point4);
-    PolySelect pgon = PolySelect(okRaster, vec);
 
-    geoPoint* testing = pgon.getSelection();
+    geoPoint* testing = okRaster.poly(vec);
 
-    for(int i = 0; i < pgon.area; i++) {
-        std::cout << testing[i].x << " " << testing[i].y << " " << testing[i].z << "\n";
-    }
+    for(int i = 0; i < 1000; i++)
+        std::cout << testing[i].z << "\n";
+
+    delete[] testing;
 }

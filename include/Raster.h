@@ -6,9 +6,12 @@
 #define OPENGCAS_RASTER_H
 
 #include "gdal_priv.h"
+#include "structs.h"
+#include <vector>
 
 class Raster {
 private:
+    const char* _filepath;
     const char* pszFilename;
     GDALRasterBand* poBand;
     GDALDataset* poDataset;
@@ -27,18 +30,30 @@ private:
 
     int** readFromBand();
 
+    // Constructor takes a string for filename
+    // Use relative path
+    Raster(const char* file);
+
+    // Frees int** array
+    ~Raster();
+
+    static Raster r_instance;
+
 public:
     int xSize, ySize;
 
-    Raster(const char* file);
+    // Singleton instance of the class
+    // Call with Raster::Instance(const char* file)
+    // Guarantees uniqueness
+    static Raster& Instance(const char* file);
 
-    Raster();
-
-    ~Raster();
-
+    // Returns rasterBandArray
     int** getArray();
 
+    // Returns adfGeoTransform
     double* getGeoTransform();
+
+    geoPoint* poly(std::vector<point> p);
 };
 
 

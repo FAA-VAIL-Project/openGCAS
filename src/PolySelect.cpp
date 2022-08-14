@@ -11,11 +11,6 @@
 #include <cmath>  // For atan2() and pow()
 
 
-Raster* raster;
-std::vector<point> points;
-int** rArray;
-
-
 struct PolySelect::sort {
     point center;
     bool operator()(point const& lhs, point const& rhs) {
@@ -89,7 +84,7 @@ int PolySelect::polyArea() {
 
 
 geoPoint* PolySelect::getSelection() {
-    geoPoint* selection = new geoPoint[area];
+    selection = new geoPoint[area];
     int index = 0;
     for(int row = 0; row < raster->ySize; row++) {
         for (int elem = 0; elem < raster->xSize; elem++) {
@@ -118,5 +113,11 @@ PolySelect::PolySelect(Raster &r, std::vector<point> pointVec) {
     std::sort(points.begin(), points.end(), polarVectorSort);
 
     this->area = polyArea();
+
+    // Fills selection pointer with memory
+    getSelection();
 }
 
+PolySelect::~PolySelect() {
+    //delete[] selection;
+}
