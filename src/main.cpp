@@ -6,7 +6,7 @@
 
 
 int main() {
-    const char* oklahoma = "../gtif/n33_w094_1arc_v3.tif";
+    const char* oklahoma = "../data/n33_w094_1arc_v3.tif";
 
     Raster okRaster = Raster(oklahoma);
 
