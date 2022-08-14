@@ -1,10 +1,12 @@
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <algorithm> // for std::sort
-#include "../include/Raster.h"
-#include "../include/structs.h"
+//
+// Created by quothbonney on 8/13/22.
+//
 
+#ifndef OPENGCAS_POLYSELECT_H
+#define OPENGCAS_POLYSELECT_H
+
+#include "include/structs.h"
+#include "include/Raster.h"
 
 class PolySelect {
 private:
@@ -69,7 +71,7 @@ private:
             if (
                     ((points[i].y > p.y) != (points[j].y > p.y)) &&
                     (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
-                ) c = !c;
+                    ) c = !c;
         }
         return c;
     }
@@ -133,27 +135,4 @@ public:
 };
 
 
-int main() {
-    const char* oklahoma = "../gtif/n33_w094_1arc_v3.tif";
-
-    Raster okRaster = Raster(oklahoma);
-
-    std::vector<point> vec;
-
-    point point1{0, 1000};
-    point point2{0, 0};
-    point point3{1000, 0};
-    point point4{1000, 10};
-
-    vec.push_back(point1);
-    vec.push_back(point2);
-    vec.push_back(point3);
-    vec.push_back(point4);
-    PolySelect pgon = PolySelect(okRaster, vec);
-
-    geoPoint* testing = pgon.getSelection();
-    /*
-    for(int i = 0; i < pgon.area; i++) {
-        std::cout << testing[i].x << " " << testing[i].y << " " << testing[i].z << "\n";
-    }*/
-}
+#endif //OPENGCAS_POLYSELECT_H
