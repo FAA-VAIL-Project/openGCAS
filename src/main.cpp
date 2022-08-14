@@ -70,7 +70,7 @@ private:
         int c = 0;
         for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
             if (
-                    ((points[i].x > p.x) != (points[j].y > p.y)) &&
+                    ((points[i].y > p.y) != (points[j].y > p.y)) &&
                     (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
                 ) c = !c;
         }
@@ -90,7 +90,7 @@ public:
         sort polarVectorSort{defineCenter()};
         std::sort(points.begin(), points.end(), polarVectorSort);
 
-        point test{10, 13};
+        point test{18, 43};
         std::cout << withinPoly(test) << std::endl;
 
         for(const auto p : points) {
