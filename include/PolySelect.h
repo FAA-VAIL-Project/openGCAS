@@ -13,6 +13,7 @@ private:
     Raster* raster;
     std::vector<point> points;
     int** rArray;
+    geoPoint* selection;
 
 
     // Operator predicate passed to std::sort
@@ -46,6 +47,9 @@ public:
 
     // Constructor takes a Raster object and a vector of points
     PolySelect(Raster &r, std::vector<point> pointVec);
+
+    // Free selection pointer
+    ~PolySelect();
 };
 
 

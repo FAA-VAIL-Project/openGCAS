@@ -1,8 +1,9 @@
 #include "gdal_priv.h"
 
 #include "../include/Raster.h"
+#include "../include/PolySelect.h"
 #include <cassert>
-
+#include <vector>
 
 int** Raster::readFromBand() {
     int** block;
@@ -23,7 +24,7 @@ int** Raster::readFromBand() {
     return block;
 }
 
-Raster::Raster(const char* file) {
+Raster::Raster(const char* file)  : _filepath(file) {
     // Init GDAL and define attributes
     GDALAllRegister();
     this->pszFilename = file;
@@ -53,4 +54,13 @@ double* Raster::getGeoTransform() {
     return adfGeoTransform;
 }
 
+Raster& Raster::Instance(const char* file) {
+    static Raster r_instance(file);
+    return r_instance;
+}
 
+
+geoPoint* Raster::poly(std::vector<point> p) {
+    PolySelect s = PolySelect(*this, p);
+    return s.getSelection();
+}
