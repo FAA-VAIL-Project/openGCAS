@@ -140,6 +140,7 @@ dmypy.json
 
 #CMake Stuff
 CMakeLists.txt.user
+cmake-build-debug/
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
