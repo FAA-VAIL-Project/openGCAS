@@ -85,9 +85,31 @@ int PolySelect::polyArea() {
 
 geoPoint* PolySelect::getSelection() {
     selection = new geoPoint[area];
+
+    // Creates iterators passed to std::minimax
+    std::vector<point>::iterator minX, maxX, minY, maxY;
+    std::tie(minX, maxX) = std::minmax_element(
+            begin(points), end(points),
+            // Comparison predicate as lambda
+            [](point const& lhs, point const& rhs)
+            {
+                return lhs.x < rhs.x;
+            }
+    );
+
+    std::tie(minY, maxY) = std::minmax_element(
+            begin(points), end(points),
+            // Comparison predicate as lambda
+            [](point const& lhs, point const& rhs)
+            {
+                return lhs.y < rhs.y;
+            }
+    );
+
+    // Iterate only from minY to maxY and minX to maxX
     int index = 0;
-    for(int row = 0; row < raster->ySize; row++) {
-        for (int elem = 0; elem < raster->xSize; elem++) {
+    for(int row = minY->y; row < maxY->y; row++) {
+        for (int elem = minX->x; elem < maxX->x; elem++) {
             point temp{elem, row};
             if (!withinPoly(temp)) {
                 selection[index] = geoPoint{elem, row, rArray[row][elem]};
