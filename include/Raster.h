@@ -11,7 +11,6 @@
 
 class Raster {
 private:
-    const char* _filepath;
     const char* pszFilename;
     GDALRasterBand* poBand;
     GDALDataset* poDataset;
@@ -54,6 +53,9 @@ public:
     double* getGeoTransform();
 
     geoPoint* poly(std::vector<point> p);
+
+    // For testing singleton property
+    const char* getInstanceName();
 };
 
 

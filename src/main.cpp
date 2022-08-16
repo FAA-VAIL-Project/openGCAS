@@ -1,15 +1,12 @@
 #include <iostream>
 #include <vector>
 #include "../include/Raster.h"
-#include "../include/PolySelect.h"
-#include "../include/structs.h"
-
 
 int main() {
     const char* oklahoma = "../data/n33_w094_1arc_v3.tif";
 
     Raster& okRaster = Raster::Instance(oklahoma);
-
+/*
     std::vector<point> vec;
 
     point point1{0, 1000};
@@ -23,9 +20,11 @@ int main() {
     vec.push_back(point4);
 
     geoPoint* testing = okRaster.poly(vec);
+    geoPoint* test2 = okRaster.poly(vec);
+
 
     for(int i = 0; i < 1000; i++)
         std::cout << testing[i].z << "\n";
 
-    delete[] testing;
+    delete[] testing;*/
 }
