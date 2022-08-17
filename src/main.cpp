@@ -4,7 +4,7 @@
 
 
 int main(int argc, char *argv[]) {
-    const char* oklahoma = "./data/n33_w094_1arc_v3.tif";
+    const char* oklahoma = "../data/oklahoma.tif";
     if(argc == 2) {
       oklahoma = argv[1];
     }

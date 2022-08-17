@@ -56,7 +56,6 @@ double* Raster::getGeoTransform() {
 
 Raster& Raster::Instance(const char* file) {
     static Raster r_instance = Raster(file);
-    std::cout << "read " << file;
     return r_instance;
 }
 

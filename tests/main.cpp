@@ -1,8 +1,3 @@
-#include <iostream>
-#include "../include/Raster.h"
+#define CATCH_CONFIG_MAIN
+#include <catch2/catch.hpp>
 
-int main() {
-    const char* t = "../../data/n33_w094_1arc_v3.tif";
-
-    Raster& r = Raster::Instance(t);
-}
