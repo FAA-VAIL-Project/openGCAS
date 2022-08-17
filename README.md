@@ -33,6 +33,11 @@ Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)**
 | Pipfile          | Definition of the Python package requirements.                                                                                                                                                                                                                                                                                                                               |
 | Pipfile.lock     | Definition of the specific versions of the Python packages.                                                                                                                                                                                                                                                                                                                  |
 | README.md        | This file.                                                                                                                                                                                                                                                                                                                                                                   |
+## 2.3 Build iand run (docker ubuntu:focal)
+```sh
+docker build -t faa_vail_opengcas:latest .
+docker run --rm -it faa_vail_opengcas:latest
+```
 
 ## 3. Support
 

@@ -2,8 +2,14 @@
 #include <vector>
 #include "../include/Raster.h"
 
-int main() {
-    const char* oklahoma = "../../data/n33_w094_1arc_v3.tif";
+
+int main(int argc, char *argv[]) {
+    const char* oklahoma = "./data/n33_w094_1arc_v3.tif";
+    if(argc == 2) {
+      oklahoma = argv[1];
+    }
+    std::cout << "Reading: " << oklahoma << std::endl;
+
 
     Raster& okRaster = Raster::Instance(oklahoma);
     Raster& oRaster = Raster::Instance(oklahoma);
