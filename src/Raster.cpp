@@ -4,6 +4,7 @@
 #include "../include/PolySelect.h"
 #include <cassert>
 #include <vector>
+#include <iostream>
 
 int** Raster::readFromBand() {
     int** block;
@@ -31,6 +32,7 @@ Raster::Raster(const char* file)  : pszFilename(file) {
     // GDAL API and band init
     // See https://gdal.org/tutorials/raster_api_tut.html
     poDataset = (GDALDataset*)GDALOpen(pszFilename, GA_ReadOnly);
+
     poBand = poDataset->GetRasterBand(1);
 
     xSize = poBand->GetXSize();
@@ -38,6 +40,7 @@ Raster::Raster(const char* file)  : pszFilename(file) {
 
     rasterBandArray = readFromBand();
 }
+
 
 Raster::~Raster() {
     free(rasterBandArray);
@@ -52,7 +55,8 @@ double* Raster::getGeoTransform() {
 }
 
 Raster& Raster::Instance(const char* file) {
-    static Raster r_instance(file);
+    static Raster r_instance = Raster(file);
+    std::cout << "read " << file;
     return r_instance;
 }
 

@@ -11,6 +11,7 @@
 
 class Raster {
 private:
+    static Raster r_instance;
     const char* pszFilename;
     GDALRasterBand* poBand;
     GDALDataset* poDataset;
@@ -32,11 +33,10 @@ private:
     // Constructor takes a string for filename
     // Use relative path
     Raster(const char* file);
+    Raster();
 
     // Frees int** array
     ~Raster();
-
-    static Raster r_instance;
 
 public:
     int xSize, ySize;
