@@ -18,3 +18,14 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+config.log
+config.status
+autom4te.cache/
+configure
+COPYING
+INSTALL
+Makefile.in
+aclocal.m4
+depcomp
+install-sh
+missing

@@ -1,0 +1,2 @@
+sudo apt-get install pkg-config libtool automake
+1. autoconf
