@@ -1,36 +1,57 @@
-#include <iostream>
-#include <vector>
+//#define CATCH_CONFIG_MAIN
+//#include <catch2/catch.hpp>
+#include <eigen3/Eigen/Dense>
 #include "../include/Raster.h"
+#include <cassert>
+#include <iostream>
+
+bool intersections(std::vector<point> p) {
+
+    int counter = 0;
+    for(int i = 0; i < p.size(); ++i) {
+        for(int j = 0; j < p.size(); ++j) {
+            if(i == j)
+                continue;
+
+            Eigen::Matrix2f mat;
 
 
-int main(int argc, char *argv[]) {
-    const char* oklahoma = "../data/oklahoma.tif";
-    if(argc == 2) {
-      oklahoma = argv[1];
+            const point p1 = p[i];
+            const point p2 = p[(i + 1) % p.size()];
+
+            const point p3 = p[j % p.size()];
+            const point p4 = p[(j + 1) % p.size()];
+
+            float m1 = (p2.y - p1.y) / (p2.x - p1.x);
+            float b1 = p2.y - (m1 * p2.x);
+            float b1_alt = p1.y - (m1 * p1.x);
+            assert(b1 == b1_alt);
+
+            float m2 = (p4.y - p3.y) / (p4.x - p3.x);
+            float b2 = p4.y - (m2 * p4.x);
+            float b2_alt = p3.y - (m2 * p3.x);
+            assert(b2 == b2_alt);
+
+            Eigen::Vector2f col1{-m1, -m2};
+            Eigen::Vector2f col2{1, 1};
+            Eigen::Vector2f b{b1, b2};
+            mat << col1, col2;
+            Eigen::Vector2f x = mat.fullPivLu().solve(b);
+
+
+
+        }
     }
-    std::cout << "Reading: " << oklahoma << std::endl;
+    std::cout << counter;
+    return 0;
+}
 
-
-    Raster okRaster = Raster(oklahoma);
-
-    std::vector<point> vec;
-
-    point point1{0, 1000};
-    point point2{0, 0};
-    point point3{1000, 0};
-    point point4{1000, 10};
-
-    vec.push_back(point1);
-    vec.push_back(point2);
-    vec.push_back(point3);
-    vec.push_back(point4);
-
-    geoPoint* testing = okRaster.poly(vec);
-    geoPoint* test2 = okRaster.poly(vec);
-
-
-    for(int i = 0; i < 1000; i++)
-        std::cout << testing[i].z << "\n";
-
-    delete[] testing;
+int main() {
+    std::vector<point> p = {
+            {1, 2},
+            {4, 5},
+            {3, 3},
+            {2, -2}
+    };
+    intersections(p);
 }
