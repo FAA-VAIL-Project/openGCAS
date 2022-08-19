@@ -46,7 +46,7 @@ public:
     geoPoint* getSelection();
 
     // Constructor takes a Raster object and a vector of points
-    PolySelect(Raster &r, std::vector<point> pointVec);
+    PolySelect(Raster& r, std::vector<point> pointVec) noexcept;
 
     // Free selection pointer
     ~PolySelect();

@@ -41,6 +41,8 @@ Raster::Raster(const char* file)  : pszFilename(file) {
     rasterBandArray = readFromBand();
 }
 
+Raster::Raster() = default;
+
 
 Raster::~Raster() {
     free(rasterBandArray);
@@ -52,11 +54,6 @@ int** Raster::getArray() {
 
 double* Raster::getGeoTransform() {
     return adfGeoTransform;
-}
-
-Raster& Raster::Instance(const char* file) {
-    static Raster r_instance = Raster(file);
-    return r_instance;
 }
 
 

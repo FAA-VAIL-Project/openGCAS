@@ -11,7 +11,6 @@
 
 class Raster {
 private:
-    static Raster r_instance;
     const char* pszFilename;
     GDALRasterBand* poBand;
     GDALDataset* poDataset;
@@ -30,6 +29,13 @@ private:
 
     int** readFromBand();
 
+
+
+
+
+public:
+    int xSize, ySize;
+
     // Constructor takes a string for filename
     // Use relative path
     Raster(const char* file);
@@ -37,14 +43,6 @@ private:
 
     // Frees int** array
     ~Raster();
-
-public:
-    int xSize, ySize;
-
-    // Singleton instance of the class
-    // Call with Raster::Instance(const char* file)
-    // Guarantees uniqueness
-    static Raster& Instance(const char* file);
 
     // Returns rasterBandArray
     int** getArray();

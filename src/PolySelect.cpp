@@ -57,7 +57,7 @@ point PolySelect::defineCenter() {
 }
 
 
-bool PolySelect::withinPoly(point p) {
+inline bool PolySelect::withinPoly(point p) {
     // Brilliant algorithm modified from https://wrfranklin.org/Research/Short_Notes/pnpoly.html
     bool c = true;
     for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
@@ -120,13 +120,10 @@ geoPoint* PolySelect::getSelection() {
     return selection;
 }
 
-PolySelect::PolySelect(Raster &r, std::vector<point> pointVec) {
-    this->points = pointVec;
-    this->raster = &r;
+PolySelect::PolySelect(Raster& r, std::vector<point> pointVec) noexcept
+    : points(pointVec), raster(&r), rArray(r.getArray()) {
 
-    // Just copies array at 0x7fffe95a7010 (Can't reduce memory usage)
-    this->rArray = r.getArray();
-
+    // Tests whether or not all points are within raster
     isIndexable();
 
     // Init object referenced in std::sort

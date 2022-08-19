@@ -11,9 +11,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Reading: " << oklahoma << std::endl;
 
 
-    Raster& okRaster = Raster::Instance(oklahoma);
-    Raster& oRaster = Raster::Instance(oklahoma);
-/*
+    Raster okRaster = Raster(oklahoma);
+
     std::vector<point> vec;
 
     point point1{0, 1000};
@@ -33,5 +32,5 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 1000; i++)
         std::cout << testing[i].z << "\n";
 
-    delete[] testing;*/
+    delete[] testing;
 }
