@@ -17,23 +17,31 @@ Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)**
 
 ### 2.1 Directories
 
-| Directory         | Content                                                                     |
-|-------------------|-----------------------------------------------------------------------------|
-| .github/workflows | [GitHub Action](https://github.com/actions) workflows                       |
-| docs              | **openGCA** documentation files                                                 |
+| Directory         | Content                                               |
+|-------------------|-------------------------------------------------------|
+| .github/workflows | [GitHub Action](https://github.com/actions) workflows |
+| data              | non-source files, like INI files                      |
+| docs              | documentation files                                   |
+| include           | public headers                                        |
+| src               | source files and private headers                      |
+| tests             | test cases                                            |
 
 ### 2.2 Files
 
-| File             | Functionality                                                                                                                                                                                                                                                                                                                                                                |
-|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| .gitignore       | Configuration of files and folders to be ignored.                                                                                                                                                                                                                                                                                                                            |
-| LICENSE          | Text of the licence terms.                                                                                                                                                                                                                                                                                                                                                   |
-| Makefile         | Definition of tasks to be excuted with the `make` command.                                                                                                                                                                                                                                                                                                                   |
-| mkdocs.yml       | Configuration file for [MkDocs](https://github.com/mkdocs/mkdocs/).                                                                                                                                                                                                                                                                                                          |
-| Pipfile          | Definition of the Python package requirements.                                                                                                                                                                                                                                                                                                                               |
-| Pipfile.lock     | Definition of the specific versions of the Python packages.                                                                                                                                                                                                                                                                                                                  |
-| README.md        | This file.                                                                                                                                                                                                                                                                                                                                                                   |
-## 2.3 Build iand run (docker ubuntu:focal)
+| File          | Functionality                                                           |
+|---------------|-------------------------------------------------------------------------|
+| .gitignore    | Configuration of files and folders to be ignored.                       |
+| CMakeList.txt | CMake configuration file.                                               |
+| Dockerfile    | Docker image configuration file.                                        |
+| LICENSE.md    | Text of the licence terms.                                              |
+| MakefileDocs  | Definition of documentation task to be excuted with the `make` command. |
+| mkdocs.yml    | Configuration file for [MkDocs](https://github.com/mkdocs/mkdocs/).     |
+| Pipfile       | Definition of the Python package requirements.                          |
+| Pipfile.lock  | Definition of the specific versions of the Python packages.             |
+| README.md     | This file.                                                              |
+
+### 2.3 Build and run (docker ubuntu:focal)
+
 ```sh
 docker build -t faa_vail_opengcas:latest .
 docker run --rm -it faa_vail_opengcas:latest
