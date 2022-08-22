@@ -44,12 +44,7 @@ bool intersections(std::vector<point> p) {
             if (o2 == 0 && onSegment(p1, q2, q1)) return true;
             if (o3 == 0 && onSegment(p2, p1, q2)) return true;
             if (o4 == 0 && onSegment(p2, q1, q2)) return true;
-            /*
-            print testing;
-            std::cout << p1.x << " " << p1.y << "   " << q1.x << " " << q1.y << "\n";
-            std::cout << p2.x << " " << p2.y << "   " << q2.x << " " << q2.y << "\n\n\n";*/
         }
-
     }
     return false;
 }
