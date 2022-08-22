@@ -78,4 +78,4 @@ Everyone who interacts in the **openGCA** project's codebase, issue trackers, an
 
 ## 7. License
 
-**[TODO](https://FAA-VAIL-Project.github.io/openGCA/license)**
+**[GNU LESSER GENERAL PUBLIC LICENSE](https://FAA-VAIL-Project.github.io/openGCA/license)**
