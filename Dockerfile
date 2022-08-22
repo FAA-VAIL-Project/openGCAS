@@ -19,4 +19,4 @@ RUN apt-get update \
     && cmake build . \
     && cmake --build .
 
-CMD [ "./openGCAS", "./data/n33_w094_1arc_v3.tif" ]
+CMD [ "./openGCAS", "../data/gabon.tif" ]
