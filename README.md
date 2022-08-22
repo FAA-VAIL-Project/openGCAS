@@ -17,23 +17,31 @@ Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)**
 
 ### 2.1 Directories
 
-| Directory         | Content                                                                     |
-|-------------------|-----------------------------------------------------------------------------|
-| .github/workflows | [GitHub Action](https://github.com/actions) workflows                       |
-| docs              | **openGCA** documentation files                                                 |
+| Directory         | Content                                                |
+|-------------------|--------------------------------------------------------|
+| .github/workflows | [GitHub Action](https://github.com/actions) workflows. |
+| data              | Non-source files, like INI files.                      |
+| docs              | Documentation files.                                   |
+| include           | Public headers.                                        |
+| src               | Source files and private headers.                      |
+| tests             | Test cases.                                            |
 
 ### 2.2 Files
 
-| File             | Functionality                                                                                                                                                                                                                                                                                                                                                                |
-|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| .gitignore       | Configuration of files and folders to be ignored.                                                                                                                                                                                                                                                                                                                            |
-| LICENSE          | Text of the licence terms.                                                                                                                                                                                                                                                                                                                                                   |
-| Makefile         | Definition of tasks to be excuted with the `make` command.                                                                                                                                                                                                                                                                                                                   |
-| mkdocs.yml       | Configuration file for [MkDocs](https://github.com/mkdocs/mkdocs/).                                                                                                                                                                                                                                                                                                          |
-| Pipfile          | Definition of the Python package requirements.                                                                                                                                                                                                                                                                                                                               |
-| Pipfile.lock     | Definition of the specific versions of the Python packages.                                                                                                                                                                                                                                                                                                                  |
-| README.md        | This file.                                                                                                                                                                                                                                                                                                                                                                   |
-## 2.3 Build iand run (docker ubuntu:focal)
+| File          | Functionality                                                           |
+|---------------|-------------------------------------------------------------------------|
+| .gitignore    | Configuration of files and folders to be ignored.                       |
+| CMakeList.txt | CMake configuration file.                                               |
+| Dockerfile    | Docker image configuration file.                                        |
+| LICENSE.md    | Text of the licence terms.                                              |
+| MakefileDocs  | Definition of documentation task to be excuted with the `make` command. |
+| mkdocs.yml    | Configuration file for [MkDocs](https://github.com/mkdocs/mkdocs/).     |
+| Pipfile       | Definition of the Python package requirements.                          |
+| Pipfile.lock  | Definition of the specific versions of the Python packages.             |
+| README.md     | This file.                                                              |
+
+### 2.3 Build and run (docker ubuntu:focal)
+
 ```sh
 docker build -t faa_vail_opengcas:latest .
 docker run --rm -it faa_vail_opengcas:latest
@@ -43,31 +51,31 @@ docker run --rm -it faa_vail_opengcas:latest
 
 If you need help with **openGCA**, do not hesitate to get in contact with us!
 
-- For questions and high-level discussions, use **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)** on GitHub.
-- To report a bug or make a feature request, open an **[Issue](https://github.com/FAA-VAIL-Project/openGCA/issues)** on GitHub.
+- For questions and high-level discussions, use **[Discussions](https://github.com/FAA-VAIL-Project/openGCAS/discussions)** on GitHub.
+- To report a bug or make a feature request, open an **[Issue](https://github.com/FAA-VAIL-Project/openGCAS/issues)** on GitHub.
 
 Please note that we may only provide support for problems / questions regarding core features of **openGCA**.
 Any questions or bug reports about features of third-party themes, plugins, extensions or similar should be made to their respective projects.
-But, such questions are **not** banned from the **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)**.
+But, such questions are **not** banned from the **[Discussions](https://github.com/FAA-VAIL-Project/openGCAS/discussions)**.
 
 Make sure to stick around to answer some questions as well!
 
 ## 4. Links
 
-- **[Official Documentation](https://FAA-VAIL-Project.github.io/openGCA)**
-- **[Release Notes](https://FAA-VAIL-Project.github.io/openGCA/release_notes)**
-- **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)** (Third-party themes, recipes, plugins and more)
+- **[Official Documentation](https://faa-vail-project.github.io/openGCAS/)**
+- **[Release Notes](https://faa-vail-project.github.io/openGCAS/release_notes)**
+- **[Discussions](https://github.com/FAA-VAIL-Project/openGCAS/discussions)** (Third-party themes, recipes, plugins and more)
 
 ## 5. Contributing to openGCA
 
 The **openGCA** project welcomes, and depends on, contributions from developers and users in the open source community.
-Please see the **[Contributing Guide](https://FAA-VAIL-Project.github.io/openGCA/contributing)** for
+Please see the **[Contributing Guide](https://faa-vail-project.github.io/openGCAS/contributing)** for
 information on how you can help.
 
 ## 6. Code of Conduct
 
-Everyone who interacts in the **openGCA** project's codebase, issue trackers, and discussion forums is expected to follow the **[Code of Conduct](https://FAA-VAIL-Project.github.io/openGCA/code_of_conduct)**.
+Everyone who interacts in the **openGCA** project's codebase, issue trackers, and discussion forums is expected to follow the **[Code of Conduct](https://faa-vail-project.github.io/openGCAS/code_of_conduct)**.
 
 ## 7. License
 
-**[TODO](https://FAA-VAIL-Project.github.io/openGCA/license)**
+**[GNU LESSER GENERAL PUBLIC LICENSE](https://faa-vail-project.github.io/openGCAS/LICENSE/)**
