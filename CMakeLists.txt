@@ -15,5 +15,5 @@ endif()
 add_subdirectory(dependencies)
 add_subdirectory(tests)
 
-add_executable(openGCAS src/main.cpp src/Raster.cpp src/PolySelect.cpp)
+add_executable(openGCAS src/main.cpp src/Raster.cpp src/PolySelect.cpp src/CircSelect.cpp)
 target_link_libraries(openGCAS PRIVATE GDAL::GDAL)

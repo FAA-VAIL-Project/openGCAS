@@ -2,6 +2,7 @@
 
 #include "../include/Raster.h"
 #include "../include/PolySelect.h"
+#include "../include/CircSelect.h"
 #include <cassert>
 #include <vector>
 #include <iostream>
@@ -59,6 +60,11 @@ double* Raster::getGeoTransform() {
 
 geoPoint* Raster::poly(std::vector<point> p) {
     PolySelect s = PolySelect(*this, p);
+    return s.getSelection();
+}
+
+geoPoint* Raster::circ(int radius, point center) {
+    CircSelect s(*this, radius, center);
     return s.getSelection();
 }
 

@@ -21,9 +21,6 @@ private:
     // and sorts based on theta without creating a new vector in memory
     struct sort;
 
-    // Ensures that the points are within the array (prevents memory violations)
-    void isIndexable();
-
     // Define center point for polar coords
     point defineCenter();
 

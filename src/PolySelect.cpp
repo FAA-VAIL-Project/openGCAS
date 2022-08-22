@@ -1,9 +1,8 @@
 #include "../include/PolySelect.h"
 #include <vector>
 #include <algorithm> // for std::sort()
-#include <iostream>
 #include <cmath>  // For atan2() and pow()
-
+#include <iostream>
 
 struct PolySelect::sort {
     point center;
@@ -111,8 +110,11 @@ PolySelect::PolySelect(Raster& r, std::vector<point> pointVec) noexcept
 
     this->area = polyArea();
 
-    // Fills selection pointer with memory
     getSelection();
+
+    for(int i = 0; i < area; ++i) {
+        std::cout << selection[i].z << "\n";
+    }
 }
 
 PolySelect::~PolySelect() {

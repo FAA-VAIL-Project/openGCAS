@@ -29,10 +29,6 @@ private:
 
     int** readFromBand();
 
-
-
-
-
 public:
     int xSize, ySize;
 
@@ -50,7 +46,11 @@ public:
     // Returns adfGeoTransform
     double* getGeoTransform();
 
+    // Get polygon selection from points
     geoPoint* poly(std::vector<point> p);
+
+    // Get circle selection
+    geoPoint* circ(int radius, point center);
 
     // For testing singleton property
     const char* getInstanceName();
