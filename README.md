@@ -62,20 +62,20 @@ Make sure to stick around to answer some questions as well!
 
 ## 4. Links
 
-- **[Official Documentation](https://FAA-VAIL-Project.github.io/openGCA)**
-- **[Release Notes](https://FAA-VAIL-Project.github.io/openGCA/release_notes)**
+- **[Official Documentation](https://faa-vail-project.github.io/openGCAS/)**
+- **[Release Notes](https://faa-vail-project.github.io/openGCAS/release_notes)**
 - **[Discussions](https://github.com/FAA-VAIL-Project/openGCA/discussions)** (Third-party themes, recipes, plugins and more)
 
 ## 5. Contributing to openGCA
 
 The **openGCA** project welcomes, and depends on, contributions from developers and users in the open source community.
-Please see the **[Contributing Guide](https://FAA-VAIL-Project.github.io/openGCA/contributing)** for
+Please see the **[Contributing Guide](https://faa-vail-project.github.io/openGCAS/contributing)** for
 information on how you can help.
 
 ## 6. Code of Conduct
 
-Everyone who interacts in the **openGCA** project's codebase, issue trackers, and discussion forums is expected to follow the **[Code of Conduct](https://FAA-VAIL-Project.github.io/openGCA/code_of_conduct)**.
+Everyone who interacts in the **openGCA** project's codebase, issue trackers, and discussion forums is expected to follow the **[Code of Conduct](https://faa-vail-project.github.io/openGCAS/code_of_conduct)**.
 
 ## 7. License
 
-**[GNU LESSER GENERAL PUBLIC LICENSE](https://FAA-VAIL-Project.github.io/openGCA/license)**
+**[GNU LESSER GENERAL PUBLIC LICENSE](https://faa-vail-project.github.io/openGCAS/LICENSE/)**
