@@ -6,20 +6,20 @@
 
 
 int main(int argc, char *argv[]) {
-    const char* oklahoma = "./data/n33_w094_1arc_v3.tif";
+    const char* oklahoma = "../data/gabon.tif";
     if(argc == 2) {
-      oklahoma = argv[1];
+        oklahoma = argv[1];
     }
     std::cout << "Reading: " << oklahoma << std::endl;
 
-    Raster& okRaster = Raster::Instance(oklahoma);
+    Raster okRaster = Raster(oklahoma);
 
     std::vector<point> vec;
 
-    point point1{0, 1000};
-    point point2{0, 0};
-    point point3{1000, 0};
-    point point4{1000, 10};
+    point point1{10000, 10000};
+    point point2{10010, 10010};
+    point point3{10000, 10010};
+    point point4{10010, 10000};
 
     vec.push_back(point1);
     vec.push_back(point2);
