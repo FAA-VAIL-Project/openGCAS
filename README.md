@@ -17,14 +17,14 @@ Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)**
 
 ### 2.1 Directories
 
-| Directory         | Content                                               |
-|-------------------|-------------------------------------------------------|
-| .github/workflows | [GitHub Action](https://github.com/actions) workflows |
-| data              | non-source files, like INI files                      |
-| docs              | documentation files                                   |
-| include           | public headers                                        |
-| src               | source files and private headers                      |
-| tests             | test cases                                            |
+| Directory         | Content                                                |
+|-------------------|--------------------------------------------------------|
+| .github/workflows | [GitHub Action](https://github.com/actions) workflows. |
+| data              | Non-source files, like INI files.                      |
+| docs              | Documentation files.                                   |
+| include           | Public headers.                                        |
+| src               | Source files and private headers.                      |
+| tests             | Test cases.                                            |
 
 ### 2.2 Files
 
