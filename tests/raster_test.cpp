@@ -1,11 +1,8 @@
 #include <catch2/catch.hpp>
-#include <eigen3/Eigen/Dense>
 #include "../include/Raster.h"
 #include <vector>
 #include <ctime>
-
 #include <algorithm>
-#include <vector>
 
 int orientation(point p, point q, point r) {
     int val = (q.y - p.y) * (r.x - q.x) -
@@ -86,7 +83,4 @@ TEST_CASE("Raster Test") {
             CHECK(intersections(vec) == 1);
         }
     }
-
-
-
 }

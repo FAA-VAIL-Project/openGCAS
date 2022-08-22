@@ -1,10 +1,4 @@
-//
-// Created by quothbonney on 8/13/22.
-//
-
 #include "../include/PolySelect.h"
-#include "../include/structs.h"
-#include "../include/Raster.h"
 #include <vector>
 #include <algorithm> // for std::sort()
 #include <iostream>
@@ -26,23 +20,6 @@ struct PolySelect::sort {
         return lhsTheta < rhsTheta;
     }
 };
-
-
-// TODO: Allow for invalid indexes and just create 0's
-void PolySelect::isIndexable() {
-    for (const auto &p: points) {
-        try {
-            if (p.x > raster->xSize || p.x < 0 || p.y > raster->ySize || p.y < 0) {
-                throw 100;
-            }
-        }
-        catch (int e) {
-            std::cerr << "Cannot create PolySelect! Point " << p.x << " " << p.y << " is outside raster range "
-                      << raster->xSize << " " << raster->ySize << "...";
-            exit(1);
-        }
-    }
-}
 
 
 point PolySelect::defineCenter() {
@@ -111,7 +88,11 @@ geoPoint* PolySelect::getSelection() {
     for(int row = minY->y; row < maxY->y; row++) {
         for (int elem = minX->x; elem < maxX->x; elem++) {
             point temp{elem, row};
-            if (!withinPoly(temp)) {
+            if(elem > raster->xSize || elem < 0 ||
+                row > raster->ySize || row < 0) {
+                selection[index] = geoPoint{elem, row, 0};
+            }
+            else if (!withinPoly(temp)) {
                 selection[index] = geoPoint{elem, row, rArray[row][elem]};
                 index++;
             }
@@ -122,9 +103,6 @@ geoPoint* PolySelect::getSelection() {
 
 PolySelect::PolySelect(Raster& r, std::vector<point> pointVec) noexcept
     : points(pointVec), raster(&r), rArray(r.getArray()) {
-
-    // Tests whether or not all points are within raster
-    isIndexable();
 
     // Init object referenced in std::sort
     // Sort OVER points (no copy)
