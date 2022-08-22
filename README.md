@@ -1,11 +1,11 @@
-# openGCAS - Ground Collision Avoidance System
+# openGCAS - open Ground Collision Avoidance System
 
 ![Coveralls GitHub](https://img.shields.io/coveralls/github/FAA-VAIL-Project/openGCA.svg)
 ![GitHub (Pre-)Release](https://img.shields.io/github/v/release/FAA-VAIL-Project/openGCAS?include_prereleases)
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/FAA-VAIL-Project/openGCAS)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/FAA-VAIL-Project/openGCAS/0.9.6)
 
-**TODO** = short and concise description of what the software openGCAS should do -
+openGCAS is an open source aviation safety system designed to help aircraft avoid flight into the ground or terrain.  openGCAS works by evaluating current aircraft state information, predicting a possible escape trajectory, comparing the altitude of that trajecotry to the altitude of the ground at that location, and evaluating the results.  If the trajectory is found to come too close to the terrain at any point in the predicted trajectory, openGCAS commands an avoidance manuver to be preformed.  openGCAS was created to help save the hundreds of pilots and passengers that die every year from this type of accident. 
 
 Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)** for more detailed information.
 
