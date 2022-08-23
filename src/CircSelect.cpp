@@ -8,8 +8,11 @@
 
 
 int CircSelect::circArea() {
+    // Algebraic simplification of the Gauss Circle Problem
+    // Determines the number of squares to cover interior of circle
+    // No empty memory
     double pi = 3.14159;
-    int area = std::floor(pi * radius*radius);
+    int area = (pi * radius*radius) - (pi * 2*radius)/(sqrt(2));
     return area;
 }
 
@@ -49,6 +52,5 @@ CircSelect::CircSelect(Raster& r, int _radius, point _center) noexcept
 
     // Get area
     this->area = circArea();
-
 
 }

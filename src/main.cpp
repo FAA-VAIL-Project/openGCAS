@@ -19,9 +19,13 @@ int main(int argc, char *argv[]) {
             {12, 94},
             {18, 3}
     };
-    geoPoint* p = okRaster.poly(ps);
+    //geoPoint* p = okRaster.poly(ps);
 
-    CircSelect circtest = CircSelect(okRaster, 5, point{400, 200});
+    geoPoint* testing2 = okRaster.circ(10, point{90, 100});
+
+    for(int i = 0; i < 100; i++) {
+        std::cout << testing2[i].x << " " << testing2[i].y << " " << testing2[i].z << "\n";
+    }
 
 
     return 0;

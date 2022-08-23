@@ -35,7 +35,6 @@ public:
     // Constructor takes a string for filename
     // Use relative path
     Raster(const char* file);
-    Raster();
 
     // Frees int** array
     ~Raster();

@@ -42,8 +42,6 @@ Raster::Raster(const char* file)  : pszFilename(file) {
     rasterBandArray = readFromBand();
 }
 
-Raster::Raster() = default;
-
 
 Raster::~Raster() {
     free(rasterBandArray);
