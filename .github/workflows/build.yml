@@ -28,6 +28,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - run: sudo apt-get update
+    - run: sudo apt-get install -y software-properties-common
+    - run: sudo apt-get update
+    - run: sudo add-apt-repository ppa:ubuntugis/ppa
+    - run: sudo apt-get update
+    - run: sudo apt-get install -y gdal-bin libgdal-dev build-essential cmake
+    
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
