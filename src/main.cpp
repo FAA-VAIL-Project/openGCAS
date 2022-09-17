@@ -21,11 +21,8 @@ int main(int argc, char *argv[]) {
     };
     //geoPoint* p = okRaster.poly(ps);
 
-    geoPoint* testing2 = okRaster.circ(10, point{90, 100});
+    geoPoint* testing2 = okRaster.circ(5, point{10, 10});
 
-    for(int i = 0; i < 100; i++) {
-        std::cout << testing2[i].x << " " << testing2[i].y << " " << testing2[i].z << "\n";
-    }
 
 
     return 0;
