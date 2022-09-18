@@ -1,9 +1,11 @@
 # Raster Query System
 
-The Raster Query System is a class containing interfaces pertaining the conversion of `llPoint` structs 
+The Raster Query System is a singleton class containing interfaces pertaining the conversion of `llPoint` structs 
 (defined in `structs.h`) to indicies on a local raster. It accepts a reference to an `std::vector<GDALRasterBand>`
 named `rasterVec` containing the RasterBands for each file in `data/` as well as an `std::vector<llPoint>` named
 `llVec`. 
+
+`init()` creates the `std::vector<GDALRasterBand> rasterVec` vector.
 
 `checkPoint()` ensures that each llPoint index in llVec is a possible value. If an impossible value is detected, it will
 pop it from the vector. This method is called in the initializer list of the RQS class to prevent any issues when copying the
