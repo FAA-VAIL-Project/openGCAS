@@ -12,13 +12,7 @@ int main(int argc, char *argv[]) {
         oklahoma = argv[1];
     }
 
-    Raster okRaster = Raster(oklahoma);
-    std::vector<point> ps = {
-            {2,4},
-            {3, 9},
-            {12, 94},
-            {18, 3}
-    };
+
     //geoPoint* p = okRaster.poly(ps);
 
     geoPoint* testing2 = okRaster.circ(5, point{10, 10});
