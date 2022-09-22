@@ -13,15 +13,27 @@ class RasterQuery {
 private:
     std::vector<GDALRasterBand> RasterList;
 
-    RasterQuery();
+    RasterQuery() = default;
 
-    ///\brief define RasterList attribute with rasters from data/ directory
-    std::vector<GDALRasterBand> readDataDir();
+
+
+    struct geoTransformData {
+        int index;
+        double lon_o;
+        double lon_res;
+        double lat_o;
+        double lat_res;
+    };
+
+protected:
+    std::vector<geoTransformData> dataDirTransform;
 
 public:
     ///\brief Singleton Instance Get
     static RasterQuery& get();
 
+    ///\brief define RasterList attribute with rasters from data/ directory
+    void readDataDir();
 
 };
 

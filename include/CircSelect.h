@@ -12,7 +12,7 @@ class CircSelect {
 private:
     Raster* raster;
     int radius;
-    point center;
+    nPoint center;
     int** rArray;
     geoPoint* selection;
 
@@ -23,7 +23,7 @@ public:
 
     geoPoint* getSelection();
 
-    CircSelect(Raster& r, int _radius, point _center) noexcept;
+    CircSelect(Raster& r, int _radius, nPoint _center) noexcept;
 };
 
 

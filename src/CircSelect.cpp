@@ -29,8 +29,8 @@ geoPoint* CircSelect::getSelection() {
         float root = std::round(sqrt(radius*radius - y*y));
         for(int i = -1 * root; i < root; ++i) {
             // Define the location of the points to each side of the centerF
-            point p{center.x + i, center.y + y};
-            point p2{center.x + i, center.y - y};
+            nPoint p{center.x + i, center.y + y};
+            nPoint p2{center.x + i, center.y - y};
 
             // create negative and positive point, create a geoPoint referencing raster
             // Else, altitude = 0
@@ -55,7 +55,7 @@ geoPoint* CircSelect::getSelection() {
     return selection;
 }
 
-CircSelect::CircSelect(Raster& r, int _radius, point _center) noexcept
+CircSelect::CircSelect(Raster& r, int _radius, nPoint _center) noexcept
 : radius(_radius), center(_center), raster(&r), rArray(r.getArray()) {
 
     // Get area

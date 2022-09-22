@@ -56,12 +56,12 @@ double* Raster::getGeoTransform() {
 }
 
 
-geoPoint* Raster::poly(std::vector<point> p) {
+geoPoint* Raster::poly(std::vector<nPoint> p) {
     PolySelect s = PolySelect(*this, p);
     return s.getSelection();
 }
 
-geoPoint* Raster::circ(int radius, point center) {
+geoPoint* Raster::circ(int radius, nPoint center) {
     CircSelect s(*this, radius, center);
     return s.getSelection();
 }

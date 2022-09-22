@@ -46,10 +46,10 @@ public:
     double* getGeoTransform();
 
     // Get polygon selection from points
-    geoPoint* poly(std::vector<point> p);
+    geoPoint* poly(std::vector<nPoint> p);
 
     // Get circle selection
-    geoPoint* circ(int radius, point center);
+    geoPoint* circ(int radius, nPoint center);
 
     // For testing singleton property
     const char* getInstanceName();
