@@ -19,10 +19,13 @@ private:
 
     struct geoTransformData {
         int index;
+        std::string fname;
         double lon_o;
         double lon_res;
         double lat_o;
         double lat_res;
+        int r_xSize;
+        int r_ySize;
     };
 
 protected:

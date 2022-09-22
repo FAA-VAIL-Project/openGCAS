@@ -29,26 +29,23 @@ void RasterQuery::readDataDir() {
         std::string extension = s_filename.substr(s_filename.find_last_of(".") + 1);
 
         // Make sure file extension is correct for gtif data
-        if(extension == "tif" && extension == "tiff") {
-            GDALDataset *e_dataset = (GDALDataset *) GDALOpen(filename, GA_ReadOnly);
+        if(extension == "tif" || extension == "tiff") {
+            GDALDataset* e_dataset = (GDALDataset *) GDALOpen(filename, GA_ReadOnly);
             double GDALTransfom[6];
             e_dataset->GetGeoTransform(GDALTransfom);
             // Push the relevant GeoTransform data to the protected attribute dataDirTransform
             dataDirTransform.push_back(geoTransformData{
-                    rasterIndex,
-                    GDALTransfom[0],
-                    GDALTransfom[1],
-                    GDALTransfom[3],
-                    GDALTransfom[5]
+                rasterIndex,
+                filename,
+                GDALTransfom[0],
+                GDALTransfom[1],
+                GDALTransfom[3],
+                GDALTransfom[5],
+                e_dataset->GetRasterXSize(),
+                e_dataset->GetRasterYSize(),
             });
 
             rasterIndex++;
         }
-            std::cout << extension << "\n\n";
     }
-    for(const auto e : dataDirTransform) {
-        std::cout << e.index << " " << e.lat_o << " " <<
-        e.lat_res << " " << e.lon_o << " " << e.lon_res << "\n";
-    }
-
 }
