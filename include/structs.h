@@ -15,6 +15,7 @@ struct llPoint {
 struct nPoint {
     int x;
     int y;
+    int r;
 };
 
 /// \brief znPoint

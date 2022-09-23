@@ -6,16 +6,13 @@
 #define OPENGCAS_RASTERQUERY_H
 
 #include "gdal_priv.h"
+#include "../../include/structs.h"
 #include <vector>
 #include <string>
 
 class RasterQuery {
 private:
-    std::vector<GDALRasterBand> RasterList;
-
-    RasterQuery() = default;
-
-
+    std::vector<GDALRasterBand> RasterCallOrder;
 
     struct geoTransformData {
         int index;
@@ -28,6 +25,12 @@ private:
         int r_ySize;
     };
 
+    ///\brief RasterQuery Private Singleton Constructor
+    RasterQuery();
+
+    ///\brief define RasterList attribute with rasters from data/ directory
+    auto readDataDir() -> std::vector<geoTransformData>;
+
 protected:
     std::vector<geoTransformData> dataDirTransform;
 
@@ -35,8 +38,8 @@ public:
     ///\brief Singleton Instance Get
     static RasterQuery& get();
 
-    ///\brief define RasterList attribute with rasters from data/ directory
-    void readDataDir();
+    ///\brief Convert llPoint into discrete nPoint on a raster
+    auto discreteIndex(llPoint workingPoint) -> nPoint;
 
 };
 

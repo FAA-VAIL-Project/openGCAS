@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[]) {
     RasterQuery& rq = RasterQuery::get();
-    rq.readDataDir();
 
+    rq.discreteIndex(llPoint{2.0, 12.83});
     return 0;
 }
