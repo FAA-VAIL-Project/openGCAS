@@ -10,6 +10,7 @@ markdown_extensions:
 
 nav:
   - Home: 'index.md'
+  - Introduction: 'intro_to_gcas.md''  
   - Release Documents:
       - Release Notes: 'release_notes.md'
 #     - Release History: 'release_history.md'
