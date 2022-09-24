@@ -6,6 +6,6 @@
 int main(int argc, char *argv[]) {
     RasterQuery& rq = RasterQuery::get();
 
-    rq.discreteIndex(llPoint{2.0, 12.83});
+    rq.discreteIndex(llPoint{35, -90});
     return 0;
 }

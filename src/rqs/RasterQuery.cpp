@@ -73,15 +73,16 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 }
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
-    int guess_lat = -1, guess_lon = -1;
+    int guessLat = -1, guessLon = -1;
+    int size = dataDirTransform.size();
     int min = 0;
-    int max = dataDirTransform.size() - 1;
+    int max = size - 1;
 
     // Basic binary search to get the latitude of the guess
     while(min <= max) {
         int mid = (min + max) / 2;
         if(dataDirTransform[mid].lat_o == workingPoint.lat) {
-            guess_lat = mid;
+            guessLat = mid;
         } else if(dataDirTransform[mid].lat_o < workingPoint.lat) {
             min = mid + 1;
         } else {
@@ -89,25 +90,42 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         }
     }
     // Only define the index if it is not found to be equal to mid
-    if(guess_lat == -1) {
-        guess_lat = max + 1;
-    }
+    int firstLat = -1, lastLat = -1;
+    if(guessLat == -1)
+        guessLat = max;
 
-    min = 0;
-    max = dataDirTransform.size() - 1;
-    while(min <= max) {
-        int mid = (min + max) / 2;
-        if(dataDirTransform[mid].lon_o == workingPoint.lon) {
-            guess_lon = mid;
-        } else if(dataDirTransform[mid].lon_o < workingPoint.lon) {
-            min = mid + 1;
-        } else {
-            max = mid - 1;
+    firstLat = max;
+    lastLat = max;
+
+    // Iterate from the point to get the minimum and maximum indecies with the same latitude from the sorted
+    // dataDirTransform vector
+    int i = 1, j = 1;
+    while(dataDirTransform[guessLat].lat_o == dataDirTransform[guessLat + i].lat_o) {
+        if(lastLat + 1 >= 0 && lastLat + 1 < size) {
+            lastLat++;
+            i++;
         }
     }
-    if(guess_lon == -1) {
-        guess_lon = max + 1;
+    while(dataDirTransform[guessLat].lat_o == dataDirTransform[guessLat - j].lat_o) {
+        if(lastLat - 1 >= 0 && lastLat - 1 < size) {
+            firstLat--;
+            j++;
+        }
     }
-    std::cout << guess_lat << " " << guess_lon << "\n";
+    int lonMin = firstLat;
+    int lonMax = lastLat;
+
+    while(lonMin <= lonMax) {
+        int lonMid = (lonMin + lonMax) / 2;
+        if(dataDirTransform[lonMid].lon_o == workingPoint.lon) {
+            guessLon = lonMid;
+        } else if(dataDirTransform[lonMid].lon_o < workingPoint.lon) {
+            lonMin = lonMid + 1;
+        } else {
+            lonMax = lonMid - 1;
+        }
+    }
+
+    std::cout << lonMax;
 
 }
