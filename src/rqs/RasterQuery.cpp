@@ -91,12 +91,11 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         }
     }
     // Define index to be the point after the maximum possible.
-    int firstLat = -1, lastLat = -1;
     if(guessLat == -1)
         guessLat = max + 1;
 
-    firstLat = max + 1;
-    lastLat = max + 1;
+    int firstLat = max + 1;
+    int lastLat = max + 1;
 
     // Iterate from the point to get the minimum and maximum indecies with the same latitude from the sorted
     // dataDirTransform vector
@@ -127,14 +126,23 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
             lonMax = lonMid - 1;
         }
     }
-    std::cout << firstLat << " " << lastLat;
-    /*
-    if(lonMax >= 0) {
+
+    // CHeck to see if point exists within guess
+    // Else finalIndex = -1
+    int finalIndex;
+    if(lonMax >= 0 && lonMax < size) {
         geoTransformData rel = dataDirTransform[lonMax];
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res);
-
-        std::cout << firstLat << " " << lastLat;
+        if(workingPoint.lat > latRasterMax && workingPoint.lat <= rel.lat_o &&
+            workingPoint.lon < lonRasterMax && workingPoint.lon >= rel.lon_o) {
+            // Actually find the closest point
+            int latIndex = (workingPoint.lat - rel.lat_o) / rel.lat_res;
+            int lonIndex = (workingPoint.lon - rel.lon_o) / rel.lon_res;
+            return nPoint{lonIndex, latIndex, lonMax};
+        } else {
+            return nPoint{0, 0, -1};
+        }
     }
-*/
+    return nPoint{0, 0, -1};
 }
