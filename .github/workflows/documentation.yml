@@ -34,7 +34,7 @@ jobs:
             echo "Current version of pip3: $(pip --version || true)"
             echo "Current version of Ubuntu: $(lsb_release -a)"
             echo "================================================================================"
-            make mkdocs
+            make -f MakefileDocs mkdocs
       - name: Commit the static documentation  # transfer the new html files back into the repository
         run: |
           git config --local user.name  ${{ github.actor }}
