@@ -16,6 +16,10 @@ struct nPoint {
     int x;
     int y;
     int r;
+
+    bool isNullPoint() {
+        return (x == 0 && y == 0 && r == -1);
+    };
 };
 
 /// \brief znPoint

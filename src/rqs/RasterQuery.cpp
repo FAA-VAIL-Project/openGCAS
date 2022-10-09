@@ -8,6 +8,9 @@
 #include "gdal_priv.h"
 #include <algorithm>
 #include <iostream>
+#include <cmath>
+
+#define EPSILON_FLT 0.0001
 
 RasterQuery& RasterQuery::get() {
     static RasterQuery rq_instance;
@@ -67,7 +70,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
     std::sort(GTVec.begin(), GTVec.end(), sortRasterByGT);
 
     for(const auto& j : GTVec) {
-        std::cout << "Lat: " << j.lat_o << " Lon: " << j.lon_o << "\n";
+        std::cout << j.fname << "  Lat: " << j.lat_o << " Lon: " << j.lon_o << "\n";
     }
     return GTVec;
 }
@@ -81,21 +84,26 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // Basic binary search to get the latitude of the guess
     while(min <= max) {
         int mid = (min + max) / 2;
-        if(dataDirTransform[mid].lat_o == workingPoint.lat) {
+        // Test if values are equal by comaring to a float
+        if(abs(dataDirTransform[mid].lat_o - workingPoint.lat) < EPSILON_FLT) {
             // If point is found to be equal
             guessLat = mid;
+            break;
         } else if(dataDirTransform[mid].lat_o < workingPoint.lat) {
             min = mid + 1;
         } else {
             max = mid - 1;
         }
     }
+
     // Define index to be the point after the maximum possible.
     if(guessLat == -1)
         guessLat = max + 1;
 
-    int firstLat = max + 1;
-    int lastLat = max + 1;
+    std::cout << guessLat << "\n";
+
+    int firstLat = guessLat;
+    int lastLat = guessLat;
 
     // Iterate from the point to get the minimum and maximum indecies with the same latitude from the sorted
     // dataDirTransform vector
@@ -112,20 +120,24 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
             j++;
         }
     }
+    std::cout << "Min " << firstLat << " " << lastLat << "\n";
     int lonMin = firstLat;
     int lonMax = lastLat;
 
     // Now binary search on the range from firstLat to lastLat
     while(lonMin <= lonMax) {
         int lonMid = (lonMin + lonMax) / 2;
-        if(dataDirTransform[lonMid].lon_o == workingPoint.lon) {
+        if(abs(dataDirTransform[lonMid].lon_o - workingPoint.lon) < EPSILON_FLT) {
             guessLon = lonMid;
+            break;
         } else if(dataDirTransform[lonMid].lon_o < workingPoint.lon) {
             lonMin = lonMid + 1;
         } else {
             lonMax = lonMid - 1;
         }
     }
+
+    std::cout << lonMax << "\n";
 
     // CHeck to see if point exists within guess
     // Else finalIndex = -1
@@ -134,8 +146,12 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         geoTransformData rel = dataDirTransform[lonMax];
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res);
-        if(workingPoint.lat > latRasterMax && workingPoint.lat <= rel.lat_o &&
-            workingPoint.lon < lonRasterMax && workingPoint.lon >= rel.lon_o) {
+        if(
+                abs(workingPoint.lat - latRasterMax) > EPSILON_FLT &&
+                abs(workingPoint.lat - rel.lat_o) <= EPSILON_FLT &&
+                workingPoint.lon < lonRasterMax &&
+                workingPoint.lon >= rel.lon_o
+                ) {
             // Actually find the closest point
             int latIndex = (workingPoint.lat - rel.lat_o) / rel.lat_res;
             int lonIndex = (workingPoint.lon - rel.lon_o) / rel.lon_res;
