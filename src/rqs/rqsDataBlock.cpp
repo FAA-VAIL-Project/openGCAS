@@ -15,6 +15,6 @@ void rqsDataBlock::init() {
     for(size_t i = 0; i < blockSize; ++i) {
         _spBlock[i] = std::make_unique<int[]>(blockSize);
     }
-    std::cout << "Allocated " << (sizeof(int) * blockSize*blockSize)/8 <<
+    std::cout << "Allocated " << (sizeof(int) * blockSize*blockSize) / 8 <<
                  " bytes of memory in block with id " << m_id;
 }

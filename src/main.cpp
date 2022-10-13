@@ -10,6 +10,5 @@ int main(int argc, char *argv[]) {
     std::cout << test.x << " " << test.y << " " << test.r << "\n";
 */
     rqsDataBlock test = rqsDataBlock(1);
-    test.init();
     return 0;
 }

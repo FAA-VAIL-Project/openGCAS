@@ -1,5 +1,5 @@
 //
-// Created by Jackie D.V. Carson on 9/17/2022.
+// Created by Jack D.V. Carson on 9/17/2022.
 // Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
@@ -22,9 +22,7 @@
  */
 class RasterQuery {
 private:
-    /**
-     * @brief Vector of open RasterBands based on geospatial position
-     */
+    //Vector of open RasterBands based on geospatial position
     std::vector<GDALRasterBand> RasterCallOrder;
 
     /**
@@ -51,9 +49,10 @@ private:
      * @brief define m_dataDirTransform vector attribute with
      * geoTransForm data from data/ directory
      */
-    auto readDataDir() -> std::vector<geoTransformData>;
+    static auto readDataDir() -> std::vector<geoTransformData>;
 
 protected:
+    // Vector of data/ geoTransformData
     std::vector<geoTransformData> m_dataDirTransform;
 
 public:
@@ -73,18 +72,31 @@ public:
 
 class rqsDataBlock {
 private:
+    /*
+     * Block data is stored in a 2d smart pointer _spBlock which consists of typedef
+     * Smart pointers _spRow. The memory  is allocated in the private init() method
+     * which is called in the constructor
+     */
     typedef std::unique_ptr<int[]> _spRow;
 
+    /**
+     * @brief Smart pointer block data container
+     */
     std::unique_ptr<_spRow[]> _spBlock;
+
+    /**
+     * @brief Initialize memory block of size 1024x1024 to _spBlock
+     */
+    void init();
 
 public:
     const int m_id;
 
-    ///\brief Default constructor with initializer list
-    rqsDataBlock(int id);
-
-    ///\brief Initialize memory block of size 1024x1024
-    void init();
+    /**
+     * Basic constructor calling init memory functions of rqsDataBlock
+     * @param int id for memory alloc
+     */
+    explicit rqsDataBlock(int id);
 };
 
 

@@ -36,11 +36,11 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
         std::string s_filename = datafile.path().string();
 
         // Neat string parsing thing to get file extension
-        std::string extension = s_filename.substr(s_filename.find_last_of(".") + 1);
+        std::string extension = s_filename.substr(s_filename.find_last_of('.') + 1);
 
         // Make sure file extension is correct for gtif data
         if(extension == "tif" || extension == "tiff") {
-            GDALDataset* e_dataset = (GDALDataset *) GDALOpen(filename, GA_ReadOnly);
+            auto e_dataset = (GDALDataset *) GDALOpen(filename, GA_ReadOnly);
             double GDALTransfom[6];
             e_dataset->GetGeoTransform(GDALTransfom);
             // Push the relevant GeoTransform data to the protected attribute dataDirTransform
@@ -77,9 +77,9 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     int guessLat = -1;
-    int size = m_dataDirTransform.size();
+    unsigned int size = m_dataDirTransform.size();
     int min = 0;
-    int max = size - 1;
+    unsigned int max = size - 1;
 
     // Basic binary search to get the latitude of the guess
     while(min <= max) {
@@ -138,7 +138,6 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
 
     // CHeck to see if point exists within guess
     // Else finalIndex = -1
-    int finalIndex;
     if(lonMax >= 0 && lonMax < size) {
         geoTransformData rel = m_dataDirTransform[lonMax];
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
