@@ -17,5 +17,5 @@ link_libraries(stdc++fs)
 add_subdirectory(dependencies)
 add_subdirectory(tests)
 
-add_executable(openGCAS src/main.cpp src/rqs/RasterQuery.cpp)
+add_executable(openGCAS src/main.cpp src/rqs/RasterQuery.cpp src/rqs/rqsDataBlock.cpp)
 target_link_libraries(openGCAS PRIVATE GDAL::GDAL)

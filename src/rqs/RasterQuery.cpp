@@ -120,7 +120,6 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
             j++;
         }
     }
-    std::cout << "Min " << firstLat << " " << lastLat << "\n";
     int lonMin = firstLat;
     int lonMax = lastLat;
 
@@ -136,8 +135,6 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
             lonMax = lonMid - 1;
         }
     }
-
-    std::cout << lonMax << "\n";
 
     // CHeck to see if point exists within guess
     // Else finalIndex = -1
