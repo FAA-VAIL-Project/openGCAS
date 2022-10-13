@@ -10,7 +10,7 @@
 #include <iostream>
 #include <cmath>
 
-#define EPSILON_FLT 0.0001
+#define EPSILON_FLT 0.001
 
 RasterQuery& RasterQuery::get() {
     static RasterQuery rq_instance;
@@ -76,7 +76,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 }
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
-    int guessLat = -1, guessLon = -1;
+    int guessLat = -1;
     int size = dataDirTransform.size();
     int min = 0;
     int max = size - 1;
@@ -128,7 +128,7 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     while(lonMin <= lonMax) {
         int lonMid = (lonMin + lonMax) / 2;
         if(abs(dataDirTransform[lonMid].lon_o - workingPoint.lon) < EPSILON_FLT) {
-            guessLon = lonMid;
+            lonMax = lonMid;
             break;
         } else if(dataDirTransform[lonMid].lon_o < workingPoint.lon) {
             lonMin = lonMid + 1;
@@ -147,10 +147,10 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res);
         if(
-                abs(workingPoint.lat - latRasterMax) > EPSILON_FLT &&
-                abs(workingPoint.lat - rel.lat_o) <= EPSILON_FLT &&
-                workingPoint.lon < lonRasterMax &&
-                workingPoint.lon >= rel.lon_o
+                abs(workingPoint.lat - latRasterMax) >= EPSILON_FLT &&
+                workingPoint.lat - rel.lat_o <= EPSILON_FLT &&
+                workingPoint.lon <= lonRasterMax &&
+                abs(workingPoint.lon - rel.lon_o) >= 0
                 ) {
             // Actually find the closest point
             int latIndex = (workingPoint.lat - rel.lat_o) / rel.lat_res;
