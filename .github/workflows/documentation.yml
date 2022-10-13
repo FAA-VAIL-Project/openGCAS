@@ -1,0 +1,47 @@
+name: Documentation
+
+on:
+  pull_request:
+    branches: [ 'main' ]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  standards:
+    # --------------------------------------------------------------------------
+    # Perform documentation creation. Changes in the documentation are also
+    # replicated in the repository.
+    # --------------------------------------------------------------------------
+    name: OS ${{ matrix.os }} - Python ${{ matrix.python-version }} - Development Standards
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: ["ubuntu-22.04"]
+        python-version: ["3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create the static documentation
+        run: |
+            echo "::echo::on"
+            echo "================================================================================"
+            echo "Current version of Python3: $(python --version)"
+            echo "Current version of pip3: $(pip --version || true)"
+            echo "Current version of Ubuntu: $(lsb_release -a)"
+            echo "================================================================================"
+            make -f MakefileDocs mkdocs
+      - name: Commit the static documentation  # transfer the new html files back into the repository
+        run: |
+          git config --local user.name  ${{ github.actor }}
+          git add .
+          git commit -a -m "Updating the repository GitHub html pages in the docs folder"
+      - name: Push changes  # push the output folder to your repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
