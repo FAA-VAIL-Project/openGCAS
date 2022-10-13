@@ -18,7 +18,7 @@ RasterQuery& RasterQuery::get() {
 }
 
 RasterQuery::RasterQuery() {
-    dataDirTransform = readDataDir();
+    m_dataDirTransform = readDataDir();
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
@@ -77,7 +77,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     int guessLat = -1;
-    int size = dataDirTransform.size();
+    int size = m_dataDirTransform.size();
     int min = 0;
     int max = size - 1;
 
@@ -85,11 +85,11 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     while(min <= max) {
         int mid = (min + max) / 2;
         // Test if values are equal by comaring to a float
-        if(abs(dataDirTransform[mid].lat_o - workingPoint.lat) < EPSILON_FLT) {
+        if(abs(m_dataDirTransform[mid].lat_o - workingPoint.lat) < EPSILON_FLT) {
             // If point is found to be equal
             guessLat = mid;
             break;
-        } else if(dataDirTransform[mid].lat_o < workingPoint.lat) {
+        } else if(m_dataDirTransform[mid].lat_o < workingPoint.lat) {
             min = mid + 1;
         } else {
             max = mid - 1;
@@ -108,13 +108,13 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // Iterate from the point to get the minimum and maximum indecies with the same latitude from the sorted
     // dataDirTransform vector
     int i = 1, j = 1;
-    while(dataDirTransform[guessLat].lat_o == dataDirTransform[guessLat + i].lat_o) {
+    while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat + i].lat_o) {
         if(lastLat + 1 >= 0 && lastLat + 1 < size) {
             lastLat++;
             i++;
         }
     }
-    while(dataDirTransform[guessLat].lat_o == dataDirTransform[guessLat - j].lat_o) {
+    while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat - j].lat_o) {
         if(lastLat - 1 >= 0 && lastLat - 1 < size) {
             firstLat--;
             j++;
@@ -126,10 +126,10 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // Now binary search on the range from firstLat to lastLat
     while(lonMin <= lonMax) {
         int lonMid = (lonMin + lonMax) / 2;
-        if(abs(dataDirTransform[lonMid].lon_o - workingPoint.lon) < EPSILON_FLT) {
+        if(abs(m_dataDirTransform[lonMid].lon_o - workingPoint.lon) < EPSILON_FLT) {
             lonMax = lonMid;
             break;
-        } else if(dataDirTransform[lonMid].lon_o < workingPoint.lon) {
+        } else if(m_dataDirTransform[lonMid].lon_o < workingPoint.lon) {
             lonMin = lonMid + 1;
         } else {
             lonMax = lonMid - 1;
@@ -140,7 +140,7 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // Else finalIndex = -1
     int finalIndex;
     if(lonMax >= 0 && lonMax < size) {
-        geoTransformData rel = dataDirTransform[lonMax];
+        geoTransformData rel = m_dataDirTransform[lonMax];
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res);
         if(

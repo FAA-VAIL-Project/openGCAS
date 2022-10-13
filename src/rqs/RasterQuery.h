@@ -22,9 +22,15 @@
  */
 class RasterQuery {
 private:
-
+    /**
+     * @brief Vector of open RasterBands based on geospatial position
+     */
     std::vector<GDALRasterBand> RasterCallOrder;
 
+    /**
+     * @brief Struct containing information about each raster
+     * @see [0] index, [1] fname, [2] lon_o, [3] lon_res, [4] lat_o, [5] lat_res, [6] r_xSize, [7], r_ySize
+     */
     struct geoTransformData {
         int index;
         std::string fname;
@@ -36,20 +42,31 @@ private:
         int r_ySize;
     };
 
-    ///\brief RasterQuery Private Singleton Constructor
+    /**
+     * @brief RasterQuery Private Singleton Constructor
+     */
     RasterQuery();
 
-    ///\brief define RasterList attribute with rasters from data/ directory
+    /**
+     * @brief define m_dataDirTransform vector attribute with
+     * geoTransForm data from data/ directory
+     */
     auto readDataDir() -> std::vector<geoTransformData>;
 
 protected:
-    std::vector<geoTransformData> dataDirTransform;
+    std::vector<geoTransformData> m_dataDirTransform;
 
 public:
-    ///\brief Singleton Instance Get
+    /**
+     * @brief Singleton Instance method
+     */
     static RasterQuery& get();
 
-    ///\brief Convert llPoint into discrete nPoint on a raster
+    /**\brief Convert llPoint into discrete nPoint on a raster
+     *
+     * @param llPoint to convert
+     * @return nPoint of closest raster index
+     */
     auto discreteIndex(llPoint workingPoint) -> nPoint;
 
 };
