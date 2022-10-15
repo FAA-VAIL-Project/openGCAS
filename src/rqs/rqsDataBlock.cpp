@@ -5,11 +5,9 @@
 #include "RasterQuery.h"
 
 ///\brief Default constructor with initializer list
-rqsDataBlock::rqsDataBlock(int id, RasterQuery& rq) : m_id(id) {
+rqsDataBlock::rqsDataBlock(int id, int posX, int posY, RasterQuery& rq) : m_id(id) {
     init();
     auto t = &rq.m_rasterCallOrder;
-    for(int i : *t)
-        std::cout << i << "\n";
 }
 
 ///\brief Initialize memory block of size 1024x1024

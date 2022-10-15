@@ -13,14 +13,24 @@ RasterQuery& RasterQuery::get() {
     return rq_instance;
 }
 
-RasterQuery::RasterQuery() {
-    m_dataDirTransform = readDataDir();
+RasterQuery::~RasterQuery() {
+    for(int i = 0; i < db.size(); ++i) {
+        delete db[i];
+    }
 }
 
 void RasterQuery::init(llPoint llLocation) {
     m_dataDirTransform = readDataDir();
     defineCallOrder(llLocation);
-    rqsDataBlock* db[9];
+    db[0] = new rqsDataBlock(0, -1, -1, *this);
+    db[1] = new rqsDataBlock(1, 0, -1, *this);
+    db[2] = new rqsDataBlock(2, 1, -1, *this);
+    db[3] = new rqsDataBlock(3, -1, 0, *this);
+    db[4] = new rqsDataBlock(4, 0, 0, *this);
+    db[5] = new rqsDataBlock(5, 1, 0, *this);
+    db[6] = new rqsDataBlock(6, -1, 1, *this);
+    db[7] = new rqsDataBlock(7, 0, 1, *this);
+    db[8] = new rqsDataBlock(8, 1, 1, *this);
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {

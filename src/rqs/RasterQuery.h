@@ -9,6 +9,7 @@
 #include "gdal_priv.h"
 #include "../../include/structs.h"
 #include <vector>
+#include <array>
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -45,13 +46,21 @@ private:
     /**
      * @brief RasterQuery Private Singleton Constructor
      */
-    RasterQuery();
+    RasterQuery() = default;
+
+    /**
+     * @brief Destructor for RasterQuery. Frees db[9]
+     */
+    ~RasterQuery();
 
     /**
      * @brief define m_dataDirTransform vector attribute with
      * geoTransForm data from data/ directory
      */
     static auto readDataDir() -> std::vector<geoTransformData>;
+
+    // Array of rqsDataBlock from which information can be read
+    std::array<rqsDataBlock*, 9> db;
 
     friend class rqsDataBlock;
 
@@ -111,7 +120,7 @@ public:
      * Basic constructor calling init memory functions of rqsDataBlock
      * @param int id for memory alloc
      */
-    explicit rqsDataBlock(int id, RasterQuery& rq);
+    explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq);
 };
 
 
