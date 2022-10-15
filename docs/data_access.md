@@ -10,10 +10,10 @@ access and designating areas of memory where data can be safely queried at any p
     - Processing `data/` root directory
     - Converting lat-long `llPoint` to `nPoint` on raster
     - Handles errant lat-long values safely
-    - Allocating memory to load nine rasters on the heap `RasterCallOrder`
+    - Allocating memory to load nine rasters on the heap `m_rasterCallOrder`
 - Level 1 "Map Manager"
   - Querying data from RQS
   - Filling RQS memory with altitude data
-  - Preparing to update `RasterCallOrder`
+  - Preparing to update `m_rasterCallOrder`
   - Create small stack array with interpolated altitudes for quick access
 - 

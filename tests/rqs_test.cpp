@@ -5,6 +5,8 @@
 #include <catch2/catch.hpp>
 #include "../src/rqs/RasterQuery.h"
 
+//TODO Make sure no sign problems (get east and west hemisphere)
+//TODO Test boundary conditions across rasters
 TEST_CASE("Raster Query System") {
     RasterQuery& rqs = RasterQuery::get();
     SECTION("Discrete Index") {

@@ -5,7 +5,9 @@
 #include "RasterQuery.h"
 
 ///\brief Default constructor with initializer list
-rqsDataBlock::rqsDataBlock(int id) : m_id(id) {}
+rqsDataBlock::rqsDataBlock(int id) : m_id(id) {
+    init();
+}
 
 ///\brief Initialize memory block of size 1024x1024
 void rqsDataBlock::init() {

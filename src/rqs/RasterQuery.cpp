@@ -1,14 +1,9 @@
 //
-// Created by quothbonney on 9/17/22.
+// Created by Jack D.V. Carson on 9/17/2022.
+// Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
 #include "RasterQuery.h"
-#include <string>
-#include <experimental/filesystem>
-#include "gdal_priv.h"
-#include <algorithm>
-#include <iostream>
-#include <cmath>
 
 #define EPSILON_FLT 0.001
 
@@ -19,6 +14,7 @@ RasterQuery& RasterQuery::get() {
 
 RasterQuery::RasterQuery() {
     m_dataDirTransform = readDataDir();
+    auto t = defineCallOrder(llPoint{141.3, -90.2});
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
@@ -77,9 +73,9 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     int guessLat = -1;
-    unsigned int size = m_dataDirTransform.size();
+    int size = m_dataDirTransform.size();
     int min = 0;
-    unsigned int max = size - 1;
+    int max = size - 1;
 
     // Basic binary search to get the latitude of the guess
     while(min <= max) {
@@ -100,8 +96,6 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     if(guessLat == -1)
         guessLat = max + 1;
 
-    std::cout << guessLat << "\n";
-
     int firstLat = guessLat;
     int lastLat = guessLat;
 
@@ -109,16 +103,12 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // dataDirTransform vector
     int i = 1, j = 1;
     while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat + i].lat_o) {
-        if(lastLat + 1 >= 0 && lastLat + 1 < size) {
-            lastLat++;
-            i++;
-        }
+        lastLat++;
+        i++;
     }
     while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat - j].lat_o) {
-        if(lastLat - 1 >= 0 && lastLat - 1 < size) {
-            firstLat--;
-            j++;
-        }
+        firstLat--;
+        j++;
     }
     int lonMin = firstLat;
     int lonMax = lastLat;
@@ -143,7 +133,7 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res);
         if(
-                abs(workingPoint.lat - latRasterMax) >= EPSILON_FLT &&
+                workingPoint.lat - latRasterMax >= EPSILON_FLT &&
                 workingPoint.lat - rel.lat_o <= EPSILON_FLT &&
                 workingPoint.lon <= lonRasterMax &&
                 abs(workingPoint.lon - rel.lon_o) >= 0
@@ -157,4 +147,19 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         }
     }
     return nPoint{0, 0, -1};
+}
+
+auto RasterQuery::defineCallOrder(llPoint llLocation) -> std::vector<int> {
+    std::vector<int> workingVec;
+    for(int i = -1; i < 2; i++) {
+        for(int j = -1; j < 2; ++j) {
+            llPoint p{llLocation.lat - i, llLocation.lon + j};
+            nPoint n = discreteIndex(p);
+            workingVec.push_back(n.r);
+        }
+    }
+    for(const auto& j : workingVec)
+        std::cout << j << "\n";
+
+    return workingVec;
 }

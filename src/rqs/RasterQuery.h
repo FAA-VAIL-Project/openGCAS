@@ -10,8 +10,11 @@
 #include "../../include/structs.h"
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <memory>
+#include <cmath>
+#include <experimental/filesystem>
 
 /**
  * @brief Raster Query System for data access and raster interface
@@ -22,9 +25,6 @@
  */
 class RasterQuery {
 private:
-    //Vector of open RasterBands based on geospatial position
-    std::vector<GDALRasterBand> RasterCallOrder;
-
     /**
      * @brief Struct containing information about each raster
      * @see [0] index, [1] fname, [2] lon_o, [3] lon_res, [4] lat_o, [5] lat_res, [6] r_xSize, [7], r_ySize
@@ -55,6 +55,9 @@ protected:
     // Vector of data/ geoTransformData
     std::vector<geoTransformData> m_dataDirTransform;
 
+    //Vector of open RasterBands based on geospatial position
+    std::vector<int> m_rasterCallOrder;
+
 public:
     /**
      * @brief Singleton Instance method
@@ -68,6 +71,7 @@ public:
      */
     auto discreteIndex(llPoint workingPoint) -> nPoint;
 
+    auto defineCallOrder(llPoint llLocation) -> std::vector<int>;
 };
 
 class rqsDataBlock {
