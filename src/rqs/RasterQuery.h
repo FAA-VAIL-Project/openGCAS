@@ -68,6 +68,8 @@ public:
      */
     static RasterQuery& get();
 
+    void init(llPoint llLocation);
+
     /**@brief Convert llPoint into discrete nPoint on a raster
      *
      * @param llPoint to convert
@@ -78,10 +80,9 @@ public:
     /**
      * @brief Define a list of Raster files from which data might be realistically found in a
      * 3x3 grid.
-     * @param llLocation
-     * @return vector of 9 raster indicies arranged from left to right from top to bottom
+     * @param llLocation is llPoint of current location
      */
-    auto defineCallOrder(llPoint llLocation) -> std::vector<int>;
+    void defineCallOrder(llPoint llLocation);
 };
 
 class rqsDataBlock {

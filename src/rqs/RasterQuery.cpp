@@ -15,8 +15,12 @@ RasterQuery& RasterQuery::get() {
 
 RasterQuery::RasterQuery() {
     m_dataDirTransform = readDataDir();
-    m_rasterCallOrder = defineCallOrder(llPoint{42.2, -92.1});
-    rqsDataBlock r0 = rqsDataBlock(1, *this);
+}
+
+void RasterQuery::init(llPoint llLocation) {
+    m_dataDirTransform = readDataDir();
+    defineCallOrder(llLocation);
+    rqsDataBlock* db[9];
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
@@ -151,14 +155,12 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     return nPoint{0, 0, -1};
 }
 
-auto RasterQuery::defineCallOrder(llPoint llLocation) -> std::vector<int> {
-    std::vector<int> workingVec;
+void RasterQuery::defineCallOrder(llPoint llLocation) {
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
             llPoint p{llLocation.lat - (i * RASTER_SIZE), llLocation.lon + (j * RASTER_SIZE)};
             nPoint n = discreteIndex(p);
-            workingVec.push_back(n.r);
+            m_rasterCallOrder.push_back(n.r);
         }
     }
-    return workingVec;
 }
