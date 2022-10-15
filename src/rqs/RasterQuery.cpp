@@ -6,6 +6,7 @@
 #include "RasterQuery.h"
 
 #define EPSILON_FLT 0.001
+#define RASTER_SIZE 1.0
 
 RasterQuery& RasterQuery::get() {
     static RasterQuery rq_instance;
@@ -14,7 +15,8 @@ RasterQuery& RasterQuery::get() {
 
 RasterQuery::RasterQuery() {
     m_dataDirTransform = readDataDir();
-    auto t = defineCallOrder(llPoint{141.3, -90.2});
+    m_rasterCallOrder = defineCallOrder(llPoint{42.2, -92.1});
+    rqsDataBlock r0 = rqsDataBlock(1, *this);
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
@@ -153,13 +155,10 @@ auto RasterQuery::defineCallOrder(llPoint llLocation) -> std::vector<int> {
     std::vector<int> workingVec;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
-            llPoint p{llLocation.lat - i, llLocation.lon + j};
+            llPoint p{llLocation.lat - (i * RASTER_SIZE), llLocation.lon + (j * RASTER_SIZE)};
             nPoint n = discreteIndex(p);
             workingVec.push_back(n.r);
         }
     }
-    for(const auto& j : workingVec)
-        std::cout << j << "\n";
-
     return workingVec;
 }

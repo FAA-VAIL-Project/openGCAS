@@ -16,6 +16,8 @@
 #include <cmath>
 #include <experimental/filesystem>
 
+class rqsDataBlock;
+
 /**
  * @brief Raster Query System for data access and raster interface
  * @see RasterQuery& rq = RasterQuery::get()
@@ -51,6 +53,8 @@ private:
      */
     static auto readDataDir() -> std::vector<geoTransformData>;
 
+    friend class rqsDataBlock;
+
 protected:
     // Vector of data/ geoTransformData
     std::vector<geoTransformData> m_dataDirTransform;
@@ -64,13 +68,19 @@ public:
      */
     static RasterQuery& get();
 
-    /**\brief Convert llPoint into discrete nPoint on a raster
+    /**@brief Convert llPoint into discrete nPoint on a raster
      *
      * @param llPoint to convert
      * @return nPoint of closest raster index
      */
     auto discreteIndex(llPoint workingPoint) -> nPoint;
 
+    /**
+     * @brief Define a list of Raster files from which data might be realistically found in a
+     * 3x3 grid.
+     * @param llLocation
+     * @return vector of 9 raster indicies arranged from left to right from top to bottom
+     */
     auto defineCallOrder(llPoint llLocation) -> std::vector<int>;
 };
 
@@ -100,7 +110,7 @@ public:
      * Basic constructor calling init memory functions of rqsDataBlock
      * @param int id for memory alloc
      */
-    explicit rqsDataBlock(int id);
+    explicit rqsDataBlock(int id, RasterQuery& rq);
 };
 
 
