@@ -19,6 +19,13 @@ RasterQuery::~RasterQuery() {
     }
 }
 
+inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint {
+    auto select = m_dataDirTransform[raster];
+    double lat = location.lat + (posX * select.r_xSize * select.lat_o);
+    double lon = location.lon + (posY * select.r_ySize * select.lon_o);
+    return discreteIndex(llPoint{lat, lon});
+}
+
 void RasterQuery::init(llPoint llLocation) {
     m_dataDirTransform = readDataDir();
     defineCallOrder(llLocation);

@@ -59,6 +59,8 @@ private:
      */
     static auto readDataDir() -> std::vector<geoTransformData>;
 
+    inline auto getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint;
+
     // Array of rqsDataBlock from which information can be read
     std::array<rqsDataBlock*, 9> db;
 
@@ -113,14 +115,17 @@ private:
      */
     void init();
 
+    auto getOrigin() -> nPoint;
+
 public:
+    nPoint m_origin;
     const int m_id;
 
     /**
      * Basic constructor calling init memory functions of rqsDataBlock
      * @param int id for memory alloc
      */
-    explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq);
+    explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, nPoint origin);
 };
 
 

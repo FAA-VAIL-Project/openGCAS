@@ -5,9 +5,15 @@
 #include "RasterQuery.h"
 
 ///\brief Default constructor with initializer list
-rqsDataBlock::rqsDataBlock(int id, int posX, int posY, RasterQuery& rq) : m_id(id) {
+rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
+                           RasterQuery& rq, nPoint origin) : m_id(id), m_origin(origin) {
     init();
-    auto t = &rq.m_rasterCallOrder;
+    auto rqsDataInfo = &rq.m_dataDirTransform;
+    auto rqsCallOrder = &rq.m_rasterCallOrder;
+}
+
+auto rqsDataBlock::getOrigin() -> nPoint {
+
 }
 
 ///\brief Initialize memory block of size 1024x1024
