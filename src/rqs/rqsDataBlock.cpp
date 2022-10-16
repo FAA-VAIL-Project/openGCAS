@@ -8,8 +8,10 @@
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
                            RasterQuery& rq, nPoint origin) : m_id(id), m_origin(origin) {
     init();
+
     auto rqsDataInfo = &rq.m_dataDirTransform;
     auto rqsCallOrder = &rq.m_rasterCallOrder;
+    std::cout << origin.x << " " << origin.y << " " << origin.r << "\n";
 }
 
 auto rqsDataBlock::getOrigin() -> nPoint {
