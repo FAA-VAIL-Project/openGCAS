@@ -29,15 +29,16 @@ inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX
 void RasterQuery::init(llPoint llLocation) {
     m_dataDirTransform = readDataDir();
     defineCallOrder(llLocation);
-    db[0] = new rqsDataBlock(0, -1, -1, *this);
-    db[1] = new rqsDataBlock(1, 0, -1, *this);
-    db[2] = new rqsDataBlock(2, 1, -1, *this);
-    db[3] = new rqsDataBlock(3, -1, 0, *this);
-    db[4] = new rqsDataBlock(4, 0, 0, *this);
-    db[5] = new rqsDataBlock(5, 1, 0, *this);
-    db[6] = new rqsDataBlock(6, -1, 1, *this);
-    db[7] = new rqsDataBlock(7, 0, 1, *this);
-    db[8] = new rqsDataBlock(8, 1, 1, *this);
+    std::array<nPoint, 9> dataBlockOrigins;
+    int index = 0;
+    for(int i = -1; i < 2; ++i) {
+        for(int j = -1; j < 2; ++j) {
+            nPoint origin = getBlockLocation(llLocation, m_rasterCallOrder[4], j, i);
+            db[index] = new rqsDataBlock(index, j, i, *this, origin);
+            dataBlockOrigins[index] = origin;
+            index++;
+        }
+    }
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
