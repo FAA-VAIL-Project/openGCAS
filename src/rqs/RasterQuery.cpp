@@ -29,11 +29,12 @@ inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX
 void RasterQuery::init(llPoint llLocation) {
     m_dataDirTransform = readDataDir();
     defineCallOrder(llLocation);
+    int locRaster = discreteIndex(llLocation).r;
     std::array<nPoint, 9> dataBlockOrigins;
     int index = 0;
     for(int i = -1; i < 2; ++i) {
         for(int j = -1; j < 2; ++j) {
-            nPoint origin = getBlockLocation(llLocation, m_rasterCallOrder[4], j, i);
+            nPoint origin = getBlockLocation(llLocation, locRaster, j, i);
             db[index] = new rqsDataBlock(index, j, i, *this, origin);
             dataBlockOrigins[index] = origin;
             index++;
@@ -66,7 +67,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
             // Push the relevant GeoTransform data to the protected attribute dataDirTransform
             GTVec.push_back(geoTransformData{
                 rasterIndex,
-                filename,
+                s_filename,
                 GDALTransfom[0],
                 GDALTransfom[1],
                 GDALTransfom[3],
@@ -174,11 +175,19 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
 }
 
 void RasterQuery::defineCallOrder(llPoint llLocation) {
+    int index = 0;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
             llPoint p{llLocation.lat - (i * RASTER_SIZE), llLocation.lon + (j * RASTER_SIZE)};
             nPoint n = discreteIndex(p);
-            m_rasterCallOrder.push_back(n.r);
+            //TODO Consider alternates
+            if(!n.isNullPoint()) {
+                const char *name = m_dataDirTransform[n.r].fname.c_str();
+                GDALDataset *dataset = (GDALDataset *) GDALOpen(name, GA_ReadOnly);
+                GDALRasterBand *band = dataset->GetRasterBand(1);
+                m_rasterCallOrder[index] = band;
+            }
+            index++;
         }
     }
 }

@@ -73,7 +73,7 @@ protected:
     std::vector<geoTransformData> m_dataDirTransform;
 
     //Vector of open RasterBands based on geospatial position
-    std::vector<int> m_rasterCallOrder;
+    std::array<GDALRasterBand*, 9> m_rasterCallOrder;
 
 public:
     /**
@@ -98,6 +98,16 @@ public:
     void defineCallOrder(llPoint llLocation);
 };
 
+
+//==================================================================
+
+
+/**
+ * @brief Raster Query System Data Block
+ *
+ * Holds 1024x1024 chunk of data for RQS. Class init allocates memory in the heap
+ * for the data
+ */
 class rqsDataBlock {
 private:
     /*
@@ -117,7 +127,7 @@ private:
      */
     void init();
 
-    auto getOrigin() -> nPoint;
+    void readFromRaster();
 
 public:
     nPoint m_origin;
@@ -126,6 +136,10 @@ public:
     /**
      * Basic constructor calling init memory functions of rqsDataBlock
      * @param int id for memory alloc
+     * @param int posX is x location in 3x3 array
+     * @param int posY is y location in 3x3 array
+     * @param RasterQuery& rq is reference to RasterQuery singleton
+     * @param nPoint origin is top left nPointo f raster
      */
     explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, nPoint origin);
 };

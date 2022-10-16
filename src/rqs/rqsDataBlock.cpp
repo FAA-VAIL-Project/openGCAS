@@ -14,7 +14,7 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
     std::cout << origin.x << " " << origin.y << " " << origin.r << "\n";
 }
 
-auto rqsDataBlock::getOrigin() -> nPoint {
+void rqsDataBlock::readFromRaster() {
 
 }
 
