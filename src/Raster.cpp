@@ -2,7 +2,7 @@
 
 #include "../include/Raster.h"
 #include "../include/PolySelect.h"
-#include <cassert>
+#include "../include/CircSelect.h"
 #include <vector>
 #include <iostream>
 
@@ -41,11 +41,10 @@ Raster::Raster(const char* file)  : pszFilename(file) {
     rasterBandArray = readFromBand();
 }
 
-Raster::Raster() = default;
-
 
 Raster::~Raster() {
     free(rasterBandArray);
+
 }
 
 int** Raster::getArray() {
@@ -57,8 +56,13 @@ double* Raster::getGeoTransform() {
 }
 
 
-geoPoint* Raster::poly(std::vector<point> p) {
+geoPoint* Raster::poly(std::vector<nPoint> p) {
     PolySelect s = PolySelect(*this, p);
+    return s.getSelection();
+}
+
+geoPoint* Raster::circ(int radius, nPoint center) {
+    CircSelect s(*this, radius, center);
     return s.getSelection();
 }
 

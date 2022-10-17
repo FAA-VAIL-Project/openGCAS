@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
-project(tests)
 
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${openGCAS_SOURCE_DIR}/bin)
 
 add_executable(tests
-        main.cpp
-        raster_test.cpp
-        ../src/Raster.cpp
-        ../src/PolySelect.cpp)
-target_link_libraries(tests PRIVATE Catch2::Catch2 GDAL::GDAL ${Eigen_LIBRARIES})
+        ../tests/main.cpp
+        ../tests/rqs_test.cpp
+        ../src/rqs/RasterQuery.cpp
+        )
+target_link_libraries(tests PRIVATE Catch2::Catch2 GDAL::GDAL)
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include <ctime>
 #include <algorithm>
-
+/*
 int orientation(point p, point q, point r) {
     int val = (q.y - p.y) * (r.x - q.x) -
               (q.x - p.x) * (r.y - q.y);
@@ -79,3 +79,4 @@ TEST_CASE("Raster Test") {
         }
     }
 }
+*/

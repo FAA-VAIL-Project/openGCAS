@@ -1,13 +1,12 @@
 #include "../include/PolySelect.h"
 #include <vector>
 #include <algorithm> // for std::sort()
-#include <iostream>
 #include <cmath>  // For atan2() and pow()
-
+#include <iostream>
 
 struct PolySelect::sort {
-    point center;
-    bool operator()(point const& lhs, point const& rhs) {
+    nPoint center;
+    bool operator()(nPoint const& lhs, nPoint const& rhs) {
         // Compare the polar coordinate theta of the struct
         float lhsTheta = std::atan2(lhs.y - center.y, lhs.x - center.x);
         float rhsTheta = std::atan2(rhs.y - center.y, rhs.x - center.x);
@@ -22,19 +21,19 @@ struct PolySelect::sort {
 };
 
 
-point PolySelect::defineCenter() {
+nPoint PolySelect::defineCenter() {
     // Pretty barebones: just average of x's and y's
     int workingX = 0, workingY = 0;
     for( const auto &p : points) {
         workingX += p.x;
         workingY += p.y;
     }
-    point c{workingX / 4, workingY / 4};
+    nPoint c{workingX / 4, workingY / 4};
     return c;
 }
 
 
-inline bool PolySelect::withinPoly(point p) {
+inline bool PolySelect::withinPoly(nPoint p) {
     // Brilliant algorithm modified from https://wrfranklin.org/Research/Short_Notes/pnpoly.html
     bool c = true;
     for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
@@ -64,11 +63,11 @@ geoPoint* PolySelect::getSelection() {
     selection = new geoPoint[area];
 
     // Creates iterators passed to std::minimax
-    std::vector<point>::iterator minX, maxX, minY, maxY;
+    std::vector<nPoint>::iterator minX, maxX, minY, maxY;
     std::tie(minX, maxX) = std::minmax_element(
             begin(points), end(points),
             // Comparison predicate as lambda
-            [](point const& lhs, point const& rhs)
+            [](nPoint const& lhs, nPoint const& rhs)
             {
                 return lhs.x < rhs.x;
             }
@@ -77,7 +76,7 @@ geoPoint* PolySelect::getSelection() {
     std::tie(minY, maxY) = std::minmax_element(
             begin(points), end(points),
             // Comparison predicate as lambda
-            [](point const& lhs, point const& rhs)
+            [](nPoint const& lhs, nPoint const& rhs)
             {
                 return lhs.y < rhs.y;
             }
@@ -87,7 +86,7 @@ geoPoint* PolySelect::getSelection() {
     int index = 0;
     for(int row = minY->y; row < maxY->y; row++) {
         for (int elem = minX->x; elem < maxX->x; elem++) {
-            point temp{elem, row};
+            nPoint temp{elem, row};
             if(elem > raster->xSize || elem < 0 ||
                 row > raster->ySize || row < 0) {
                 selection[index] = geoPoint{elem, row, 0};
@@ -101,9 +100,9 @@ geoPoint* PolySelect::getSelection() {
     return selection;
 }
 
-PolySelect::PolySelect(Raster& r, std::vector<point> pointVec) noexcept
+PolySelect::PolySelect(Raster& r, std::vector<nPoint> pointVec) noexcept
     : points(pointVec), raster(&r), rArray(r.getArray()) {
-
+/*
     // Init object referenced in std::sort
     // Sort OVER points (no copy)
     sort polarVectorSort{defineCenter()};
@@ -111,10 +110,13 @@ PolySelect::PolySelect(Raster& r, std::vector<point> pointVec) noexcept
 
     this->area = polyArea();
 
-    // Fills selection pointer with memory
     getSelection();
-}
 
+    for(int i = 0; i < area; ++i) {
+        std::cout << selection[i].z << "\n";
+    }
+    */
+}
 PolySelect::~PolySelect() {
     //delete[] selection;
 }

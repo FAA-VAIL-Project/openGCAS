@@ -29,17 +29,12 @@ private:
 
     int** readFromBand();
 
-
-
-
-
 public:
     int xSize, ySize;
 
     // Constructor takes a string for filename
     // Use relative path
     Raster(const char* file);
-    Raster();
 
     // Frees int** array
     ~Raster();
@@ -50,7 +45,11 @@ public:
     // Returns adfGeoTransform
     double* getGeoTransform();
 
-    geoPoint* poly(std::vector<point> p);
+    // Get polygon selection from points
+    geoPoint* poly(std::vector<nPoint> p);
+
+    // Get circle selection
+    geoPoint* circ(int radius, nPoint center);
 
     // For testing singleton property
     const char* getInstanceName();
