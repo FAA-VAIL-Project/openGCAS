@@ -17,7 +17,7 @@ RasterQuery& RasterQuery::get() {
 RasterQuery::~RasterQuery() {
     for(int i = 0; i < db.size(); ++i) {
         delete db[i];
-        GDALClose(m_rasterCallOrder[i]);
+        GDALClose(m_rasterCallOrder[i].band);
     }
 }
 
@@ -191,9 +191,9 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
                 const char *name = m_unsortedDirTransform[n.r].fname.c_str();
                 GDALDataset *dataset = (GDALDataset *)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
-                m_rasterCallOrder[index] = band;
+                m_rasterCallOrder[index] = rasterBand{band, n.r};
             } else {
-                m_rasterCallOrder[index] = nullptr;
+                m_rasterCallOrder[index] = rasterBand{nullptr, -1};
             }
             index++;
         }

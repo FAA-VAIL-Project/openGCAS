@@ -18,25 +18,30 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
 
 void rqsDataBlock::readFromRaster() {
     // Possibly GNU compiler bug (???) pointer to vector is a vector?, this appears to work though.
-    auto raster = m_rqsDataInfo[0];
-/*
+    auto raster = m_rqsDataInfo[0][m_origin.r];
+
     // Check if there are intersections and read from the raster based on which intersections there are (4 options)
     bool xIntersections, yIntersections;
     xIntersections = (m_origin.x + BLOCK_SIZE > raster.r_xSize);
     yIntersections = (m_origin.y + BLOCK_SIZE > raster.r_ySize);
 
+    int rasterIndexInCallOrder;
+    for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
+        if(m_rqsCallOrder[0][i].index == m_origin.r) { rasterIndexInCallOrder = i; }
+    }
 
     if(!xIntersections && !yIntersections) { // If no intersections
         for(int row = 0; row < BLOCK_SIZE; ++row) {
             // Create buffer; if the raster is undefined, the buffer is set equal to the value 0,
             // Else, the raster is read normally
             int* buffer = new int[BLOCK_SIZE];
-            auto t = m_rqsCallOrder[0][raster.index];
-            if(t == nullptr) {
+
+            auto t = m_rqsCallOrder[0][rasterIndexInCallOrder];
+            if(t.band == nullptr) {
                 buffer[BLOCK_SIZE] = { 0 };
                 std::cout << "NULL\n";
             } else {
-                t->RasterIO(GF_Read,
+                t.band->RasterIO(GF_Read,
                             m_origin.x, m_origin.y + row,
                             BLOCK_SIZE, 1,
                             buffer,
@@ -49,7 +54,7 @@ void rqsDataBlock::readFromRaster() {
             memcpy(_spBlock[row].get(), buffer, BLOCK_SIZE * sizeof(int));
             delete[] buffer;
         }
-    }*/
+    }
 }
 
 ///\brief Initialize memory block of size 1024x1024

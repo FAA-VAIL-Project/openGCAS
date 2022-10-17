@@ -45,6 +45,11 @@ private:
         int r_ySize;
     };
 
+    struct rasterBand {
+        GDALRasterBand* band;
+        int index;
+    };
+
     /**
      * @brief RasterQuery Private Singleton Constructor
      */
@@ -71,10 +76,11 @@ private:
 protected:
     // Vector of data/ geoTransformData
     std::vector<geoTransformData> m_dataDirTransform;
+
     std::vector<geoTransformData> m_unsortedDirTransform;
 
     //Vector of open RasterBands based on geospatial position
-    std::array<GDALRasterBand*, 9> m_rasterCallOrder;
+    std::array<rasterBand, 9> m_rasterCallOrder;
 
 public:
     /**
@@ -134,7 +140,7 @@ private:
     // Attributes inherited from the singleton reference RasterQuery
     std::vector<RasterQuery::geoTransformData> *m_rqsDataInfo;
 
-    std::array<GDALRasterBand*, 9> *m_rqsCallOrder;
+    std::array<RasterQuery::rasterBand, 9> *m_rqsCallOrder;
 
 public:
     nPoint m_origin;
