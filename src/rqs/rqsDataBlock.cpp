@@ -10,7 +10,7 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
                            RasterQuery& rq, nPoint origin) : m_id(id), m_origin(origin) {
     init();
 
-    m_rqsDataInfo = &rq.m_dataDirTransform;
+    m_rqsDataInfo = &rq.m_unsortedDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
     std::cout << origin.x << " " << origin.y << " " << origin.r << "\n";
     readFromRaster();
@@ -18,8 +18,8 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
 
 void rqsDataBlock::readFromRaster() {
     // Possibly GNU compiler bug (???) pointer to vector is a vector?, this appears to work though.
-    RasterQuery::geoTransformData raster = m_rqsDataInfo[0][m_origin.r];
-
+    auto raster = m_rqsDataInfo[0];
+/*
     // Check if there are intersections and read from the raster based on which intersections there are (4 options)
     bool xIntersections, yIntersections;
     xIntersections = (m_origin.x + BLOCK_SIZE > raster.r_xSize);
@@ -31,10 +31,11 @@ void rqsDataBlock::readFromRaster() {
             // Create buffer; if the raster is undefined, the buffer is set equal to the value 0,
             // Else, the raster is read normally
             int* buffer = new int[BLOCK_SIZE];
-            auto t = m_rqsCallOrder[0][m_origin.r];
-            if(t == nullptr)
+            auto t = m_rqsCallOrder[0][raster.index];
+            if(t == nullptr) {
                 buffer[BLOCK_SIZE] = { 0 };
-            else {
+                std::cout << "NULL\n";
+            } else {
                 t->RasterIO(GF_Read,
                             m_origin.x, m_origin.y + row,
                             BLOCK_SIZE, 1,
@@ -48,7 +49,7 @@ void rqsDataBlock::readFromRaster() {
             memcpy(_spBlock[row].get(), buffer, BLOCK_SIZE * sizeof(int));
             delete[] buffer;
         }
-    }
+    }*/
 }
 
 ///\brief Initialize memory block of size 1024x1024

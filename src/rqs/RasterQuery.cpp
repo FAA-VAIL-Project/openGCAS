@@ -22,9 +22,9 @@ RasterQuery::~RasterQuery() {
 }
 
 inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint {
-    auto select = m_dataDirTransform[raster];
-    double lat = location.lat + (posX * BLOCK_SIZE * select.lat_res);
-    double lon = location.lon + (posY * BLOCK_SIZE * select.lon_res);
+    auto select = m_unsortedDirTransform[raster];
+    double lat = location.lat + (posY * BLOCK_SIZE * select.lat_res);
+    double lon = location.lon + (posX * BLOCK_SIZE * select.lon_res);
     return discreteIndex(llPoint{lat, lon});
 }
 
@@ -81,6 +81,10 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
             GDALClose(e_dataset);
         }
     }
+
+    // Save the unsorted vector
+    m_unsortedDirTransform = GTVec;
+
     // Sorting lambda sort by latitude then longitude
     auto sortRasterByGT = [](const geoTransformData& rhs, const geoTransformData& lhs) {
         if (lhs.lat_o != rhs.lat_o) {
@@ -100,7 +104,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     int guessLat = -1;
-    int size = m_dataDirTransform.size();
+    int size = m_unsortedDirTransform.size();
     int min = 0;
     int max = size - 1;
 
@@ -184,7 +188,7 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
             nPoint n = discreteIndex(p);
             //TODO Consider alternates
             if(!n.isNullPoint()) {
-                const char *name = m_dataDirTransform[n.r].fname.c_str();
+                const char *name = m_unsortedDirTransform[n.r].fname.c_str();
                 GDALDataset *dataset = (GDALDataset *)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
                 m_rasterCallOrder[index] = band;

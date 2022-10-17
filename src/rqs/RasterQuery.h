@@ -59,7 +59,7 @@ private:
      * @brief define m_dataDirTransform vector attribute with
      * geoTransForm data from data/ directory
      */
-    static auto readDataDir() -> std::vector<geoTransformData>;
+    auto readDataDir() -> std::vector<geoTransformData>;
 
     inline auto getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint;
 
@@ -71,6 +71,7 @@ private:
 protected:
     // Vector of data/ geoTransformData
     std::vector<geoTransformData> m_dataDirTransform;
+    std::vector<geoTransformData> m_unsortedDirTransform;
 
     //Vector of open RasterBands based on geospatial position
     std::array<GDALRasterBand*, 9> m_rasterCallOrder;
@@ -110,7 +111,8 @@ public:
  */
 class rqsDataBlock {
 private:
-    /*
+
+    /**
      * Block data is stored in a 2d smart pointer _spBlock which consists of typedef
      * Smart pointers _spRow. The memory  is allocated in the private init() method
      * which is called in the constructor
