@@ -129,6 +129,11 @@ private:
 
     void readFromRaster();
 
+    // Attributes inherited from the singleton reference RasterQuery
+    std::vector<RasterQuery::geoTransformData> *m_rqsDataInfo;
+
+    std::array<GDALRasterBand*, 9> *m_rqsCallOrder;
+
 public:
     nPoint m_origin;
     const int m_id;

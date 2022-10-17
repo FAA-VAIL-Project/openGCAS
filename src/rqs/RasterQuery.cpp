@@ -7,6 +7,7 @@
 
 #define EPSILON_FLT 0.001
 #define RASTER_SIZE 1.0
+#define BLOCK_SIZE 1024
 
 RasterQuery& RasterQuery::get() {
     static RasterQuery rq_instance;
@@ -16,13 +17,14 @@ RasterQuery& RasterQuery::get() {
 RasterQuery::~RasterQuery() {
     for(int i = 0; i < db.size(); ++i) {
         delete db[i];
+        GDALClose(m_rasterCallOrder[i]);
     }
 }
 
 inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint {
     auto select = m_dataDirTransform[raster];
-    double lat = location.lat + (posX * 1024 * select.lat_res);
-    double lon = location.lon + (posY * 1024 * select.lon_res);
+    double lat = location.lat + (posX * BLOCK_SIZE * select.lat_res);
+    double lon = location.lon + (posY * BLOCK_SIZE * select.lon_res);
     return discreteIndex(llPoint{lat, lon});
 }
 
@@ -183,9 +185,11 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
             //TODO Consider alternates
             if(!n.isNullPoint()) {
                 const char *name = m_dataDirTransform[n.r].fname.c_str();
-                GDALDataset *dataset = (GDALDataset *) GDALOpen(name, GA_ReadOnly);
+                GDALDataset *dataset = (GDALDataset *)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
                 m_rasterCallOrder[index] = band;
+            } else {
+                m_rasterCallOrder[index] = nullptr;
             }
             index++;
         }

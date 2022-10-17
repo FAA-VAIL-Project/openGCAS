@@ -3,7 +3,6 @@
 #include "../include/Raster.h"
 #include "../include/PolySelect.h"
 #include "../include/CircSelect.h"
-#include <cassert>
 #include <vector>
 #include <iostream>
 
@@ -45,6 +44,7 @@ Raster::Raster(const char* file)  : pszFilename(file) {
 
 Raster::~Raster() {
     free(rasterBandArray);
+
 }
 
 int** Raster::getArray() {
