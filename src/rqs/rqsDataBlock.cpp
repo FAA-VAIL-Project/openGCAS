@@ -25,6 +25,7 @@ void rqsDataBlock::readFromRaster() {
     xIntersections = (m_origin.x + BLOCK_SIZE > raster.r_xSize);
     yIntersections = (m_origin.y + BLOCK_SIZE > raster.r_ySize);
 
+    // Align the index with the actual raster of the file in the RasterCallOrder
     int rasterIndexInCallOrder;
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
         if(m_rqsCallOrder[0][i].index == m_origin.r) { rasterIndexInCallOrder = i; }

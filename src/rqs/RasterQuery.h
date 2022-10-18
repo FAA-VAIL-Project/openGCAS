@@ -75,12 +75,18 @@ private:
 
 protected:
     // Vector of data/ geoTransformData
+    // Primarily used by discreteIndex
     std::vector<geoTransformData> m_dataDirTransform;
 
+    // m_dataDirTransform not sorted by lat long but rather by index
+    // Used for querying information about a raster
     std::vector<geoTransformData> m_unsortedDirTransform;
 
     //Vector of open RasterBands based on geospatial position
     std::array<rasterBand, 9> m_rasterCallOrder;
+
+    // Origins of each dataBlock stored in matrix
+    std::array<nPoint, 9> m_dbOrigins;
 
 public:
     /**
@@ -88,7 +94,7 @@ public:
      */
     static RasterQuery& get();
 
-    void init(llPoint llLocation);
+    void init(const llPoint& llLocation);
 
     /**@brief Convert llPoint into discrete nPoint on a raster
      *

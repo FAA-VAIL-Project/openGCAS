@@ -10,51 +10,59 @@
 #define BLOCK_SIZE 1024
 
 RasterQuery& RasterQuery::get() {
+    // Return static instance for singleton
     static RasterQuery rq_instance;
     return rq_instance;
 }
 
 RasterQuery::~RasterQuery() {
     for(int i = 0; i < db.size(); ++i) {
+        // Delete each rqsDataBlock object
         delete db[i];
+        // Close each raster on the CallOrder (guaranteed to have the same size as db)
         GDALClose(m_rasterCallOrder[i].band);
     }
 }
 
 inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint {
     auto select = m_unsortedDirTransform[raster];
+    // origin = center raster position + (position in matrix * BLOCK_SIZE * resolution of each raster data point)
     double lat = location.lat + (posY * BLOCK_SIZE * select.lat_res);
     double lon = location.lon + (posX * BLOCK_SIZE * select.lon_res);
     return discreteIndex(llPoint{lat, lon});
 }
 
-void RasterQuery::init(llPoint llLocation) {
+void RasterQuery::init(const llPoint& llLocation) {
     m_dataDirTransform = readDataDir();
     defineCallOrder(llLocation);
     int locRaster = discreteIndex(llLocation).r;
-    std::array<nPoint, 9> dataBlockOrigins;
     int index = 0;
+    // Index across a 3x3 matrix
     for(int i = -1; i < 2; ++i) {
         for(int j = -1; j < 2; ++j) {
+            // Get origin of DataBlock
             nPoint origin = getBlockLocation(llLocation, locRaster, j, i);
+            // Allocate memory for it in array
             db[index] = new rqsDataBlock(index, j, i, *this, origin);
-            dataBlockOrigins[index] = origin;
+            // Save origin to protected attribute
+            m_dbOrigins[index] = origin;
             index++;
         }
     }
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
+    // Init GDAL and local variables
     GDALAllRegister();
-    std::vector<GDALRasterBand> working;
     std::string dataDir = "../data";
     int rasterIndex = 0;
     std::vector<geoTransformData> GTVec;
 
+    // Iterate over filenames in the data/ root directory
     for (const auto& datafile :
       std::experimental::filesystem::directory_iterator(dataDir)) {
-        // Iterate across all files in the data directory
         std::string pathstring{datafile.path().string()};
+        // Save both the c_str() and the string()
         const char* filename = datafile.path().c_str();
         std::string s_filename = datafile.path().string();
 
@@ -82,7 +90,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
         }
     }
 
-    // Save the unsorted vector
+    // Save the unsorted vector and continue working on GTVec
     m_unsortedDirTransform = GTVec;
 
     // Sorting lambda sort by latitude then longitude
@@ -103,12 +111,21 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 }
 
 auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
+    /*
+     * Basically what is happening here: a wacky 2d binary search. Latitude is the first aspect checked,
+     * but because binary search doesn't consider the fact that there may be multiple instances of the same
+     * latitude, it chooses whichever index it lands on first and calls it the guess. Therefore, two
+     * loops iterate up and down the m_dataDirTransform vector to find the first and last indicies with the same latitude.
+     * After that, a second binary search is done ONLY between those two indicies, and ONLY considering the
+     * longitude of each raster. Over large amounts of rasters (as would be seen in a real use-case, this is
+     * faster than a brute force search as it scales logarithmically).
+     */
     int guessLat = -1;
     int size = m_unsortedDirTransform.size();
     int min = 0;
     int max = size - 1;
 
-    // Basic binary search to get the latitude of the guess
+    // Basic binary search to get the latitude guess
     while(min <= max) {
         int mid = (min + max) / 2;
         // Test if values are equal by comaring to a float
@@ -123,7 +140,7 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         }
     }
 
-    // Define index to be the point after the maximum possible.
+    // Assuming that the pointw as not found exactly, define it as the max + 1
     if(guessLat == -1)
         guessLat = max + 1;
 
@@ -161,13 +178,13 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // Else finalIndex = -1
     if(lonMax >= 0 && lonMax < size) {
         geoTransformData rel = m_dataDirTransform[lonMax];
-        double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res);
-        double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res);
+        double latRasterMax = rel.lat_o - (rel.r_ySize * rel.lat_res); // Maximum latitude contained in each raster
+        double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res); // ~~~~~~~ longitude
         if(
-                workingPoint.lat - latRasterMax >= EPSILON_FLT &&
-                workingPoint.lat - rel.lat_o <= EPSILON_FLT &&
-                workingPoint.lon <= lonRasterMax &&
-                abs(workingPoint.lon - rel.lon_o) >= 0
+                workingPoint.lat - latRasterMax <= EPSILON_FLT && // If latitude - maxLat is negative (lat increments negatively)
+                workingPoint.lat - rel.lat_o <= EPSILON_FLT && // If latitude exists inside raster
+                workingPoint.lon <= lonRasterMax && // If longitude is less than max longitude
+                workingPoint.lon - rel.lon_o >= 0 // If longitude exists inside raster
                 ) {
             // Actually find the closest point
             int latIndex = (workingPoint.lat - rel.lat_o) / rel.lat_res;
