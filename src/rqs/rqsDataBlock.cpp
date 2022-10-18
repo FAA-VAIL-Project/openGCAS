@@ -31,7 +31,16 @@ void rqsDataBlock::readFromRaster() {
         if(m_rqsCallOrder[0][i].index == m_origin.r) { rasterIndexInCallOrder = i; }
     }
 
-    if(!xIntersections && !yIntersections) { // If no intersections
+    // Check that raster is in the call order. It should always be, but just making sure
+    bool rasterInCallOrder = false;
+    for(int i = 0; i < m_rqsCallOrder[0].size(); ++i) {
+        if(m_rqsCallOrder[0][i].index == m_origin.r) {
+            rasterInCallOrder = true;
+            break;
+        }
+    }
+
+    if(!xIntersections && !yIntersections && rasterInCallOrder) { // If no intersections
         for(int row = 0; row < BLOCK_SIZE; ++row) {
             // Create buffer; if the raster is undefined, the buffer is set equal to the value 0,
             // Else, the raster is read normally

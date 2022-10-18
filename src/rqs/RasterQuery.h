@@ -18,7 +18,6 @@
 #include <experimental/filesystem>
 
 
-
 class rqsDataBlock;
 
 /**
@@ -101,7 +100,7 @@ public:
      * @param llPoint to convert
      * @return nPoint of closest raster index
      */
-    auto discreteIndex(llPoint workingPoint) -> nPoint;
+    auto discreteIndex(const llPoint& loc) -> nPoint;
 
     /**
      * @brief Define a list of Raster files from which data might be realistically found in a

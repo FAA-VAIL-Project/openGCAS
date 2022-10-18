@@ -110,7 +110,7 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
     return GTVec;
 }
 
-auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
+auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     /*
      * Basically what is happening here: a wacky 2d binary search. Latitude is the first aspect checked,
      * but because binary search doesn't consider the fact that there may be multiple instances of the same
@@ -129,11 +129,11 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     while(min <= max) {
         int mid = (min + max) / 2;
         // Test if values are equal by comaring to a float
-        if(abs(m_dataDirTransform[mid].lat_o - workingPoint.lat) < EPSILON_FLT) {
+        if(abs(m_dataDirTransform[mid].lat_o - loc.lat) < EPSILON_FLT) {
             // If point is found to be equal
             guessLat = mid;
             break;
-        } else if(m_dataDirTransform[mid].lat_o < workingPoint.lat) {
+        } else if(m_dataDirTransform[mid].lat_o < loc.lat) {
             min = mid + 1;
         } else {
             max = mid - 1;
@@ -164,10 +164,10 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
     // Now binary search on the range from firstLat to lastLat
     while(lonMin <= lonMax) {
         int lonMid = (lonMin + lonMax) / 2;
-        if(abs(m_dataDirTransform[lonMid].lon_o - workingPoint.lon) < EPSILON_FLT) {
+        if(abs(m_dataDirTransform[lonMid].lon_o - loc.lon) < EPSILON_FLT) {
             lonMax = lonMid;
             break;
-        } else if(m_dataDirTransform[lonMid].lon_o < workingPoint.lon) {
+        } else if(m_dataDirTransform[lonMid].lon_o < loc.lon) {
             lonMin = lonMid + 1;
         } else {
             lonMax = lonMid - 1;
@@ -181,19 +181,21 @@ auto RasterQuery::discreteIndex(llPoint workingPoint) -> nPoint {
         double latRasterMax = rel.lat_o - (rel.r_ySize * rel.lat_res); // Maximum latitude contained in each raster
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res); // ~~~~~~~ longitude
         if(
-                workingPoint.lat - latRasterMax <= EPSILON_FLT && // If latitude - maxLat is negative (lat increments negatively)
-                workingPoint.lat - rel.lat_o <= EPSILON_FLT && // If latitude exists inside raster
-                workingPoint.lon <= lonRasterMax && // If longitude is less than max longitude
-                workingPoint.lon - rel.lon_o >= 0 // If longitude exists inside raster
+                loc.lat - latRasterMax <= EPSILON_FLT && // If latitude - maxLat is negative (lat increments negatively)
+                loc.lat - rel.lat_o <= EPSILON_FLT && // If latitude exists inside raster
+                loc.lon <= lonRasterMax && // If longitude is less than max longitude
+                abs(loc.lon - rel.lon_o) >= 0 // If longitude exists inside raster
                 ) {
             // Actually find the closest point
-            int latIndex = (workingPoint.lat - rel.lat_o) / rel.lat_res;
-            int lonIndex = (workingPoint.lon - rel.lon_o) / rel.lon_res;
+            int latIndex = (loc.lat - rel.lat_o) / rel.lat_res;
+            int lonIndex = (loc.lon - rel.lon_o) / rel.lon_res;
             return nPoint{lonIndex, latIndex, lonMax};
         } else {
+            // Return null point if point is not within a raster
             return nPoint{0, 0, -1};
         }
     }
+    // Return null if something has catastrophically failed and the above if statement is false
     return nPoint{0, 0, -1};
 }
 
@@ -201,12 +203,19 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
     int index = 0;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
+            /*
+             * Kinda crude method of assuming each raster is RASTER_SIZE (1.0 lat-lon for current implementation)
+             * and getting each surrounding raster by adding RASTER_SIZE to the location llPoint and discreteIndex
+             * the new llPoint to get the raster
+             */
             llPoint p{llLocation.lat - (i * RASTER_SIZE), llLocation.lon + (j * RASTER_SIZE)};
             nPoint n = discreteIndex(p);
-            //TODO Consider alternates
+
+
+
             if(!n.isNullPoint()) {
                 const char *name = m_unsortedDirTransform[n.r].fname.c_str();
-                GDALDataset *dataset = (GDALDataset *)GDALOpen(name, GA_ReadOnly);
+                GDALDataset *dataset = (GDALDataset*)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
                 m_rasterCallOrder[index] = rasterBand{band, n.r};
             } else {
