@@ -28,42 +28,106 @@ void rqsDataBlock::readFromRaster() {
     // Align the index with the actual raster of the file in the RasterCallOrder
     int rasterIndexInCallOrder;
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
-        if(m_rqsCallOrder[0][i].index == m_origin.r) { rasterIndexInCallOrder = i; }
+        if(m_rqsCallOrder[0][i].index == m_origin.r) { rasterIndexInCallOrder = i; break; }
     }
 
-    // Check that raster is in the call order. It should always be, but just making sure
-    bool rasterInCallOrder = false;
-    for(int i = 0; i < m_rqsCallOrder[0].size(); ++i) {
-        if(m_rqsCallOrder[0][i].index == m_origin.r) {
-            rasterInCallOrder = true;
-            break;
-        }
-    }
-
-    if(!xIntersections && !yIntersections && rasterInCallOrder) { // If no intersections
+    if(!xIntersections && !yIntersections) { // If no intersections
         for(int row = 0; row < BLOCK_SIZE; ++row) {
             // Create buffer; if the raster is undefined, the buffer is set equal to the value 0,
             // Else, the raster is read normally
-            int* buffer = new int[BLOCK_SIZE];
-
-            auto t = m_rqsCallOrder[0][rasterIndexInCallOrder];
-            if(t.band == nullptr) {
-                buffer[BLOCK_SIZE] = { 0 };
+            const auto* t = &m_rqsCallOrder[0][rasterIndexInCallOrder];
+            if(t->band == nullptr) {
+                _spBlock[row].get()[BLOCK_SIZE] = { 0 };
                 std::cout << "NULL\n";
             } else {
-                t.band->RasterIO(GF_Read,
+                t->band->RasterIO(GF_Read,
                             m_origin.x, m_origin.y + row,
                             BLOCK_SIZE, 1,
-                            buffer,
+                            _spBlock[row].get(),
                             BLOCK_SIZE, 1,
                             GDT_Int32,
                             0, 0
                 );
             }
-            // copy data to smart pointer
-            memcpy(_spBlock[row].get(), buffer, BLOCK_SIZE * sizeof(int));
-            delete[] buffer;
         }
+
+    } else if(xIntersections && !yIntersections) {
+        int maxX = m_rqsDataInfo[0][m_origin.r].r_xSize;
+        int scanSize = maxX - m_origin.x;
+        const auto* t = &m_rqsCallOrder[0][rasterIndexInCallOrder];
+        const auto* t2 = &m_rqsCallOrder[0][rasterIndexInCallOrder + 1]; // Raster to the right
+        for(int row = 0; row < BLOCK_SIZE; ++row) {
+            if(t->band == nullptr) {
+                _spBlock[row].get()[scanSize] = { 0 };
+                std::cout << "NULL\n";
+            } else {
+                t->band->RasterIO(GF_Read,
+                                 m_origin.x, m_origin.y + row,
+                                 scanSize, 1,
+                                 _spBlock[row].get(),
+                                 scanSize, 1,
+                                 GDT_Int32,
+                                 0, 0
+                );
+                t2->band->RasterIO(GF_Read,
+                                  0, m_origin.y + row,
+                                  BLOCK_SIZE - scanSize, 1,
+                                  _spBlock[row].get() + scanSize, // Offset pointer by scansize. Surprisingly easy!
+                                  BLOCK_SIZE - scanSize, 1,
+                                  GDT_Int32,
+                                  0, 0
+                );
+            }
+        }
+
+    } else if(!xIntersections && yIntersections) {
+        int maxY = m_rqsDataInfo[0][m_origin.r].r_ySize;
+        int scanY = maxY - m_origin.y;
+        const auto* t = &m_rqsCallOrder[0][rasterIndexInCallOrder];
+        const auto* t2 = &m_rqsCallOrder[0][rasterIndexInCallOrder + 3]; // Raster below origin
+
+        for(int row = 0; row < scanY; ++row) {
+            if(t->band == nullptr) {
+                _spBlock[row] = { 0 };
+                std::cout << "NULL\n";
+            } else {
+                t->band->RasterIO(GF_Read,
+                                 m_origin.x, m_origin.y + row,
+                                 BLOCK_SIZE, 1,
+                                 _spBlock[row].get(),
+                                 BLOCK_SIZE, 1,
+                                 GDT_Int32,
+                                 0, 0
+                );
+            }
+        }
+        for(int row2 = 0; row2 < BLOCK_SIZE - scanY; ++row2) {
+            if(t2->band == nullptr) {
+                _spBlock[row2] = { 0 };
+                std::cout << "NULL\n";
+            } else {
+                t2->band->RasterIO(GF_Read,
+                                 m_origin.x, 0 + row2,
+                                 BLOCK_SIZE, 1,
+                                 _spBlock[row2 + scanY].get(),
+                                 BLOCK_SIZE, 1,
+                                 GDT_Int32,
+                                 0, 0
+                );
+            }
+        }
+
+        /*for(int i = 0; i < BLOCK_SIZE; ++i) {
+            for(int j = 0; j < BLOCK_SIZE; ++j) {
+                std::cout << _spBlock[i][j] << " ";
+            }
+            std::cout << "\n";
+        }*/
+    } else if(xIntersections && yIntersections) {
+        int maxX = m_rqsDataInfo[0][m_origin.r].r_xSize;
+        int maxY = m_rqsDataInfo[0][m_origin.r].r_ySize;
+        const auto* t = &m_rqsCallOrder[0][rasterIndexInCallOrder];
+
     }
 }
 
