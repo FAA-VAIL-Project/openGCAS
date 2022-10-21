@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]) {
     RasterQuery& rq = RasterQuery::get();
     rq.init(llPoint{41.3, -91.2});
-    std::cout << "RASTER " << rq.discreteIndex(llPoint{41.3, -91.2}).r;
+    std::cout << "\n\nRASTER " << rq.discreteIndex(llPoint{41.2, -91.2}).r;
     /*
     nPoint test = rq.discreteIndex(llPoint{41.3, -91.2});
 

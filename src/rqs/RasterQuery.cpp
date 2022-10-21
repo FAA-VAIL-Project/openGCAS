@@ -178,13 +178,13 @@ auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     // Else finalIndex = -1
     if(lonMax >= 0 && lonMax < size) {
         geoTransformData rel = m_dataDirTransform[lonMax];
-        double latRasterMax = rel.lat_o - (rel.r_ySize * rel.lat_res); // Maximum latitude contained in each raster
+        double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res); // Maximum latitude contained in each raster
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res); // ~~~~~~~ longitude
         if(
-                loc.lat - latRasterMax <= EPSILON_FLT && // If latitude - maxLat is negative (lat increments negatively)
-                loc.lat - rel.lat_o <= EPSILON_FLT && // If latitude exists inside raster
-                loc.lon <= lonRasterMax && // If longitude is less than max longitude
-                abs(loc.lon - rel.lon_o) >= 0 // If longitude exists inside raster
+                loc.lon >= rel.lon_o &&
+                loc.lon <= lonRasterMax &&
+                loc.lat <= rel.lat_o &&
+                loc.lat >= latRasterMax
                 ) {
             // Actually find the closest point
             int latIndex = (loc.lat - rel.lat_o) / rel.lat_res;
@@ -210,8 +210,6 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
              */
             llPoint p{llLocation.lat - (i * RASTER_SIZE), llLocation.lon + (j * RASTER_SIZE)};
             nPoint n = discreteIndex(p);
-
-
 
             if(!n.isNullPoint()) {
                 const char *name = m_unsortedDirTransform[n.r].fname.c_str();
