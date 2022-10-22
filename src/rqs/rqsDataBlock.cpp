@@ -14,6 +14,7 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
     m_rqsCallOrder = &rq.m_rasterCallOrder;
     std::cout << origin.x << " " << origin.y << " " << origin.r << "\n";
     readFromRaster();
+    debugWriteBitmap();
 }
 
 void rqsDataBlock::readFromRaster() {
@@ -194,4 +195,20 @@ void rqsDataBlock::init() {
     }
     std::cout << "Allocated " << (sizeof(int) * blockSize*blockSize) / 8 <<
                  " bytes of memory in block with id " << m_id << std::endl;
+
+}
+
+void rqsDataBlock::debugWriteBitmap() {
+    std::ofstream bitmap;
+    std::stringstream filename;
+    filename << std::to_string(m_id) << "bitmap.pgm";
+    bitmap.open(filename.str());
+    bitmap << "P2\n" << BLOCK_SIZE << ' ' << BLOCK_SIZE << "\n255\n";
+    for(int i = 0; i < BLOCK_SIZE; ++i) {
+        for(int j = 0; j < BLOCK_SIZE; ++j) {
+            int adj_int = (_spBlock[i][j] / 5) % 255;
+            bitmap << adj_int << "  ";
+        }
+        bitmap << "\n";
+    }
 }

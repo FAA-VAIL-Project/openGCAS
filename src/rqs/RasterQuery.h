@@ -16,6 +16,7 @@
 #include <memory>
 #include <cmath>
 #include <experimental/filesystem>
+#include <fstream>
 
 
 class rqsDataBlock;
@@ -160,6 +161,8 @@ public:
      * @param nPoint origin is top left nPointo f raster
      */
     explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, nPoint origin);
+
+    void debugWriteBitmap();
 };
 
 
