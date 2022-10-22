@@ -201,7 +201,7 @@ void rqsDataBlock::init() {
 void rqsDataBlock::debugWriteBitmap() {
     std::ofstream bitmap;
     std::stringstream filename;
-    filename << std::to_string(m_id) << "bitmap.pgm";
+    filename << "../etc/output_vis/" << std::to_string(m_id) << "bitmap.pgm";
     bitmap.open(filename.str());
     bitmap << "P2\n" << BLOCK_SIZE << ' ' << BLOCK_SIZE << "\n255\n";
     for(int i = 0; i < BLOCK_SIZE; ++i) {
@@ -211,4 +211,5 @@ void rqsDataBlock::debugWriteBitmap() {
         }
         bitmap << "\n";
     }
+    std::stringstream command;
 }
