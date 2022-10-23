@@ -66,6 +66,17 @@ private:
      */
     auto readDataDir() -> std::vector<geoTransformData>;
 
+    /**
+     * @brief Define a list of Raster files from which data might be realistically found in a
+     * 3x3 grid.
+     * @param llLocation is llPoint of current location
+     */
+    void defineCallOrder(const llPoint& llLocation);
+
+    /**
+     * @brief returns nPoint origin of each rqsDataBlock in array
+     * @see defineCallOrder()
+     */
     inline auto getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint;
 
     // Array of rqsDataBlock from which information can be read
@@ -77,10 +88,6 @@ protected:
     // Vector of data/ geoTransformData
     // Primarily used by discreteIndex
     std::vector<geoTransformData> m_dataDirTransform;
-
-    // m_dataDirTransform not sorted by lat long but rather by index
-    // Used for querying information about a raster
-    std::vector<geoTransformData> m_unsortedDirTransform;
 
     //Vector of open RasterBands based on geospatial position
     std::array<rasterBand, 9> m_rasterCallOrder;
@@ -94,6 +101,10 @@ public:
      */
     static RasterQuery& get();
 
+    /**
+     * @brief Allocate memory and define the call order for rasters on the heap
+     * @param llLocation
+     */
     void init(const llPoint& llLocation);
 
     /**@brief Convert llPoint into discrete nPoint on a raster
@@ -104,11 +115,14 @@ public:
     auto discreteIndex(const llPoint& loc) -> nPoint;
 
     /**
-     * @brief Define a list of Raster files from which data might be realistically found in a
-     * 3x3 grid.
-     * @param llLocation is llPoint of current location
+     * @brief FOR UNIT TESTING searches through m_dataDirTransform for index of raster by name
+     *
+     * Highly unoptimized brute force search to ensure unit tests do not need to be refactored.
+     * Do not use in production code
+     * @param std::string filename
+     * @return int index of desired raster passed by filename
      */
-    void defineCallOrder(llPoint llLocation);
+    auto searchRasterIndex(const std::string& filename) -> int;
 };
 
 
@@ -141,6 +155,9 @@ private:
      */
     void init();
 
+    /**
+     * @brief Reads from raster call stack to fill memory block
+     */
     void readFromRaster();
 
     // Attributes inherited from the singleton reference RasterQuery
@@ -153,7 +170,7 @@ public:
     const int m_id;
 
     /**
-     * Basic constructor calling init memory functions of rqsDataBlock
+     * @brief Basic constructor calling init memory functions of rqsDataBlock
      * @param int id for memory alloc
      * @param int posX is x location in 3x3 array
      * @param int posY is y location in 3x3 array
@@ -162,6 +179,11 @@ public:
      */
     explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, nPoint origin);
 
+    /**
+     * @brief takes advantage of Pilot Greymap image encoding to quickly save _spBlock to an image for
+     * debugging purposes. See etc/scripts/pgmtopng.py to convert images to PNG. Image output is saved in
+     * etc/output_vis
+     */
     void debugWriteBitmap();
 };
 

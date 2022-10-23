@@ -1,5 +1,6 @@
 //
-// Created by quothbonney on 10/13/22.
+// Created by Jack D.V. Carson on 10/13/2022.
+// Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
 #include "RasterQuery.h"
@@ -7,14 +8,14 @@
 
 ///\brief Default constructor with initializer list
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
-                           RasterQuery& rq, nPoint origin) : m_id(id), m_origin(origin) {
+                           RasterQuery& rq, nPoint origin)
+                           : m_id(id), m_origin(origin) {
     init();
 
-    m_rqsDataInfo = &rq.m_unsortedDirTransform;
+    m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
-    std::cout << origin.x << " " << origin.y << " " << origin.r << "\n";
     readFromRaster();
-    debugWriteBitmap();
+    //debugWriteBitmap();
 }
 
 void rqsDataBlock::readFromRaster() {
@@ -26,6 +27,8 @@ void rqsDataBlock::readFromRaster() {
     xIntersections = (m_origin.x + BLOCK_SIZE > raster.r_xSize);
     yIntersections = (m_origin.y + BLOCK_SIZE > raster.r_ySize);
 
+    std::cout << (xIntersections ? "XINT " : " ");
+    std::cout << (yIntersections ? "YINT\n" : " \n");
     // Align the index with the actual raster of the file in the RasterCallOrder
     int rasterIndexInCallOrder;
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
@@ -39,7 +42,7 @@ void rqsDataBlock::readFromRaster() {
             const auto* t = &m_rqsCallOrder[0][rasterIndexInCallOrder];
             if(t->band == nullptr) {
                 _spBlock[row].get()[BLOCK_SIZE] = { 0 };
-                std::cout << "NULL\n";
+                //std::cout << "NULL\n";
             } else {
                 t->band->RasterIO(GF_Read,
                             m_origin.x, m_origin.y + row,
@@ -59,24 +62,21 @@ void rqsDataBlock::readFromRaster() {
         const auto* t2 = &m_rqsCallOrder[0][rasterIndexInCallOrder + 1]; // Raster to the right
         for(int row = 0; row < BLOCK_SIZE; ++row) {
             if(t->band == nullptr) {
-                _spBlock[row].get()[scanX] = {0 };
-                std::cout << "NULL\n";
-            } else {
-                t->band->RasterIO(GF_Read,
-                                  m_origin.x, m_origin.y + row,
-                                  scanX, 1,
+                _spBlock[row].get()[scanX] = { 0 };
+                continue;
+            }
+            if(t2->band == nullptr) {
+                (_spBlock[row].get() + scanX)[BLOCK_SIZE - scanX] = { 0 };
+                continue;
+            }
+            else {
+                t->band->RasterIO(GF_Read, m_origin.x, m_origin.y + row, scanX, 1,
                                   _spBlock[row].get(),
-                                  scanX, 1,
-                                  GDT_Int32,
-                                  0, 0
+                                  scanX, 1, GDT_Int32,0, 0
                 );
-                t2->band->RasterIO(GF_Read,
-                                   0, m_origin.y + row,
-                                   BLOCK_SIZE - scanX, 1,
+                t2->band->RasterIO(GF_Read, 0, m_origin.y + row, BLOCK_SIZE - scanX, 1,
                                    _spBlock[row].get() + scanX, // Offset pointer by scansize. Surprisingly easy!
-                                   BLOCK_SIZE - scanX, 1,
-                                   GDT_Int32,
-                                   0, 0
+                                   BLOCK_SIZE - scanX, 1, GDT_Int32, 0, 0
                 );
             }
         }
@@ -89,9 +89,11 @@ void rqsDataBlock::readFromRaster() {
 
         for(int row = 0; row < scanY; ++row) {
             if(t->band == nullptr) {
-                _spBlock[row] = { 0 };
-                std::cout << "NULL\n";
-            } else {
+                _spBlock[row].get()[BLOCK_SIZE] = { 0 };
+                continue;
+            }
+
+            else {
                 t->band->RasterIO(GF_Read,
                                  m_origin.x, m_origin.y + row,
                                  BLOCK_SIZE, 1,
@@ -104,8 +106,8 @@ void rqsDataBlock::readFromRaster() {
         }
         for(int row2 = 0; row2 < BLOCK_SIZE - scanY; ++row2) {
             if(t2->band == nullptr) {
-                _spBlock[row2] = { 0 };
-                std::cout << "NULL\n";
+                _spBlock[scanY + row2].get()[BLOCK_SIZE] = { 0 };
+                //std::cout << "NULL\n";
             } else {
                 t2->band->RasterIO(GF_Read,
                                  m_origin.x, 0 + row2,
@@ -118,12 +120,6 @@ void rqsDataBlock::readFromRaster() {
             }
         }
 
-        /*for(int i = 0; i < BLOCK_SIZE; ++i) {
-            for(int j = 0; j < BLOCK_SIZE; ++j) {
-                std::cout << _spBlock[i][j] << " ";
-            }
-            std::cout << "\n";
-        }*/
     } else if(xIntersections && yIntersections) {
         int maxX = m_rqsDataInfo[0][m_origin.r].r_xSize;
         int maxY = m_rqsDataInfo[0][m_origin.r].r_ySize;
@@ -137,9 +133,12 @@ void rqsDataBlock::readFromRaster() {
 
         for(int row = 0; row < scanY; ++row) {
             if(tOrigin->band == nullptr) {
-                _spBlock[row].get()[BLOCK_SIZE] = { 0 };
-                std::cout << "NULL\n";
-            } else {
+                _spBlock[row].get()[scanX] = { 0 };
+                //std::cout << "NULL\n";
+            } if(tX->band == nullptr) {
+                (_spBlock[row].get() + scanX)[BLOCK_SIZE - scanX] = { 0 };
+            }
+            else {
                 tOrigin->band->RasterIO(GF_Read,
                                   m_origin.x, m_origin.y + row,
                                   scanX, 1,
@@ -161,8 +160,10 @@ void rqsDataBlock::readFromRaster() {
 
         for(int row2 = 0; row2 < BLOCK_SIZE - scanY; ++row2) {
             if(tY->band == nullptr) {
-                _spBlock[row2].get()[BLOCK_SIZE] = {0 };
-                std::cout << "NULL\n";
+                _spBlock[scanY + row2].get()[scanX] = { 0 };
+                //std::cout << "NULL\n";
+            } if(tXY->band == nullptr) {
+                (_spBlock[scanY + row2].get() + scanX)[BLOCK_SIZE - scanX] = { 0 };
             } else {
                 tY->band->RasterIO(GF_Read,
                                         m_origin.x, 0 + row2,

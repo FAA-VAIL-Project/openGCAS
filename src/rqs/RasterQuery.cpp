@@ -25,10 +25,11 @@ RasterQuery::~RasterQuery() {
 }
 
 inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint {
-    auto select = m_unsortedDirTransform[raster];
+    auto select = m_dataDirTransform[raster];
     // origin = center raster position + (position in matrix * BLOCK_SIZE * resolution of each raster data point)
     double lat = location.lat + (posY * BLOCK_SIZE * select.lat_res);
     double lon = location.lon + (posX * BLOCK_SIZE * select.lon_res);
+    std::cout << " Lat: " << lat << " Lon: " << lon << std::endl;
     return discreteIndex(llPoint{lat, lon});
 }
 
@@ -41,6 +42,7 @@ void RasterQuery::init(const llPoint& llLocation) {
     for(int i = -1; i < 2; ++i) {
         for(int j = -1; j < 2; ++j) {
             // Get origin of DataBlock
+            std::cout << "Index: " << index;
             nPoint origin = getBlockLocation(llLocation, locRaster, j, i);
             // Allocate memory for it in array
             db[index] = new rqsDataBlock(index, j, i, *this, origin);
@@ -90,9 +92,6 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
         }
     }
 
-    // Save the unsorted vector and continue working on GTVec
-    m_unsortedDirTransform = GTVec;
-
     // Sorting lambda sort by latitude then longitude
     auto sortRasterByGT = [](const geoTransformData& rhs, const geoTransformData& lhs) {
         if (lhs.lat_o != rhs.lat_o) {
@@ -121,7 +120,7 @@ auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
      * faster than a brute force search as it scales logarithmically).
      */
     int guessLat = -1;
-    int size = m_unsortedDirTransform.size();
+    int size = m_dataDirTransform.size();
     int min = 0;
     int max = size - 1;
 
@@ -199,7 +198,7 @@ auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     return nPoint{0, 0, -1};
 }
 
-void RasterQuery::defineCallOrder(llPoint llLocation) {
+void RasterQuery::defineCallOrder(const llPoint& llLocation) {
     int index = 0;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
@@ -212,7 +211,7 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
             nPoint n = discreteIndex(p);
 
             if(!n.isNullPoint()) {
-                const char *name = m_unsortedDirTransform[n.r].fname.c_str();
+                const char *name = m_dataDirTransform[n.r].fname.c_str();
                 GDALDataset *dataset = (GDALDataset*)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
                 m_rasterCallOrder[index] = rasterBand{band, n.r};
@@ -222,4 +221,11 @@ void RasterQuery::defineCallOrder(llPoint llLocation) {
             index++;
         }
     }
+}
+
+auto RasterQuery::searchRasterIndex(const std::string& filename) -> int {
+    for( const auto& t : m_dataDirTransform ) {
+        if(t.fname == filename) { return t.index; }
+    }
+    return -1;
 }
