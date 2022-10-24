@@ -8,7 +8,7 @@
 #define EPSILON_FLT 0.001
 #define RASTER_SIZE 1.0
 #define BLOCK_SIZE 1024
-#define __DEBUG_VERBOSE
+
 
 using namespace RQS::structures;
 
@@ -37,7 +37,7 @@ inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX
 
 void RasterQuery::init(const llPoint& llLocation) {
     m_dataDirTransform = readDataDir();
-    defineCallOrder(llLocation);
+    m_rasterCallOrder = defineCallOrder(llLocation);
     int locRaster = discreteIndex(llLocation).r;
     int index = 0;
     // Index across a 3x3 matrix
@@ -203,8 +203,9 @@ auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     return nPoint{0, 0, -1};
 }
 
-void RasterQuery::defineCallOrder(const llPoint& llLocation) {
+auto RasterQuery::defineCallOrder(const llPoint& llLocation) -> std::array<rasterBand, 9> {
     int index = 0;
+    std::array<rasterBand, 9> working;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
             /*
@@ -219,13 +220,14 @@ void RasterQuery::defineCallOrder(const llPoint& llLocation) {
                 const char *name = m_dataDirTransform[n.r].fname.c_str();
                 GDALDataset *dataset = (GDALDataset*)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
-                m_rasterCallOrder[index] = rasterBand{band, n.r};
+                working[index] = rasterBand{band, n.r};
             } else {
-                m_rasterCallOrder[index] = rasterBand{nullptr, -1};
+                working[index] = rasterBand{nullptr, -1};
             }
             index++;
         }
     }
+    return working;
 }
 
 auto RasterQuery::searchRasterIndex(const std::string& filename) -> int {

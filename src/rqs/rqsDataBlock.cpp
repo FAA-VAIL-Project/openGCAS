@@ -192,9 +192,10 @@ void rqsDataBlock::init() {
     for(size_t i = 0; i < blockSize; ++i) {
         _spBlock[i] = std::make_unique<int[]>(blockSize);
     }
+#ifdef __DEBUG_VERBOSE
     std::cout << "Allocated " << (sizeof(int) * blockSize*blockSize) / 8 <<
                  " bytes of memory in block with id " << m_id << std::endl;
-
+#endif
 }
 
 void rqsDataBlock::debugWriteBitmap() {

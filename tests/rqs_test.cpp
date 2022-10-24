@@ -13,7 +13,8 @@ TEST_CASE("RasterQuery Unit Tests") {
     SECTION("Read Saved Raster Data") {
         // Check that adding a non raster wont break reading
         std::ofstream testNonRaster;
-        testNonRaster.open("not_a_raster.jpg");
+        const char* fp = "../data/not_a_raster.jpg";
+        testNonRaster.open(fp);
         rqs.init(llPoint{41.9, -90.3});
         auto dt = rqs.getDataTransform();
         CHECK(dt.size() == 9);
@@ -23,6 +24,7 @@ TEST_CASE("RasterQuery Unit Tests") {
             bool gr = (llPoint{dt[i].lat_o, dt[i].lon_o} > llPoint{dt[i-1].lat_o, dt[i-1].lon_o});
             CHECK(gr);
         }
+        std::experimental::filesystem::remove(fp);
     }
     SECTION("Discrete Index") {
         // Create impossible points and test to guaruntee that they are do not exist
@@ -49,5 +51,25 @@ TEST_CASE("RasterQuery Unit Tests") {
             if(rqs.discreteIndex(test).r == -1) t = -1;
         }
         CHECK(t != -1);
+    }
+    SECTION("Raster Call Order") {
+        for(double i = -10; i < 10; i+=0.1) {
+            llPoint t = llPoint{i, -i};
+            // Check that the origin exists (always should)
+            auto arr = rqs.defineCallOrder(t);
+            CHECK((arr[4].index == rqs.discreteIndex(t).r));
+            std::vector<int> existingIndecies;
+
+            // Check no duplicate rasters
+            for(int j = 0; j < 9; ++j) {
+                if(arr[j].index > -1) {
+                    bool exists = std::find(
+                            existingIndecies.begin(), existingIndecies.end(), arr[j].index
+                            ) != existingIndecies.end();
+                    CHECK(exists == false);
+                    existingIndecies.push_back(arr[j].index);
+                }
+            }
+        }
     }
 }

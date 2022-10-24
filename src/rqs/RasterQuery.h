@@ -6,6 +6,8 @@
 #ifndef OPENGCAS_RASTERQUERY_H
 #define OPENGCAS_RASTERQUERY_H
 
+#define __DEBUG_VERBOSE
+
 #include "gdal_priv.h"
 #include "../../include/structs.h"
 #include <vector>
@@ -20,6 +22,7 @@
 
 
 class rqsDataBlock;
+class RasterQuery;
 
 /**
  * @brief Raster Query System for data access and raster interface
@@ -65,13 +68,6 @@ private:
      * geoTransForm data from data/ directory
      */
     auto readDataDir() -> std::vector<geoTransformData>;
-
-    /**
-     * @brief Define a list of Raster files from which data might be realistically found in a
-     * 3x3 grid.
-     * @param llLocation is llPoint of current location
-     */
-    void defineCallOrder(const RQS::structures::llPoint& llLocation);
 
     /**
      * @brief returns nPoint origin of each rqsDataBlock in array
@@ -124,6 +120,14 @@ public:
      */
     auto searchRasterIndex(const std::string& filename) -> int;
 
+    /**
+     * @brief Define a list of Raster files from which data might be realistically found in a
+     * 3x3 grid.
+     * @param llLocation is llPoint of current location
+     */
+    auto defineCallOrder(const RQS::structures::llPoint& llLocation) -> std::array<rasterBand, 9>;
+
+    // m_dataDirTransform getter
     auto getDataTransform() -> std::vector<geoTransformData>;
 };
 
@@ -164,7 +168,6 @@ private:
 
     // Attributes inherited from the singleton reference RasterQuery
     std::vector<RasterQuery::geoTransformData> *m_rqsDataInfo;
-
     std::array<RasterQuery::rasterBand, 9> *m_rqsCallOrder;
 
 public:
