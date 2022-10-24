@@ -12,8 +12,13 @@ using namespace RQS::structures;
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
                            RasterQuery& rq, nPoint origin)
                            : m_id(id), m_origin(origin) {
+    if(abs(posY) > 1 || abs(posX) > 1) {
+        std::stringstream s;
+        s << "Block position " << posX << " " << posY << " lies beyond defined raster bounds (-1, 1), (-1, 1)"
+          << " for raster with size 9";
+        throw std::invalid_argument(s.str());
+    }
     init();
-
     m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
     readFromRaster();

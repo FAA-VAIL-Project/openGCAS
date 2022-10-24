@@ -73,3 +73,9 @@ TEST_CASE("RasterQuery Unit Tests") {
         }
     }
 }
+
+TEST_CASE("rqsDataBlock Unit Tests") {
+    try {
+        rqsDataBlock rdb = rqsDataBlock(1, 2, -2, RasterQuery::get(), nPoint{0, 0, -1});
+    } catch(const std::invalid_argument& e) { CHECK(0 == 0); };
+}
