@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 #include "rqs/RasterQuery.h"
 
 using namespace RQS::structures;

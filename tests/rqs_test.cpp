@@ -5,6 +5,8 @@
 #include <catch2/catch.hpp>
 #include "../src/rqs/RasterQuery.h"
 
+using namespace RQS::structures;
+
 TEST_CASE("RasterQuery Unit Tests") {
     RasterQuery& rqs = RasterQuery::get();
     rqs.init(llPoint{41.9, -90.3});

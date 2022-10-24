@@ -6,6 +6,8 @@
 #include "RasterQuery.h"
 #define BLOCK_SIZE 1024
 
+using namespace RQS::structures;
+
 ///\brief Default constructor with initializer list
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
                            RasterQuery& rq, nPoint origin)
@@ -27,8 +29,8 @@ void rqsDataBlock::readFromRaster() {
     xIntersections = (m_origin.x + BLOCK_SIZE > raster.r_xSize);
     yIntersections = (m_origin.y + BLOCK_SIZE > raster.r_ySize);
 
-    std::cout << (xIntersections ? "XINT " : " ");
-    std::cout << (yIntersections ? "YINT\n" : " \n");
+    //std::cout << (xIntersections ? "XINT " : " ");
+    //std::cout << (yIntersections ? "YINT\n" : " \n");
     // Align the index with the actual raster of the file in the RasterCallOrder
     int rasterIndexInCallOrder;
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
@@ -42,7 +44,6 @@ void rqsDataBlock::readFromRaster() {
             const auto* t = &m_rqsCallOrder[0][rasterIndexInCallOrder];
             if(t->band == nullptr) {
                 _spBlock[row].get()[BLOCK_SIZE] = { 0 };
-                //std::cout << "NULL\n";
             } else {
                 t->band->RasterIO(GF_Read,
                             m_origin.x, m_origin.y + row,
@@ -107,7 +108,6 @@ void rqsDataBlock::readFromRaster() {
         for(int row2 = 0; row2 < BLOCK_SIZE - scanY; ++row2) {
             if(t2->band == nullptr) {
                 _spBlock[scanY + row2].get()[BLOCK_SIZE] = { 0 };
-                //std::cout << "NULL\n";
             } else {
                 t2->band->RasterIO(GF_Read,
                                  m_origin.x, 0 + row2,
@@ -134,7 +134,6 @@ void rqsDataBlock::readFromRaster() {
         for(int row = 0; row < scanY; ++row) {
             if(tOrigin->band == nullptr) {
                 _spBlock[row].get()[scanX] = { 0 };
-                //std::cout << "NULL\n";
             } if(tX->band == nullptr) {
                 (_spBlock[row].get() + scanX)[BLOCK_SIZE - scanX] = { 0 };
             }
@@ -161,7 +160,6 @@ void rqsDataBlock::readFromRaster() {
         for(int row2 = 0; row2 < BLOCK_SIZE - scanY; ++row2) {
             if(tY->band == nullptr) {
                 _spBlock[scanY + row2].get()[scanX] = { 0 };
-                //std::cout << "NULL\n";
             } if(tXY->band == nullptr) {
                 (_spBlock[scanY + row2].get() + scanX)[BLOCK_SIZE - scanX] = { 0 };
             } else {

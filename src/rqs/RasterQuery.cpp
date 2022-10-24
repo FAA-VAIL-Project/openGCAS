@@ -8,6 +8,7 @@
 #define EPSILON_FLT 0.001
 #define RASTER_SIZE 1.0
 #define BLOCK_SIZE 1024
+#define __DEBUG_VERBOSE
 
 using namespace RQS::structures;
 
@@ -31,7 +32,6 @@ inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX
     // origin = center raster position + (position in matrix * BLOCK_SIZE * resolution of each raster data point)
     double lat = location.lat + (posY * BLOCK_SIZE * select.lat_res);
     double lon = location.lon + (posX * BLOCK_SIZE * select.lon_res);
-    std::cout << " Lat: " << lat << " Lon: " << lon << std::endl;
     return discreteIndex(llPoint{lat, lon});
 }
 
@@ -44,7 +44,6 @@ void RasterQuery::init(const llPoint& llLocation) {
     for(int i = -1; i < 2; ++i) {
         for(int j = -1; j < 2; ++j) {
             // Get origin of DataBlock
-            std::cout << "Index: " << index;
             nPoint origin = getBlockLocation(llLocation, locRaster, j, i);
             // Allocate memory for it in array
             db[index] = new rqsDataBlock(index, j, i, *this, origin);
@@ -105,12 +104,16 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 
     std::sort(GTVec.begin(), GTVec.end(), sortRasterByGT);
 
+#ifdef __DEBUG_VERBOSE
+    std::cout << "RASTER INFO \n";
     for(const auto& j : GTVec) {
-        std::cout << j.fname << "  Lat: " << j.lat_o << " Lon: " << j.lon_o << "\n";
+        std::cout << j.fname << "  |  Lat: " << j.lat_o << "  |  Lon: " << j.lon_o << "\n";
     }
+    std::cout << "\n\n";
+#endif
+
     return GTVec;
 }
-
 auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     /*
      * Basically what is happening here: a wacky 2d binary search. Latitude is the first aspect checked,
