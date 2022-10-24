@@ -9,6 +9,8 @@
 #define RASTER_SIZE 1.0
 #define BLOCK_SIZE 1024
 
+using namespace RQS::structures;
+
 RasterQuery& RasterQuery::get() {
     // Return static instance for singleton
     static RasterQuery rq_instance;
@@ -224,8 +226,17 @@ void RasterQuery::defineCallOrder(const llPoint& llLocation) {
 }
 
 auto RasterQuery::searchRasterIndex(const std::string& filename) -> int {
+    int i = 0;
     for( const auto& t : m_dataDirTransform ) {
-        if(t.fname == filename) { return t.index; }
+        if(t.fname == filename) { return i; }
+        i++;
     }
+    // not found
     return -1;
+}
+
+auto RasterQuery::getDataTransform() -> std::vector <geoTransformData> {
+    if(m_dataDirTransform.empty())
+        std::cerr << "WARNING: dataTransform not initialized";
+    return m_dataDirTransform;
 }

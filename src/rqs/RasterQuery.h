@@ -71,13 +71,13 @@ private:
      * 3x3 grid.
      * @param llLocation is llPoint of current location
      */
-    void defineCallOrder(const llPoint& llLocation);
+    void defineCallOrder(const RQS::structures::llPoint& llLocation);
 
     /**
      * @brief returns nPoint origin of each rqsDataBlock in array
      * @see defineCallOrder()
      */
-    inline auto getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint;
+    inline auto getBlockLocation(RQS::structures::llPoint location, int raster, int posX, int posY) -> RQS::structures::nPoint;
 
     // Array of rqsDataBlock from which information can be read
     std::array<rqsDataBlock*, 9> db;
@@ -93,7 +93,7 @@ protected:
     std::array<rasterBand, 9> m_rasterCallOrder;
 
     // Origins of each dataBlock stored in matrix
-    std::array<nPoint, 9> m_dbOrigins;
+    std::array<RQS::structures::nPoint, 9> m_dbOrigins;
 
 public:
     /**
@@ -105,14 +105,14 @@ public:
      * @brief Allocate memory and define the call order for rasters on the heap
      * @param llLocation
      */
-    void init(const llPoint& llLocation);
+    void init(const RQS::structures::llPoint& llLocation);
 
     /**@brief Convert llPoint into discrete nPoint on a raster
      *
      * @param llPoint to convert
      * @return nPoint of closest raster index
      */
-    auto discreteIndex(const llPoint& loc) -> nPoint;
+    auto discreteIndex(const RQS::structures::llPoint& loc) -> RQS::structures::nPoint;
 
     /**
      * @brief FOR UNIT TESTING searches through m_dataDirTransform for index of raster by name
@@ -123,6 +123,8 @@ public:
      * @return int index of desired raster passed by filename
      */
     auto searchRasterIndex(const std::string& filename) -> int;
+
+    auto getDataTransform() -> std::vector<geoTransformData>;
 };
 
 
@@ -166,7 +168,7 @@ private:
     std::array<RasterQuery::rasterBand, 9> *m_rqsCallOrder;
 
 public:
-    nPoint m_origin;
+    RQS::structures::nPoint m_origin;
     const int m_id;
 
     /**
@@ -177,7 +179,7 @@ public:
      * @param RasterQuery& rq is reference to RasterQuery singleton
      * @param nPoint origin is top left nPointo f raster
      */
-    explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, nPoint origin);
+    explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, RQS::structures::nPoint origin);
 
     /**
      * @brief takes advantage of Pilot Greymap image encoding to quickly save _spBlock to an image for
