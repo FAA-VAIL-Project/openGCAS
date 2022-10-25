@@ -6,6 +6,7 @@ add_executable(tests
         ../tests/main.cpp
         ../tests/rqs_test.cpp
         ../src/rqs/RasterQuery.cpp
+        ../src/rqs/rqsDataBlock.cpp
         )
 target_link_libraries(tests PRIVATE Catch2::Catch2 GDAL::GDAL)
 

@@ -1,16 +1,9 @@
-#include <iostream>
-#include <vector>
 #include "rqs/RasterQuery.h"
 
+using namespace RQS::structures;
 
 int main(int argc, char *argv[]) {
     RasterQuery& rq = RasterQuery::get();
-    rq.init(llPoint{41.3, -91.2});
-    /*
-    nPoint test = rq.discreteIndex(llPoint{41.3, -91.2});
-
-    std::cout << test.x << " " << test.y << " " << test.r;
-
-    //rqsDataBlock test2 = rqsDataBlock(1);*/
+    rq.init(llPoint{0.9, -0.3});
     return 0;
 }
