@@ -114,73 +114,13 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
 
     return GTVec;
 }
+
 auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
-    /*
-     * Basically what is happening here: a wacky 2d binary search. Latitude is the first aspect checked,
-     * but because binary search doesn't consider the fact that there may be multiple instances of the same
-     * latitude, it chooses whichever index it lands on first and calls it the guess. Therefore, two
-     * loops iterate up and down the m_dataDirTransform vector to find the first and last indicies with the same latitude.
-     * After that, a second binary search is done ONLY between those two indicies, and ONLY considering the
-     * longitude of each raster. Over large amounts of rasters (as would be seen in a real use-case, this is
-     * faster than a brute force search as it scales logarithmically).
-     */
-    int guessLat = -1;
-    int size = m_dataDirTransform.size();
-    int min = 0;
-    int max = size - 1;
-
-    // Basic binary search to get the latitude guess
-    while(min <= max) {
-        int mid = (min + max) / 2;
-        // Test if values are equal by comaring to a float
-        if(abs(m_dataDirTransform[mid].lat_o - loc.lat) < EPSILON_FLT) {
-            // If point is found to be equal
-            guessLat = mid;
-            break;
-        } else if(m_dataDirTransform[mid].lat_o < loc.lat) {
-            min = mid + 1;
-        } else {
-            max = mid - 1;
-        }
-    }
-
-    // Assuming that the pointw as not found exactly, define it as the max + 1
-    if(guessLat == -1)
-        guessLat = max + 1;
-
-    int firstLat = guessLat;
-    int lastLat = guessLat;
-
-    // Iterate from the point to get the minimum and maximum indecies with the same latitude from the sorted
-    // dataDirTransform vector
-    int i = 1, j = 1;
-    while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat + i].lat_o) {
-        lastLat++;
-        i++;
-    }
-    while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat - j].lat_o) {
-        firstLat--;
-        j++;
-    }
-    int lonMin = firstLat;
-    int lonMax = lastLat;
-
-    // Now binary search on the range from firstLat to lastLat
-    while(lonMin <= lonMax) {
-        int lonMid = (lonMin + lonMax) / 2;
-        if(abs(m_dataDirTransform[lonMid].lon_o - loc.lon) < EPSILON_FLT) {
-            lonMax = lonMid;
-            break;
-        } else if(m_dataDirTransform[lonMid].lon_o < loc.lon) {
-            lonMin = lonMid + 1;
-        } else {
-            lonMax = lonMid - 1;
-        }
-    }
+    int lonMax = getClosest(std::move(loc));
 
     // CHeck to see if point exists within guess
     // Else finalIndex = -1
-    if(lonMax >= 0 && lonMax < size) {
+    if(lonMax >= 0 && lonMax < m_dataDirTransform.size()) {
         geoTransformData rel = m_dataDirTransform[lonMax];
         double latRasterMax = rel.lat_o + (rel.r_ySize * rel.lat_res); // Maximum latitude contained in each raster
         double lonRasterMax = rel.lon_o + (rel.r_xSize * rel.lon_res); // ~~~~~~~ longitude
@@ -245,3 +185,74 @@ auto RasterQuery::getDataTransform() -> std::vector <geoTransformData> {
         std::cerr << "WARNING: dataTransform not initialized";
     return m_dataDirTransform;
 }
+
+auto RasterQuery::getClosest(const llPoint &loc) -> int {
+
+    /*
+     * Basically what is happening here: a wacky 2d binary search. Latitude is the first aspect checked,
+     * but because binary search doesn't consider the fact that there may be multiple instances of the same
+     * latitude, it chooses whichever index it lands on first and calls it the guess. Therefore, two
+     * loops iterate up and down the m_dataDirTransform vector to find the first and last indicies with the same latitude.
+     * After that, a second binary search is done ONLY between those two indicies, and ONLY considering the
+     * longitude of each raster. Over large amounts of rasters (as would be seen in a real use-case, this is
+     * faster than a brute force search as it scales logarithmically).
+     */
+    int guessLat = -1;
+    int size = m_dataDirTransform.size();
+    int min = 0;
+    int max = size - 1;
+
+    // Basic binary search to get the latitude guess
+    while(min <= max) {
+        int mid = (min + max) / 2;
+        // Test if values are equal by comaring to a float
+        if(abs(m_dataDirTransform[mid].lat_o - loc.lat) < EPSILON_FLT) {
+            // If point is found to be equal
+            guessLat = mid;
+            break;
+        } else if(m_dataDirTransform[mid].lat_o < loc.lat) {
+            min = mid + 1;
+        } else {
+            max = mid - 1;
+        }
+    }
+
+    // Assuming that the pointw as not found exactly, define it as the max + 1
+    if(guessLat == -1)
+        guessLat = max + 1;
+
+    int firstLat = guessLat;
+    int lastLat = guessLat;
+
+    // Iterate from the point to get the minimum and maximum indecies with the same latitude from the sorted
+    // dataDirTransform vector
+    int i = 1, j = 1;
+    while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat + i].lat_o) {
+        lastLat++;
+        i++;
+    }
+    while(m_dataDirTransform[guessLat].lat_o == m_dataDirTransform[guessLat - j].lat_o) {
+        firstLat--;
+        j++;
+    }
+    int lonMin = firstLat;
+    int lonMax = lastLat;
+
+    // Now binary search on the range from firstLat to lastLat
+    while(lonMin <= lonMax) {
+        int lonMid = (lonMin + lonMax) / 2;
+        if(abs(m_dataDirTransform[lonMid].lon_o - loc.lon) < EPSILON_FLT) {
+            lonMax = lonMid;
+            break;
+        } else if(m_dataDirTransform[lonMid].lon_o < loc.lon) {
+            lonMin = lonMid + 1;
+        } else {
+            lonMax = lonMid - 1;
+        }
+    }
+    return lonMax;
+}
+
+auto RasterQuery::offsetLL(const llPoint& loc, int offX, int offY) -> llPoint {
+
+};

@@ -75,6 +75,8 @@ private:
      */
     inline auto getBlockLocation(RQS::structures::llPoint location, int raster, int posX, int posY) -> RQS::structures::nPoint;
 
+    auto getClosest(const RQS::structures::llPoint& loc) -> int;
+
     // Array of rqsDataBlock from which information can be read
     std::array<rqsDataBlock*, 9> db;
 
@@ -129,6 +131,8 @@ public:
 
     // m_dataDirTransform getter
     auto getDataTransform() -> std::vector<geoTransformData>;
+
+    auto offsetLL(const RQS::structures::llPoint& loc, int offX, int offY) -> RQS::structures::llPoint;
 };
 
 
@@ -183,6 +187,7 @@ public:
      * @param nPoint origin is top left nPointo f raster
      */
     explicit rqsDataBlock(int id, int posX, int posY, RasterQuery& rq, RQS::structures::nPoint origin);
+
 
     /**
      * @brief takes advantage of Pilot Greymap image encoding to quickly save _spBlock to an image for

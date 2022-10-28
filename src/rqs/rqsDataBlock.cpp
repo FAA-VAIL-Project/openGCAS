@@ -18,6 +18,7 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
           << " for raster with size 9";
         throw std::invalid_argument(s.str());
     }
+
     init();
     m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
@@ -34,8 +35,12 @@ void rqsDataBlock::readFromRaster() {
     xIntersections = (m_origin.x + BLOCK_SIZE > raster.r_xSize);
     yIntersections = (m_origin.y + BLOCK_SIZE > raster.r_ySize);
 
-    //std::cout << (xIntersections ? "XINT " : " ");
-    //std::cout << (yIntersections ? "YINT\n" : " \n");
+#ifdef __DEBUG_VERBOSE
+    std::cout << "Raster Origin: " << m_origin.x << " " << m_origin.y << " " << m_origin.r << "\n";
+    std::cout << (xIntersections ? "XINT " : "");
+    std::cout << (yIntersections ? "YINT\n" : " \n");
+#endif
+
     // Align the index with the actual raster of the file in the RasterCallOrder
     int rasterIndexInCallOrder;
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
