@@ -250,9 +250,20 @@ auto RasterQuery::getClosest(const llPoint &loc) -> int {
             lonMax = lonMid - 1;
         }
     }
+
+    assert((lonMax > 0));
     return lonMax;
 }
 
-auto RasterQuery::offsetLL(const llPoint& loc, int offX, int offY) -> llPoint {
-
+inline auto RasterQuery::offsetLL(const llPoint& loc, int offX, int offY) -> llPoint {
+    int rasIndex = discreteIndex(loc).r;
+    if(rasIndex == -1) {
+        // If the raster for the data doesn't exist, it grabs the nearest
+        // Raster and takes the res values from it
+        rasIndex = getClosest(loc);
+    }
+    return llPoint {
+        loc.lat + m_dataDirTransform[rasIndex].lat_res * offX,
+        loc.lon + m_dataDirTransform[rasIndex].lon_res * offY,
+    };
 };

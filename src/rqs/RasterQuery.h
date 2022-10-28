@@ -19,7 +19,7 @@
 #include <cmath>
 #include <experimental/filesystem>
 #include <fstream>
-
+#include <cassert>
 
 class rqsDataBlock;
 class RasterQuery;
@@ -75,7 +75,7 @@ private:
      */
     inline auto getBlockLocation(RQS::structures::llPoint location, int raster, int posX, int posY) -> RQS::structures::nPoint;
 
-    auto getClosest(const RQS::structures::llPoint& loc) -> int;
+    inline auto getClosest(const RQS::structures::llPoint& loc) -> int;
 
     // Array of rqsDataBlock from which information can be read
     std::array<rqsDataBlock*, 9> db;
