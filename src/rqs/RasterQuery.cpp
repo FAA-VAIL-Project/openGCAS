@@ -27,26 +27,28 @@ RasterQuery::~RasterQuery() {
     }
 }
 
-inline auto RasterQuery::getBlockLocation(llPoint location, int raster, int posX, int posY) -> nPoint {
+inline auto RasterQuery::getBlockLocation(llPoint loc, int raster, int posX, int posY) -> nPoint {
     auto select = m_dataDirTransform[raster];
     // origin = center raster position + (position in matrix * BLOCK_SIZE * resolution of each raster data point)
-    double lat = location.lat + (posY * BLOCK_SIZE * select.lat_res);
-    double lon = location.lon + (posX * BLOCK_SIZE * select.lon_res);
+    double lat = loc.lat + (posY * BLOCK_SIZE * select.lat_res);
+    double lon = loc.lon + (posX * BLOCK_SIZE * select.lon_res);
     return discreteIndex(llPoint{lat, lon});
 }
 
-void RasterQuery::init(const llPoint& llLocation) {
+void RasterQuery::init(const llPoint& loc) {
     m_dataDirTransform = readDataDir();
-    m_rasterCallOrder = defineCallOrder(llLocation);
-    int locRaster = discreteIndex(llLocation).r;
+    m_rasterCallOrder = defineCallOrder(loc);
+    int locRaster = discreteIndex(loc).r;
     int index = 0;
     // Index across a 3x3 matrix
     for(int i = -1; i < 2; ++i) {
         for(int j = -1; j < 2; ++j) {
             // Get origin of DataBlock
-            nPoint origin = getBlockLocation(llLocation, locRaster, j, i);
+            nPoint origin = discreteIndex(
+                    offsetLL(loc, i*BLOCK_SIZE, j*BLOCK_SIZE, m_dataDirTransform)
+                    );
             // Allocate memory for it in array
-            db[index] = new rqsDataBlock(index, j, i, *this, origin);
+            db[index] = std::make_unique<rqsDataBlock>(index, j, i, *this, origin);
             // Save origin to protected attribute
             m_dbOrigins[index] = origin;
             index++;
@@ -255,7 +257,9 @@ auto RasterQuery::getClosest(const llPoint &loc) -> int {
     return lonMax;
 }
 
-inline auto RasterQuery::offsetLL(const llPoint& loc, int offX, int offY) -> llPoint {
+inline auto RasterQuery::offsetLL(const llPoint& loc,
+                                  int offX, int offY,
+                                  const std::vector<geoTransformData>& dat) -> llPoint {
     int rasIndex = discreteIndex(loc).r;
     if(rasIndex == -1) {
         // If the raster for the data doesn't exist, it grabs the nearest
@@ -263,7 +267,7 @@ inline auto RasterQuery::offsetLL(const llPoint& loc, int offX, int offY) -> llP
         rasIndex = getClosest(loc);
     }
     return llPoint {
-        loc.lat + m_dataDirTransform[rasIndex].lat_res * offX,
-        loc.lon + m_dataDirTransform[rasIndex].lon_res * offY,
+        loc.lat + dat[rasIndex].lat_res * offX,
+        loc.lon + dat[rasIndex].lon_res * offY,
     };
 };

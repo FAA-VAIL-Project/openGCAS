@@ -10,7 +10,7 @@ using namespace RQS::structures;
 
 ///\brief Default constructor with initializer list
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
-                           RasterQuery& rq, nPoint origin)
+                           RasterQuery& rq, llPoint origin)
                            : m_id(id), m_origin(origin) {
     if(abs(posY) > 1 || abs(posX) > 1) {
         std::stringstream s;
@@ -22,6 +22,7 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
     init();
     m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
+    m_dbOrigins = &rq.m_dbOrigins;
     readFromRaster();
     //debugWriteBitmap();
 }
@@ -29,6 +30,7 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
 void rqsDataBlock::readFromRaster() {
     // Possibly GNU compiler bug (???) pointer to vector is a vector?, this appears to work though.
     auto raster = m_rqsDataInfo[0][m_origin.r];
+
 
     // Check if there are intersections and read from the raster based on which intersections there are (4 options)
     bool xIntersections, yIntersections;

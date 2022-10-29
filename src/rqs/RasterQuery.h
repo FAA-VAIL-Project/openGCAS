@@ -73,12 +73,12 @@ private:
      * @brief returns nPoint origin of each rqsDataBlock in array
      * @see defineCallOrder()
      */
-    inline auto getBlockLocation(RQS::structures::llPoint location, int raster, int posX, int posY) -> RQS::structures::nPoint;
+    inline auto getBlockLocation(RQS::structures::llPoint loc, int raster, int posX, int posY) -> RQS::structures::nPoint;
 
     inline auto getClosest(const RQS::structures::llPoint& loc) -> int;
 
     // Array of rqsDataBlock from which information can be read
-    std::array<rqsDataBlock*, 9> db;
+    std::array<std::unique_ptr<rqsDataBlock>, 9> db;
 
     friend class rqsDataBlock;
 
@@ -101,9 +101,9 @@ public:
 
     /**
      * @brief Allocate memory and define the call order for rasters on the heap
-     * @param llLocation
+     * @param loc
      */
-    void init(const RQS::structures::llPoint& llLocation);
+    void init(const RQS::structures::llPoint& loc);
 
     /**@brief Convert llPoint into discrete nPoint on a raster
      *
@@ -132,7 +132,9 @@ public:
     // m_dataDirTransform getter
     auto getDataTransform() -> std::vector<geoTransformData>;
 
-    auto offsetLL(const RQS::structures::llPoint& loc, int offX, int offY) -> RQS::structures::llPoint;
+    auto offsetLL(const RQS::structures::llPoint& loc,
+                  int offX, int offY,
+                  const std::vector<geoTransformData>& dat) -> RQS::structures::llPoint;
 };
 
 
@@ -145,7 +147,7 @@ public:
  * Holds 1024x1024 chunk of data for RQS. Class init allocates memory in the heap
  * for the data
  */
-class rqsDataBlock {
+class rqsDataBlock : public RasterQuery {
 private:
 
     /**
@@ -175,7 +177,7 @@ private:
     std::array<RasterQuery::rasterBand, 9> *m_rqsCallOrder;
 
 public:
-    RQS::structures::nPoint m_origin;
+    RQS::structures::llPoint m_origin;
     const int m_id;
 
     /**
