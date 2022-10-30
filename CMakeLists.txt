@@ -17,7 +17,10 @@ link_libraries(stdc++fs)
 add_subdirectory(dependencies)
 add_subdirectory(tests)
 
-
+FetchContent_Declare(SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
 
 add_executable(openGCAS
         src/main.cpp
@@ -25,7 +28,9 @@ add_executable(openGCAS
         src/rqs/rqsDataBlock.cpp
         )
 target_link_libraries(openGCAS PRIVATE GDAL::GDAL)
+target_link_libraries(openGCAS PRIVATE sfml-graphics)
 
+target_compile_features(openGCAS PRIVATE cxx_std_17)
 target_precompile_headers(openGCAS
         PUBLIC
         src/rqs/RasterQuery.h

@@ -18,7 +18,7 @@ namespace RQS::structures {
             bool eq = abs(this->lat - right.lat) <= 0.001;
             if (this->lat > right.lat || eq) {
                 if (eq) {
-                    return this->lon > right.lon;
+                    return this->lon < right.lon;
                 }
                 return true;
             }
@@ -33,7 +33,7 @@ namespace RQS::structures {
         int r;
 
         bool isNullPoint() {
-            return (x == 0 && y == 0 && r == -1);
+            return (r == -1);
         };
 
         //friend std::ostream& operator<<(std::ostream& os, const nPoint& p);

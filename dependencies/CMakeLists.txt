@@ -1,4 +1,5 @@
 include(FetchContent)
+set(BUILD_SHARED_LIBS OFF)
 
 # -----------------------------TESTING-------------------------------
 # adds ghs_filesystem Catch2::Catch2 ApprovalTests::ApprovalTests fmt::fmt
@@ -28,3 +29,7 @@ FetchContent_MakeAvailable(filesystem)
 
 # -------------------------------------------------------------------
 
+FetchContent_Declare(SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)

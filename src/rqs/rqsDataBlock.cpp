@@ -10,7 +10,7 @@ using namespace RQS::structures;
 
 ///\brief Default constructor with initializer list
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
-                           RasterQuery& rq, llPoint origin)
+                           RasterQuery& rq, nPoint origin)
                            : m_id(id), m_origin(origin) {
     if(abs(posY) > 1 || abs(posX) > 1) {
         std::stringstream s;
@@ -22,8 +22,11 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
     init();
     m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
-    m_dbOrigins = &rq.m_dbOrigins;
     readFromRaster();
+    std::cout << "Raster Origin: " << m_origin.x << " " << m_origin.y << " " << m_origin.r << "\n";
+    for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
+        if(m_rqsCallOrder[0][i].index == m_origin.r) { std::cout<< "Found Index "<< i << "\n" ; break; }
+    }
     //debugWriteBitmap();
 }
 

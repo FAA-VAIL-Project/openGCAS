@@ -20,8 +20,6 @@ RasterQuery& RasterQuery::get() {
 
 RasterQuery::~RasterQuery() {
     for(int i = 0; i < db.size(); ++i) {
-        // Delete each rqsDataBlock object
-        delete db[i];
         // Close each raster on the CallOrder (guaranteed to have the same size as db)
         GDALClose(m_rasterCallOrder[i].band);
     }
@@ -38,7 +36,6 @@ inline auto RasterQuery::getBlockLocation(llPoint loc, int raster, int posX, int
 void RasterQuery::init(const llPoint& loc) {
     m_dataDirTransform = readDataDir();
     m_rasterCallOrder = defineCallOrder(loc);
-    int locRaster = discreteIndex(loc).r;
     int index = 0;
     // Index across a 3x3 matrix
     for(int i = -1; i < 2; ++i) {
@@ -252,8 +249,9 @@ auto RasterQuery::getClosest(const llPoint &loc) -> int {
             lonMax = lonMid - 1;
         }
     }
-
+    const llPoint tmp{m_dataDirTransform[lonMax].lat_o,m_dataDirTransform[lonMax].lon_o};
     assert((lonMax > 0));
+    assert((&loc > &tmp));
     return lonMax;
 }
 

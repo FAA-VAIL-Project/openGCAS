@@ -135,6 +135,8 @@ public:
     auto offsetLL(const RQS::structures::llPoint& loc,
                   int offX, int offY,
                   const std::vector<geoTransformData>& dat) -> RQS::structures::llPoint;
+
+    auto getDB(int index) { return db[index].get(); }
 };
 
 
@@ -147,7 +149,7 @@ public:
  * Holds 1024x1024 chunk of data for RQS. Class init allocates memory in the heap
  * for the data
  */
-class rqsDataBlock : public RasterQuery {
+class rqsDataBlock {
 private:
 
     /**
@@ -177,7 +179,7 @@ private:
     std::array<RasterQuery::rasterBand, 9> *m_rqsCallOrder;
 
 public:
-    RQS::structures::llPoint m_origin;
+    RQS::structures::nPoint m_origin;
     const int m_id;
 
     /**
@@ -197,6 +199,8 @@ public:
      * etc/output_vis
      */
     void debugWriteBitmap();
+
+    auto getData() -> std::unique_ptr<int[]>* { return _spBlock.get(); }
 };
 
 
