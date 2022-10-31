@@ -7,6 +7,7 @@
 #define OPENGCAS_RASTERQUERY_H
 
 #define __DEBUG_VERBOSE
+#define BLOCK_SIZE 1024
 
 #include "gdal_priv.h"
 #include "structs.h"

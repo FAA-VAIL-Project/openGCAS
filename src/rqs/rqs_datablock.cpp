@@ -4,7 +4,6 @@
 //
 
 #include "rqs.h"
-#define BLOCK_SIZE 1024
 
 using namespace RQS::structures;
 using namespace RQS;
