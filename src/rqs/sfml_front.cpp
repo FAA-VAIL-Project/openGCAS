@@ -6,14 +6,14 @@
 
 using namespace RQS::front;
 
-void sfmlFront::loadData() {
+void dbVis::loadData() {
     for(int i = 0; i < 9; ++i) {
-        auto p = m_rqs->getDB(i)->getData();
-        m_db[i] = new sf::Uint8[b_size*b_size*4];
+        auto p = m_rqs->get().getDB(i)->getData();
+        m_db[i] = new sf::Uint8[b_size*2*b_size*2*4];
         m_tex[i].create(b_size, b_size);
 
-        for(int j = 0; i < b_size*b_size; i += 4) {
-            int val = p[(int)std::floor(i/(512*4)) % 512][i/4 % 512]/2; // Hacky way of accessing the array;
+        for(int j = 0; j < 1024*1024; j += 4) {
+            int val = p[(int)std::floor(j/(1024)) % 1024][j/2 % 1024]/2; // Hacky way of accessing the array;
             m_db[i][j] = val; // obviously, assign the values you need here to form your color
             m_db[i][j+1] = val;
             m_db[i][j+2] = val;
@@ -22,14 +22,22 @@ void sfmlFront::loadData() {
 
         m_tex[i].update(m_db[i]);
         m_sprite[i].setTexture(m_tex[i]);
+        m_sprite[i].setScale(sf::Vector2f(0.75f, 0.75f));
+        m_sprite[i].setOrigin(
+                sf::Vector2f(
+
+                        (float)-1 * (i % 3) * b_size,
+                        (float)-1 * std::floor(i/3) * b_size
+                        ));
     }
 }
 
-sfmlFront::sfmlFront(const RQS::RasterQuery &rqs) {
+dbVis::dbVis(const RQS::RasterQuery* rqs) {
+    m_rqs = rqs;
     loadData();
 }
 
-void sfmlFront::render() {
+void dibVis::render() {
     while (m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event)) {
@@ -38,7 +46,9 @@ void sfmlFront::render() {
         }
 
         m_window.clear();
-        m_window.draw(m_sprite[5]);
+        for(int i = 0; i < 9; ++i) {
+            m_window.draw(m_sprite[i]);
+        }
         m_window.display();
     }
 }

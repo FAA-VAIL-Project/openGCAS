@@ -9,22 +9,22 @@
 #include <SFML/Graphics.hpp>
 
 namespace RQS::front {
-    class sfmlFront {
+    class dbVis {
     private:
         std::array<sf::Uint8*, 9> m_db;
         std::array<sf::Texture, 9> m_tex;
         std::array<sf::Sprite, 9> m_sprite;
 
-        RQS::RasterQuery* m_rqs;
+        const RQS::RasterQuery* m_rqs;
         sf::RenderWindow m_window =
-                sf::RenderWindow(sf::VideoMode(512*3, 512*3), "SFML works!");
+                sf::RenderWindow(sf::VideoMode(0.75*512*3, 0.75*512*3), "Datablock Visualization");
 
         const int b_size = BLOCK_SIZE/2;
 
         void loadData();
 
     public:
-        explicit sfmlFront(const RQS::RasterQuery& rqs);
+        explicit dbVis(const RQS::RasterQuery* rqs);
 
         void render();
     };
