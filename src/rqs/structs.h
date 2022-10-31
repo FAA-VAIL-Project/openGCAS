@@ -1,11 +1,7 @@
 //
-// Define global structs
+// Created by Jack D.V. Carson on 10/30/2022.
+// Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
-
-#ifndef OPENGCAS_STRUCTS_H
-#define OPENGCAS_STRUCTS_H
-
-#include <iostream>
 
 namespace RQS::structures {
 
@@ -35,13 +31,7 @@ namespace RQS::structures {
         bool isNullPoint() {
             return (r == -1);
         };
-
-        //friend std::ostream& operator<<(std::ostream& os, const nPoint& p);
     };
-
-// Basic std::cout operator overload for quick print debugging
-
-
 
 /// \brief znPoint
     struct geoPoint {
@@ -50,4 +40,3 @@ namespace RQS::structures {
         int z;
     };
 }
-#endif //OPENGCAS_STRUCTS_H

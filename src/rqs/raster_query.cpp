@@ -3,14 +3,14 @@
 // Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
-#include "RasterQuery.h"
+#include "rqs.h"
 
 #define EPSILON_FLT 0.001
 #define RASTER_SIZE 1.0
 #define BLOCK_SIZE 1024
 
-
 using namespace RQS::structures;
+using namespace RQS;
 
 RasterQuery& RasterQuery::get() {
     // Return static instance for singleton
@@ -45,7 +45,7 @@ void RasterQuery::init(const llPoint& loc) {
                     offsetLL(loc, i*BLOCK_SIZE, j*BLOCK_SIZE, m_dataDirTransform)
                     );
             // Allocate memory for it in array
-            db[index] = std::make_unique<rqsDataBlock>(index, j, i, *this, origin);
+            db[index] = std::make_unique<RQS::rqsDataBlock>(index, j, i, *this, origin);
             // Save origin to protected attribute
             m_dbOrigins[index] = origin;
             index++;

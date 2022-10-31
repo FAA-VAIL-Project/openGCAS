@@ -3,10 +3,11 @@
 // Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
-#include "RasterQuery.h"
+#include "rqs.h"
 #define BLOCK_SIZE 1024
 
 using namespace RQS::structures;
+using namespace RQS;
 
 ///\brief Default constructor with initializer list
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,

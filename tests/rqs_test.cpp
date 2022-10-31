@@ -3,12 +3,12 @@
 //
 
 #include <catch2/catch.hpp>
-#include "../src/rqs/RasterQuery.h"
+#include "../src/rqs/rqs.h"
 
 using namespace RQS::structures;
 
 TEST_CASE("RasterQuery Unit Tests") {
-    RasterQuery& rqs = RasterQuery::get();
+    RQS::RasterQuery& rqs = RQS::RasterQuery::get();
     rqs.init(llPoint{41.9, -90.3});
     SECTION("Read Saved Raster Data") {
         // Check that adding a non raster wont break reading
@@ -76,6 +76,6 @@ TEST_CASE("RasterQuery Unit Tests") {
 
 TEST_CASE("rqsDataBlock Unit Tests") {
     try {
-        rqsDataBlock rdb = rqsDataBlock(1, 2, -2, RasterQuery::get(), nPoint{0, 0, -1});
+        RQS::rqsDataBlock rdb = RQS::rqsDataBlock(1, 2, -2, RQS::RasterQuery::get(), nPoint{0, 0, -1});
     } catch(const std::invalid_argument& e) { CHECK(0 == 0); };
 }
