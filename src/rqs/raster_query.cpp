@@ -114,6 +114,13 @@ auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
     return GTVec;
 }
 
+auto RasterQuery::toLL(const RQS::structures::nPoint &nLoc) -> RQS::structures::llPoint {
+    auto ras = &m_dataDirTransform[nLoc.r];
+    double lat = ras->lat_o + (ras->lat_res*nLoc.x);
+    double lon = ras->lon_o + (ras->lon_res*nLoc.y);
+    return llPoint{lat, lon};
+}
+
 auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     int lonMax = getClosest(std::move(loc));
 

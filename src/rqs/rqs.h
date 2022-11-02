@@ -117,6 +117,8 @@ namespace RQS {
          */
         auto discreteIndex(const RQS::structures::llPoint &loc) -> RQS::structures::nPoint;
 
+        auto toLL(const RQS::structures::nPoint& nLoc) -> RQS::structures::llPoint;
+
         /**
          * @brief FOR UNIT TESTING searches through m_dataDirTransform for index of raster by name
          *

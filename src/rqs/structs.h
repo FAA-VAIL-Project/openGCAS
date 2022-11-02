@@ -20,6 +20,10 @@ namespace RQS::structures {
             }
             return false;
         };
+
+        llPoint invert() {
+            return llPoint{this->lon, this->lat};
+        };
     };
 
 /// \brief Index information from within a raster
@@ -31,6 +35,7 @@ namespace RQS::structures {
         bool isNullPoint() {
             return (r == -1);
         };
+
     };
 
 /// \brief znPoint

@@ -11,15 +11,24 @@
 namespace RQS::front {
     class dbVis {
     private:
+        RQS::structures::llPoint llOrigin;
         std::array<sf::Uint8*, 9> m_db;
         std::array<sf::Texture, 9> m_tex;
         std::array<sf::Sprite, 9> m_sprite;
 
+
+
+        double cornerLatRes;
+        double cornerLonRes;
+
         const RQS::RasterQuery* m_rqs;
+        const int w_size = 1 * 512 * 3;
         sf::RenderWindow m_window =
-                sf::RenderWindow(sf::VideoMode(0.75*512*3, 0.75*512*3), "Datablock Visualization");
+                sf::RenderWindow(sf::VideoMode(w_size, w_size), "Datablock Visualization");
 
         const int b_size = BLOCK_SIZE/2;
+
+        auto llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f;
 
         void loadData();
 

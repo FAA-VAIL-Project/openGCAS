@@ -5,6 +5,19 @@
 #include "sfml_front.h"
 
 using namespace RQS::front;
+using namespace RQS::structures;
+
+dbVis::dbVis(const RQS::RasterQuery* rqs) {
+    m_rqs = rqs;
+    llOrigin = rqs->get().toLL(rqs->get().getDB(0)->m_origin);
+    auto tmp = rqs->get()
+            .getDataTransform()
+            [m_rqs->get().getDB(4)->m_origin.r];
+    cornerLatRes = tmp.lat_res;
+    cornerLonRes = tmp.lon_res;
+    std::cout << llOrigin.lat << " " << llOrigin.lon;
+    loadData();
+}
 
 void dbVis::loadData() {
     for(int i = 0; i < 9; ++i) {
@@ -22,22 +35,31 @@ void dbVis::loadData() {
 
         m_tex[i].update(m_db[i]);
         m_sprite[i].setTexture(m_tex[i]);
-        m_sprite[i].setScale(sf::Vector2f(0.75f, 0.75f));
+        //m_sprite[i].setScale(sf::Vector2f(0.75f, 0.75f));
         m_sprite[i].setOrigin(
                 sf::Vector2f(
 
                         (float)-1 * (i % 3) * b_size,
                         (float)-1 * std::floor(i/3) * b_size
-                        ));
+                ));
     }
 }
 
-dbVis::dbVis(const RQS::RasterQuery* rqs) {
-    m_rqs = rqs;
-    loadData();
+auto dbVis::llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f {
+    const int divConstant = 512;
+    float x = ((loc.lat - llOrigin.lat)/cornerLatRes) / 2;
+    float y = ((loc.lon - llOrigin.lon)/cornerLonRes) / 2;
+    std::cout << "\n" << x << " " << y;
+    return sf::Vector2f{-1*y, -1*x};
 }
 
-void dibVis::render() {
+void dbVis::render() {
+    auto n = llToPx(llPoint{-89.4046,41.2921}.invert());
+    sf::CircleShape shape(5);
+    shape.setOrigin(n);
+// set the shape color to green
+    shape.setFillColor(sf::Color(100, 250, 50));
+
     while (m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event)) {
@@ -49,6 +71,7 @@ void dibVis::render() {
         for(int i = 0; i < 9; ++i) {
             m_window.draw(m_sprite[i]);
         }
+        m_window.draw(shape);
         m_window.display();
     }
 }
