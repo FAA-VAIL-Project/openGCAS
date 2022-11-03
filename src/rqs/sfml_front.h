@@ -1,5 +1,6 @@
 //
-// Created by quothbonney on 10/30/22.
+// Created by Jack D.V. Carson on 10/30/2022.
+// Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
 #ifndef OPENGCAS_SFML_FRONT_H
@@ -8,35 +9,61 @@
 #include "rqs.h"
 #include <SFML/Graphics.hpp>
 
+
+
 namespace RQS::front {
-    class dbVis {
+    class RasterBorder;
+
+    class DBVis {
     private:
         RQS::structures::llPoint llOrigin;
         std::array<sf::Uint8*, 9> m_db;
         std::array<sf::Texture, 9> m_tex;
         std::array<sf::Sprite, 9> m_sprite;
-
-
+        std::vector<RQS::structures::llPoint> points;
 
         double cornerLatRes;
         double cornerLonRes;
 
         const RQS::RasterQuery* m_rqs;
-        const int w_size = 1 * 512 * 3;
-        sf::RenderWindow m_window =
-                sf::RenderWindow(sf::VideoMode(w_size, w_size), "Datablock Visualization");
+        static const int w_size = 0.5 * 512 * 3;
+        sf::RenderWindow m_window = sf::RenderWindow(sf::VideoMode(w_size, w_size), "Datablock Visualization");
 
         const int b_size = BLOCK_SIZE/2;
 
-        auto llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f;
+        auto inline llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f const;
 
         void loadData();
 
+        friend class RasterBorder;
     public:
-        explicit dbVis(const RQS::RasterQuery* rqs);
+        DBVis() = default;
+
+        explicit DBVis(const RQS::RasterQuery* rqs);
 
         void render();
     };
+
+
+    class RasterBorder : public sf::Drawable {
+    public:
+        RasterBorder(int rasterNumber, const RasterQuery *rqs, DBVis *vis);
+
+    private:
+        const float thickness;
+        std::array<sf::VertexArray, 4> m_verticies;
+
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+        {
+            for(int i = 0; i < 4; ++i)
+                target.draw(m_verticies[i], states);
+        }
+
+
+    };
+
+    //sf::RenderWindow* DBVis::m_window = new sf::RenderWindow;
+
 }
 
 #endif //OPENGCAS_SFML_FRONT_H

@@ -26,7 +26,7 @@ add_executable(openGCAS
         src/main.cpp
         src/rqs/raster_query.cpp
         src/rqs/rqs_datablock.cpp
-        src/rqs/sfml_front.cpp src/rqs/sfml_front.h)
+        src/rqs/sfml_front.cpp src/rqs/sfml_front.h src/rqs/structs.cpp)
 target_link_libraries(openGCAS PRIVATE GDAL::GDAL)
 target_link_libraries(openGCAS PRIVATE sfml-graphics)
 

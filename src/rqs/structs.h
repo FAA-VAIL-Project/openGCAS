@@ -3,6 +3,11 @@
 // Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
+#ifndef OPENGCAS_RQS_STRUCTURES_H
+#define OPENGCAS_RQS_STRUCTURES_H
+
+#include <iostream>
+
 namespace RQS::structures {
 
 /// \brief Geographic point defined by latitude (N) and longitude (E)
@@ -10,20 +15,9 @@ namespace RQS::structures {
         double lat;
         double lon;
 
-        bool operator>(const llPoint &right) {
-            bool eq = abs(this->lat - right.lat) <= 0.001;
-            if (this->lat > right.lat || eq) {
-                if (eq) {
-                    return this->lon < right.lon;
-                }
-                return true;
-            }
-            return false;
-        };
+        bool operator>(const llPoint &right) const;
 
-        llPoint invert() {
-            return llPoint{this->lon, this->lat};
-        };
+        llPoint invert();
     };
 
 /// \brief Index information from within a raster
@@ -32,9 +26,7 @@ namespace RQS::structures {
         int y;
         int r;
 
-        bool isNullPoint() {
-            return (r == -1);
-        };
+        [[nodiscard]] bool isNullPoint() const;
 
     };
 
@@ -44,4 +36,12 @@ namespace RQS::structures {
         int y;
         int z;
     };
+
+
+
 }
+
+std::ostream& operator<<(std::ostream& os, const RQS::structures::llPoint& ll);
+std::ostream& operator<<(std::ostream& os, const RQS::structures::nPoint& n);
+
+#endif // OPENGCAS_RQS_STRUCTURES_H

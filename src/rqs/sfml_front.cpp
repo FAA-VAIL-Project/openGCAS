@@ -1,5 +1,6 @@
 //
-// Created by quothbonney on 10/30/22.
+// Created by Jack D.V. Carson on 10/30/2022.
+// Copyright (C) GNU LESSER GENERAL PUBLIC LICENSE
 //
 
 #include "sfml_front.h"
@@ -7,7 +8,7 @@
 using namespace RQS::front;
 using namespace RQS::structures;
 
-dbVis::dbVis(const RQS::RasterQuery* rqs) {
+DBVis::DBVis(const RQS::RasterQuery* rqs) {
     m_rqs = rqs;
     llOrigin = rqs->get().toLL(rqs->get().getDB(0)->m_origin);
     auto tmp = rqs->get()
@@ -19,7 +20,7 @@ dbVis::dbVis(const RQS::RasterQuery* rqs) {
     loadData();
 }
 
-void dbVis::loadData() {
+void DBVis::loadData() {
     for(int i = 0; i < 9; ++i) {
         auto p = m_rqs->get().getDB(i)->getData();
         m_db[i] = new sf::Uint8[b_size*2*b_size*2*4];
@@ -35,7 +36,7 @@ void dbVis::loadData() {
 
         m_tex[i].update(m_db[i]);
         m_sprite[i].setTexture(m_tex[i]);
-        //m_sprite[i].setScale(sf::Vector2f(0.75f, 0.75f));
+        m_sprite[i].setScale(sf::Vector2f(0.5f, 0.5f));
         m_sprite[i].setOrigin(
                 sf::Vector2f(
 
@@ -45,18 +46,20 @@ void dbVis::loadData() {
     }
 }
 
-auto dbVis::llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f {
-    const int divConstant = 512;
-    float x = ((loc.lat - llOrigin.lat)/cornerLatRes) / 2;
-    float y = ((loc.lon - llOrigin.lon)/cornerLonRes) / 2;
-    std::cout << "\n" << x << " " << y;
-    return sf::Vector2f{-1*y, -1*x};
+auto inline DBVis::llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f const {
+    float x = ((loc.lat - llOrigin.lat)/cornerLatRes) / 4;
+    float y = ((loc.lon - llOrigin.lon)/cornerLonRes) / 4;
+    std::cout << "\nllToPx(): " << x << " " << y;
+    return sf::Vector2f{1*y, 1*x};
 }
 
-void dbVis::render() {
+void DBVis::render() {
     auto n = llToPx(llPoint{-89.4046,41.2921}.invert());
     sf::CircleShape shape(5);
+    sf::Vertex point(n, sf::Color::Green);
     shape.setOrigin(n);
+
+    RasterBorder rb(5, m_rqs, this);
 // set the shape color to green
     shape.setFillColor(sf::Color(100, 250, 50));
 
@@ -70,8 +73,45 @@ void dbVis::render() {
         m_window.clear();
         for(int i = 0; i < 9; ++i) {
             m_window.draw(m_sprite[i]);
+            m_window.draw(rb);
         }
         m_window.draw(shape);
         m_window.display();
     }
+}
+
+RasterBorder::RasterBorder(int rasterNumber, const RasterQuery *rqs, DBVis *vis)
+: thickness(5.f) {
+    auto dat = rqs->get().getDataTransform()[rasterNumber];
+
+    llPoint min = llPoint{dat.lat_o, dat.lon_o};
+    llPoint max = dat.maxLL();
+    sf::Vector2f pos[4];
+
+    pos[0] = sf::Vector2f(vis->llToPx(min));
+    pos[1] = sf::Vector2f(vis->llToPx(llPoint{max.lat, min.lon}));
+    pos[2] = sf::Vector2f(vis->llToPx(max));
+    pos[3] = sf::Vector2f(vis->llToPx(llPoint{min.lat, max.lon}));
+
+    for(int i = 0; i < 4; ++i) {
+        sf::Vector2f direction = pos[(i + 1)%4] - pos[i];
+        sf::Vector2f unitDirection = direction/std::sqrt(direction.x*direction.x+direction.y*direction.y);
+        sf::Vector2f unitPerpendicular(-unitDirection.y,unitDirection.x);
+
+        sf::Vector2f offset = (thickness/2.f)*unitPerpendicular;
+
+        auto vertex = sf::VertexArray(sf::Quads, 4);
+        vertex[0].position = pos[i] + offset;
+        vertex[1].position = pos[(i + 1) % 4] + offset;
+        vertex[2].position = pos[(i + 1) % 4] - offset;
+        vertex[3].position = pos[i] - offset;
+
+        vertex[0].color = sf::Color::Green;
+        vertex[1].color = sf::Color::Green;
+        vertex[2].color = sf::Color::Green;
+        vertex[3].color = sf::Color::Green;
+
+        m_verticies[i] = vertex;
+    }
+
 }

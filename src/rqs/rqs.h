@@ -50,6 +50,8 @@ namespace RQS {
             double lat_res;
             int r_xSize;
             int r_ySize;
+
+            [[nodiscard]] RQS::structures::llPoint maxLL() const;
         };
 
         struct rasterBand {

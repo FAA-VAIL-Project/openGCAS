@@ -275,4 +275,10 @@ inline auto RasterQuery::offsetLL(const llPoint& loc,
         loc.lat + dat[rasIndex].lat_res * offX,
         loc.lon + dat[rasIndex].lon_res * offY,
     };
-};
+}
+
+RQS::structures::llPoint RasterQuery::geoTransformData::maxLL() const {
+    double maxLat = this->lat_o + (this->lat_res * this->r_xSize);
+    double maxLon = this->lon_o + (this->lon_res * this->r_ySize);
+    return llPoint{maxLat, maxLon};
+}
