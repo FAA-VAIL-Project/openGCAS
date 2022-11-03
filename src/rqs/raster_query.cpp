@@ -257,8 +257,8 @@ auto RasterQuery::getClosest(const llPoint &loc) -> int {
         }
     }
     const llPoint tmp{m_dataDirTransform[lonMax].lat_o,m_dataDirTransform[lonMax].lon_o};
-    assert((lonMax > 0));
-    assert((&loc > &tmp));
+    //assert((lonMax > 0));
+    //assert((&loc > &tmp));
     return lonMax;
 }
 
