@@ -21,6 +21,7 @@ namespace RQS::front {
         std::array<sf::Texture, 9> m_tex;
         std::array<sf::Sprite, 9> m_sprite;
         std::vector<sf::CircleShape> points;
+        std::vector<RasterBorder> borders;
 
         double cornerLatRes;
         double cornerLonRes;

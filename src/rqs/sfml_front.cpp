@@ -21,7 +21,12 @@ DBVis::DBVis(const RQS::RasterQuery* rqs) {
 }
 
 void DBVis::loadData() {
+
+    auto dat = m_rqs->get().getDataTransform();
+    auto calls = m_rqs->get().getCallOrder();
     for(int i = 0; i < 9; ++i) {
+        borders.push_back(static_cast<RasterBorder>(RasterBorder(std::max(calls[i].index, 0), m_rqs, this)));
+
         auto p = m_rqs->get().getDB(i)->getData();
         m_db[i] = new sf::Uint8[b_size*2*b_size*2*4];
         m_tex[i].create(b_size, b_size);
@@ -54,9 +59,6 @@ auto inline DBVis::llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f c
 }
 
 void DBVis::render() {
-
-
-    RasterBorder rb(5, m_rqs, this);
 // set the shape color to green
 
     while (m_window.isOpen()) {
@@ -69,11 +71,12 @@ void DBVis::render() {
         m_window.clear();
         for(int i = 0; i < 9; ++i) {
             m_window.draw(m_sprite[i]);
-            m_window.draw(rb);
         }
-        for( const auto& p : points) {
+        for(const auto& b : borders)
+            m_window.draw(b);
+
+        for( const auto& p : points)
             m_window.draw(p);
-        }
         m_window.display();
     }
 }

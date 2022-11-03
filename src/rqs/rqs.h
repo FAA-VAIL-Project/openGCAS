@@ -138,6 +138,8 @@ namespace RQS {
          */
         auto defineCallOrder(const RQS::structures::llPoint &llLocation) -> std::array<rasterBand, 9>;
 
+        auto getCallOrder() { return m_rasterCallOrder; }
+
         // m_dataDirTransform getter
         auto getDataTransform() -> std::vector<geoTransformData>;
 
