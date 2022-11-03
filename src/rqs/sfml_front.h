@@ -20,7 +20,7 @@ namespace RQS::front {
         std::array<sf::Uint8*, 9> m_db;
         std::array<sf::Texture, 9> m_tex;
         std::array<sf::Sprite, 9> m_sprite;
-        std::vector<RQS::structures::llPoint> points;
+        std::vector<sf::CircleShape> points;
 
         double cornerLatRes;
         double cornerLonRes;
@@ -40,6 +40,8 @@ namespace RQS::front {
         DBVis() = default;
 
         explicit DBVis(const RQS::RasterQuery* rqs);
+
+        void loadPoints(std::vector<structures::llPoint> locs);
 
         void render();
     };

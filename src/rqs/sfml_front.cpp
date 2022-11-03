@@ -54,14 +54,10 @@ auto inline DBVis::llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f c
 }
 
 void DBVis::render() {
-    auto n = llToPx(llPoint{-89.4046,41.2921}.invert());
-    sf::CircleShape shape(5);
-    sf::Vertex point(n, sf::Color::Green);
-    shape.setOrigin(n);
+
 
     RasterBorder rb(5, m_rqs, this);
 // set the shape color to green
-    shape.setFillColor(sf::Color(100, 250, 50));
 
     while (m_window.isOpen()) {
         sf::Event event;
@@ -75,13 +71,28 @@ void DBVis::render() {
             m_window.draw(m_sprite[i]);
             m_window.draw(rb);
         }
-        m_window.draw(shape);
+        for( const auto& p : points) {
+            m_window.draw(p);
+        }
         m_window.display();
     }
 }
 
+void DBVis::loadPoints(std::vector<llPoint> locs) {
+    for(const auto& ll : locs) {
+        auto tmp = llToPx(ll);
+        auto n = sf::Vector2f{tmp.x*-1, tmp.y*-1};
+        sf::CircleShape shape(5);
+        sf::Vertex point(n, sf::Color::Green);
+        shape.setOrigin(n);
+        shape.setFillColor(sf::Color(100, 250, 50));
+
+        points.push_back(shape);
+    }
+}
+
 RasterBorder::RasterBorder(int rasterNumber, const RasterQuery *rqs, DBVis *vis)
-: thickness(5.f) {
+: thickness(3.f) {
     auto dat = rqs->get().getDataTransform()[rasterNumber];
 
     llPoint min = llPoint{dat.lat_o, dat.lon_o};
