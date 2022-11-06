@@ -112,7 +112,7 @@ void rqsDataBlock::readFromRaster() {
             }
 
             else {
-                std::get<0>(*t2)->RasterIO(GF_Read,
+                std::get<0>(*t)->RasterIO(GF_Read,
                                  m_origin.x, m_origin.y + row,
                                  BLOCK_SIZE, 1,
                                  _spBlock[row].get(),
