@@ -20,14 +20,17 @@ namespace RQS::front {
         std::array<sf::Uint8*, 9> m_db;
         std::array<sf::Texture, 9> m_tex;
         std::array<sf::Sprite, 9> m_sprite;
-        std::vector<sf::CircleShape> points;
-        std::vector<RasterBorder> borders;
+        std::vector<sf::CircleShape> m_points;
+        std::vector<RasterBorder> m_borders;
 
         double cornerLatRes;
         double cornerLonRes;
+        float m_scale;
 
-        const RQS::RasterQuery* m_rqs;
-        static const int w_size = 0.5 * 512 * 3;
+        using m_rqs = RQS::RasterQuery;
+
+        //const RQS::RasterQuery* m_rqs;
+        const int w_size = 0.5 * 512 * 3;
         sf::RenderWindow m_window = sf::RenderWindow(sf::VideoMode(w_size, w_size), "Datablock Visualization");
 
         const int b_size = BLOCK_SIZE/2;
@@ -38,9 +41,8 @@ namespace RQS::front {
 
         friend class RasterBorder;
     public:
-        DBVis() = default;
 
-        explicit DBVis(const RQS::RasterQuery* rqs);
+        explicit DBVis(float scale = 0.5);
 
         void loadPoints(std::vector<structures::llPoint> locs);
 

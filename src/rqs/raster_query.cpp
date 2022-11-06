@@ -21,7 +21,7 @@ RasterQuery& RasterQuery::get() {
 RasterQuery::~RasterQuery() {
     for(int i = 0; i < db.size(); ++i) {
         // Close each raster on the CallOrder (guaranteed to have the same size as db)
-        GDALClose(m_rasterCallOrder[i].band);
+        GDALClose(std::get<0>(m_rasterCallOrder[i]));
     }
 }
 
@@ -41,11 +41,10 @@ void RasterQuery::init(const llPoint& loc) {
     for(int i = -1; i < 2; ++i) {
         for(int j = -1; j < 2; ++j) {
             // Get origin of DataBlock
-            nPoint origin = discreteIndex(
-                    offsetLL(loc, i*BLOCK_SIZE, j*BLOCK_SIZE, m_dataDirTransform)
-                    );
+            auto ll = offsetLL(loc, i*BLOCK_SIZE, j*BLOCK_SIZE, m_dataDirTransform);
+            nPoint origin = discreteIndex(ll);
             // Allocate memory for it in array
-            db[index] = std::make_unique<RQS::rqsDataBlock>(index, j, i, *this, origin);
+            db[index] = std::make_unique<RQS::rqsDataBlock>(index, j, i, *this, origin, ll);
             // Save origin to protected attribute
             m_dbOrigins[index] = origin;
             index++;
@@ -149,9 +148,9 @@ auto RasterQuery::discreteIndex(const llPoint& loc) -> nPoint {
     return nPoint{0, 0, -1};
 }
 
-auto RasterQuery::defineCallOrder(const llPoint& llLocation) -> std::array<rasterBand, 9> {
+auto RasterQuery::defineCallOrder(const llPoint& llLocation) -> std::array<_rb_tup , 9> {
     int index = 0;
-    std::array<rasterBand, 9> working;
+    std::array<_rb_tup, 9> working;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; ++j) {
             /*
@@ -166,9 +165,9 @@ auto RasterQuery::defineCallOrder(const llPoint& llLocation) -> std::array<raste
                 const char *name = m_dataDirTransform[n.r].fname.c_str();
                 GDALDataset *dataset = (GDALDataset*)GDALOpen(name, GA_ReadOnly);
                 GDALRasterBand *band = dataset->GetRasterBand(1);
-                working[index] = rasterBand{band, n.r};
+                working[index] = std::make_tuple(band, n.r);
             } else {
-                working[index] = rasterBand{nullptr, -1};
+                working[index] = std::make_tuple(nullptr, -1);
             }
             index++;
         }

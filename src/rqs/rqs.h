@@ -20,6 +20,7 @@
 #include <cmath>
 #include <experimental/filesystem>
 #include <fstream>
+#include <tuple>
 #include <cassert>
 
 
@@ -54,10 +55,8 @@ namespace RQS {
             [[nodiscard]] RQS::structures::llPoint maxLL() const;
         };
 
-        struct rasterBand {
-            GDALRasterBand *band;
-            int index;
-        };
+        typedef std::tuple<GDALRasterBand*, int> _rb_tup;
+
 
         /**
          * @brief RasterQuery Private Singleton Constructor
@@ -95,7 +94,7 @@ namespace RQS {
         std::vector<geoTransformData> m_dataDirTransform;
 
         //Vector of open RasterBands based on geospatial position
-        std::array<rasterBand, 9> m_rasterCallOrder;
+        std::array<_rb_tup, 9> m_rasterCallOrder;
 
         // Origins of each dataBlock stored in matrix
         std::array<RQS::structures::nPoint, 9> m_dbOrigins;
@@ -136,7 +135,7 @@ namespace RQS {
          * 3x3 grid.
          * @param llLocation is llPoint of current location
          */
-        auto defineCallOrder(const RQS::structures::llPoint &llLocation) -> std::array<rasterBand, 9>;
+        auto defineCallOrder(const RQS::structures::llPoint &llLocation) -> std::array<_rb_tup, 9>;
 
         auto getCallOrder() { return m_rasterCallOrder; }
 
@@ -162,6 +161,7 @@ namespace RQS {
  */
     class rqsDataBlock {
     private:
+        std::tuple<double, double> llRes;
 
         /**
          * Block data is stored in a 2d smart pointer _spBlock which consists of typedef
@@ -185,12 +185,22 @@ namespace RQS {
          */
         void readFromRaster();
 
+        void defineLLRes();
+
+        void n_readFromRaster();
+
+        void readRasterFromTuple(int rasterIndex,
+                                 std::tuple<structures::nPoint, structures::nPoint> nEdges,
+                                 structures::nPoint blockIndex);
+
         // Attributes inherited from the singleton reference RasterQuery
         std::vector<RasterQuery::geoTransformData> *m_rqsDataInfo;
-        std::array<RasterQuery::rasterBand, 9> *m_rqsCallOrder;
+        std::array<RasterQuery::_rb_tup, 9> *m_rqsCallOrder;
 
     public:
         RQS::structures::nPoint m_origin;
+        RQS::structures::llPoint m_llOrigin;
+
         const int m_id;
 
         /**
@@ -201,7 +211,7 @@ namespace RQS {
          * @param RasterQuery& rq is reference to RasterQuery singleton
          * @param nPoint origin is top left nPointo f raster
          */
-        explicit rqsDataBlock(int id, int posX, int posY, RasterQuery &rq, RQS::structures::nPoint origin);
+        explicit rqsDataBlock(int id, int posX, int posY, RasterQuery &rq, structures::nPoint origin, structures::llPoint llOrigin);
 
 
         /**
