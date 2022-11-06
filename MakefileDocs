@@ -1,13 +1,21 @@
 .DEFAULT_GOAL := help
 
+ifeq ($(OS),Windows_NT)
+	export PIPENV=python -m pipenv
+	export PYTHON=python
+else
+	export PIPENV=python3 -m pipenv
+	export PYTHON=python3
+endif
+
 ##                                                                            .
 ## ============================================================================
 ## openGCAS - Ground Collision Avoidance System.
-##       ---------------------------------------------------------------
-##       The purpose of this Makefile is to support the software
-##       development process for openGCAS.
-##       ---------------------------------------------------------------
-##       The available make commands are:
+##            ---------------------------------------------------------------
+##            The purpose of this Makefile is to support the software
+##            development process for openGCAS.
+##            ---------------------------------------------------------------
+##            The available make commands are:
 ## ----------------------------------------------------------------------------
 ## help:               Show this help.
 ## docs:               Create and upload the user documentation with MkDocs.
@@ -22,15 +30,16 @@ help:
 # Configuration file: none
 mkdocs:
 	@echo "Info **********  Start: MkDocs **************************************"
-	python -m pip install --upgrade pip
-	python -m pip install --upgrade pipenv
-	python -m pipenv install --dev
-	python -m pipenv update --dev
-	pipenv run pip freeze
-	python --version
-	python -m pip --version
-	pipenv run mkdocs --version
-	pipenv run mkdocs gh-deploy --force
+	${PYTHON} -m pip install --upgrade pip
+	${PYTHON} -m pip install --upgrade pipenv
+	${PYTHON} -m pipenv install --dev
+	${PYTHON} -m pipenv update --dev
+	${PIPENV} run pip freeze
+	@echo ---------------------------------------------------------------------
+	@echo PYTHON    =${PYTHON}
+	${PIPENV} run mkdocs --version
+	@echo ---------------------------------------------------------------------
+	${PIPENV} run mkdocs gh-deploy --force
 	@echo "Info **********  End:   MkDocs **************************************"
 
 ## ============================================================================
