@@ -6,7 +6,7 @@
 #define OPENGCAS_RASTER_H
 
 #include "gdal_priv.h"
-#include "structs.h"
+#include "../src/rqs/structs.h"
 #include <vector>
 
 class Raster {

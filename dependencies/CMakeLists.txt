@@ -1,4 +1,5 @@
 include(FetchContent)
+set(BUILD_SHARED_LIBS OFF)
 
 # -----------------------------TESTING-------------------------------
 # adds ghs_filesystem Catch2::Catch2 ApprovalTests::ApprovalTests fmt::fmt

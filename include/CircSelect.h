@@ -5,7 +5,7 @@
 #ifndef OPENGCAS_CIRCSELECT_H
 #define OPENGCAS_CIRCSELECT_H
 
-#include "structs.h"
+#include "../src/rqs/structs.h"
 #include "Raster.h"
 
 class CircSelect {

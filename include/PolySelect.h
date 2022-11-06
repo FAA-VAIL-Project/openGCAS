@@ -5,7 +5,7 @@
 #ifndef OPENGCAS_POLYSELECT_H
 #define OPENGCAS_POLYSELECT_H
 
-#include "structs.h"
+#include "../src/rqs/structs.h"
 #include "Raster.h"
 
 class PolySelect {
