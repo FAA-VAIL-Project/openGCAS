@@ -57,7 +57,6 @@ namespace RQS {
 
         typedef std::tuple<GDALRasterBand*, int> _rb_tup;
 
-
         /**
          * @brief RasterQuery Private Singleton Constructor
          */
@@ -106,6 +105,12 @@ namespace RQS {
         static RasterQuery &get();
 
         /**
+         * Tuple type to store lat long resolution data for a raster
+         * lat: double, lon: double, callOrderIndex: int
+         */
+        typedef std::tuple<double, double, int> _llRes;
+
+        /**
          * @brief Allocate memory and define the call order for rasters on the heap
          * @param loc
          */
@@ -147,6 +152,8 @@ namespace RQS {
                       const std::vector<geoTransformData> &dat) -> RQS::structures::llPoint;
 
         auto getDB(int index) { return db[index].get(); }
+
+        auto defineLLRes(structures::llPoint loc) -> std::tuple<double, double, int>;
     };
 
 
@@ -161,7 +168,7 @@ namespace RQS {
  */
     class rqsDataBlock {
     private:
-        std::tuple<double, double> llRes;
+
 
         /**
          * Block data is stored in a 2d smart pointer _spBlock which consists of typedef
@@ -184,8 +191,6 @@ namespace RQS {
          * @brief Reads from raster call stack to fill memory block
          */
         void readFromRaster();
-
-        void defineLLRes();
 
         void n_readFromRaster();
 

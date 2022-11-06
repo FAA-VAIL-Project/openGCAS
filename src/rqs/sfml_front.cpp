@@ -9,13 +9,9 @@ using namespace RQS::front;
 using namespace RQS::structures;
 
 DBVis::DBVis(float scale) : m_scale(scale) {
-    llOrigin = m_rqs::get().toLL(m_rqs::get().getDB(0)->m_origin);
-    auto tmp = m_rqs::get()
-            .getDataTransform()
-            [m_rqs::get().getDB(4)->m_origin.r];
-    cornerLatRes = tmp.lat_res;
-    cornerLonRes = tmp.lon_res;
-    std::cout << llOrigin.lat << " " << llOrigin.lon;
+    llOrigin = m_rqs::get().getDB(0)->m_llOrigin;
+    cornerRes = m_rqs::get().defineLLRes(llOrigin);
+    std::cout << cornerLatRes << " " << cornerLonRes;
     loadData();
 }
 
@@ -54,10 +50,10 @@ void DBVis::loadData() {
 }
 
 auto inline DBVis::llToPx(const RQS::structures::llPoint& loc) -> sf::Vector2f const {
-    float x = ((loc.lat - llOrigin.lat)/cornerLatRes) * (m_scale*m_scale);
-    float y = ((loc.lon - llOrigin.lon)/cornerLonRes) * (m_scale*m_scale);
+    double x = ((loc.lat - llOrigin.lat)/std::get<0>(cornerRes)) * (m_scale*m_scale);
+    double y = ((loc.lon - llOrigin.lon)/std::get<1>(cornerRes)) * (m_scale*m_scale);
     std::cout << "\nllToPx(): " << x << " " << y;
-    return sf::Vector2f{1*y, 1*x};
+    return sf::Vector2f{1*(float)y, 1*(float)x};
 }
 
 void DBVis::render() {

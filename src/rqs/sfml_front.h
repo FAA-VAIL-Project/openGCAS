@@ -23,6 +23,7 @@ namespace RQS::front {
         std::vector<sf::CircleShape> m_points;
         std::vector<RasterBorder> m_borders;
 
+        RasterQuery::_llRes cornerRes;
         double cornerLatRes;
         double cornerLonRes;
         float m_scale;

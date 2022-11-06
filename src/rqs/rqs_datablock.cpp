@@ -23,7 +23,6 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
     init();
     m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
-    defineLLRes();
     readFromRaster();
     std::cout << "Raster Origin: " << m_origin.x << " " << m_origin.y << " " << m_origin.r << "\n";
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
@@ -254,20 +253,19 @@ void rqsDataBlock::n_readFromRaster() {
 
 }
 
-void rqsDataBlock::defineLLRes() {
+auto RasterQuery::defineLLRes(llPoint loc) -> std::tuple<double, double, int> {
 
     auto sort_cmp = [&](RasterQuery::_rb_tup const & x,
-                       RasterQuery::_rb_tup const & y) -> bool
+                        RasterQuery::_rb_tup const & y) -> bool
     { return std::get<1>(x) < std::get<1>(y); };
-    auto l_callOrder = *m_rqsCallOrder;
+    auto l_callOrder = m_rasterCallOrder;
 
     std::sort(std::begin(l_callOrder), std::end(l_callOrder),sort_cmp);
 
-    int c = RQS::RasterQuery::get().getClosest(m_llOrigin);
+    int c = RQS::RasterQuery::get().getClosest(loc);
     auto tmp = std::lower_bound(l_callOrder.begin(), l_callOrder.end(), c,
                                 [](RasterQuery::_rb_tup const & lhs,  int target) -> bool
                                 { return std::get<1>(lhs) < target; });
-    std::cout << "INDEX " << std::get<1>(*tmp) << "\n";
-
-
+    int index = std::get<1>(*tmp);
+    return std::make_tuple(m_dataDirTransform[index].lat_res, m_dataDirTransform[index].lon_res, index);
 }
