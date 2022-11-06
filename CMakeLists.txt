@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(openGCAS)
 
 find_package(GDAL REQUIRED)
+include(FetchContent)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
@@ -14,8 +15,8 @@ endif()
 
 link_libraries(stdc++fs)
 
-add_subdirectory(dependencies)
-add_subdirectory(tests)
+#add_subdirectory(dependencies)
+#add_subdirectory(tests)
 
 FetchContent_Declare(SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -35,3 +36,8 @@ target_precompile_headers(openGCAS
         PUBLIC
         src/rqs/rqs.h
         )
+
+FetchContent_Declare(SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
