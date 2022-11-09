@@ -202,6 +202,9 @@ namespace RQS {
         std::vector<RasterQuery::geoTransformData> *m_rqsDataInfo;
         std::array<RasterQuery::_rb_tup, 9> *m_rqsCallOrder;
 
+        // Initializer variables
+        std::tuple<double, double, int> _res;
+
     public:
         RQS::structures::nPoint m_origin;
         RQS::structures::llPoint m_llOrigin;

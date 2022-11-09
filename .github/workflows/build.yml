@@ -35,8 +35,8 @@ jobs:
     - run: sudo apt-get update
     - run: sudo add-apt-repository ppa:ubuntugis/ppa
     - run: sudo apt-get update
-    - run: sudo apt-get install -y gdal-bin libgdal-dev build-essential cmake
     - run: sudo apt-get install -y libfreetype6-dev libxrandr-dev libudev-dev libogg-dev libflac-dev libvorbis-dev libopenal-dev libx11-dev libsfml-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev git
+    - run: sudo apt-get install -y gdal-bin libgdal-dev build-essential cmake
     
 
     - name: Configure CMake

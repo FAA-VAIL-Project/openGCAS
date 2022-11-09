@@ -50,6 +50,8 @@ void RasterQuery::init(const llPoint& loc) {
             index++;
         }
     }
+
+    std::cout << "CLOSEST " <<getClosest(llPoint{42.1, -91.4});
 }
 
 auto RasterQuery::readDataDir() -> std::vector<geoTransformData> {
@@ -281,3 +283,25 @@ RQS::structures::llPoint RasterQuery::geoTransformData::maxLL() const {
     double maxLon = this->lon_o + (this->lon_res * this->r_ySize);
     return llPoint{maxLat, maxLon};
 }
+
+auto RasterQuery::defineLLRes(llPoint loc) -> std::tuple<double, double, int> {
+    static std::vector<int> l_callOrder{};
+    if(l_callOrder.empty()) {
+        for (const auto &in: m_rasterCallOrder)
+            if (std::get<1>(in) != -2) l_callOrder.push_back(std::get<1>(in));
+        std::sort(l_callOrder.begin(), l_callOrder.end());
+    }
+
+    // Get the closest raster and check if it exists in the call order.
+    // If not, assign it to the next raster in the call order
+    int c = RQS::RasterQuery::get().getClosest(loc);
+    auto lambIndex = std::lower_bound(l_callOrder.begin(), l_callOrder.end(), c,
+                                      [](int const & lhs,  int target) -> bool
+                                { return lhs < target; });
+
+    assert(*lambIndex != -1);
+    //assert(c == *lambIndex);
+    std::cout << "INDEX FOUND: " << *lambIndex << "\n\n";
+    return std::make_tuple(m_dataDirTransform[*lambIndex].lat_res, m_dataDirTransform[*lambIndex].lon_res, *lambIndex);
+}
+

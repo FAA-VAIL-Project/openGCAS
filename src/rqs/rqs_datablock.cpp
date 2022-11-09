@@ -12,7 +12,9 @@ using namespace RQS;
 rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
                            RasterQuery& rq, nPoint origin,
                            llPoint llOrigin)
-                           : m_id(id), m_origin(origin), m_llOrigin(llOrigin) {
+                           : m_id(id)
+                           , m_origin(origin)
+                           , m_llOrigin(llOrigin) {
     if(abs(posY) > 1 || abs(posX) > 1) {
         std::stringstream s;
         s << "Block position " << posX << " " << posY << " lies beyond defined raster bounds (-1, 1), (-1, 1)"
@@ -21,12 +23,13 @@ rqsDataBlock::rqsDataBlock(int id, int posX, int posY,
     }
 
     init();
+    _res = RasterQuery::get().defineLLRes(m_llOrigin);
     m_rqsDataInfo = &rq.m_dataDirTransform;
     m_rqsCallOrder = &rq.m_rasterCallOrder;
     readFromRaster();
-    std::cout << "Raster Origin: " << m_origin.x << " " << m_origin.y << " " << m_origin.r << "\n";
+    std::cout << "Raster Origin: " << m_origin.x << " " << m_origin.y << " " << m_origin.r << "\n\n\n";
     for(int i = 0; i < m_rqsCallOrder->size(); ++i) {
-        if(std::get<1>(m_rqsCallOrder[0][i]) == m_origin.r) { std::cout<< "Found Index "<< i << "\n" ; break; }
+        if(std::get<1>(m_rqsCallOrder[0][i]) == m_origin.r) { /*std::cout<< "Found Index "<< i << "\n" ; break;*/ }
     }
     //debugWriteBitmap();
 }
@@ -253,19 +256,4 @@ void rqsDataBlock::n_readFromRaster() {
 
 }
 
-auto RasterQuery::defineLLRes(llPoint loc) -> std::tuple<double, double, int> {
 
-    auto sort_cmp = [&](RasterQuery::_rb_tup const & x,
-                        RasterQuery::_rb_tup const & y) -> bool
-    { return std::get<1>(x) < std::get<1>(y); };
-    auto l_callOrder = m_rasterCallOrder;
-
-    std::sort(std::begin(l_callOrder), std::end(l_callOrder),sort_cmp);
-
-    int c = RQS::RasterQuery::get().getClosest(loc);
-    auto tmp = std::lower_bound(l_callOrder.begin(), l_callOrder.end(), c,
-                                [](RasterQuery::_rb_tup const & lhs,  int target) -> bool
-                                { return std::get<1>(lhs) < target; });
-    int index = std::get<1>(*tmp);
-    return std::make_tuple(m_dataDirTransform[index].lat_res, m_dataDirTransform[index].lon_res, index);
-}
