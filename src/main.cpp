@@ -5,11 +5,10 @@ using namespace RQS::structures;
 
 int main(int argc, char *argv[]) {
     RQS::RasterQuery& rq = RQS::RasterQuery::get();
-    rq.init(llPoint{41.9, -89.9 -0});
+    rq.init(llPoint{41.9, -89.9 -1.2});
     RQS::front::DBVis vis;
     std::vector<llPoint> v{
-        llPoint{-89.7594,41.7540}.invert(),
-        llPoint{-89.5418,41.9330}.invert()
+        llPoint{42.1, -91.4}
     };
     vis.loadPoints(v);
     vis.render();
