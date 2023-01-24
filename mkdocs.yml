@@ -10,6 +10,12 @@ markdown_extensions:
 
 nav:
   - Home: 'index.md'
+  - Concepts:
+      - Our Priorities: 'priorities.md'
+      - Certification considerations: 'certification.md'
+      - Intro To GCAS: 'gcas_introduction.md'
+      - GCAS Details: 'gcas_details.md'
+      - Run-time Assurance: 'rta.md' 
   - Introduction: 'intro_to_gcas.md'
   - Release Documents:
       - Release Notes: 'release_notes.md'

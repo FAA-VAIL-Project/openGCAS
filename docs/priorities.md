@@ -1,0 +1,13 @@
+# Priorities for the openAeroSystems group
+## Priority #1 - Democratizing Aviation
+First things first. People have been dreaming about flying since before the dawn of history, and we have only been able to accomplish this with any reasonable expectation of not immediately dying for around 100 years or so.  Additionally, airplanes are useful, fast, and a lot of fun.  We don't want to get rid of airplanes or airplane pilots, in fact, quite the contrary.  Instead, we want to elevate them both to an even higher plane (pun intended).  So, that's the number one priority here, bar none, that airplanes should be made better so that they can fly, be a useful and safe form of transportation, and be made available to everyone.  In short, to democratize aviation!
+
+
+## Priority #2 - Aviation Safety
+Now, if you insist on making only safety the number one priority, then airplanes shouldn't be allowed to fly at all. This is because there is always some non-zero risk in flying in any airplane. For large commercial airplanes, the risk is very very low. Travel in large commercial airplanes is one of the safest forms of mass travel ever devised by humans. In fact, all things being equal, it is probably safer than walking. It's a different story, however, for small airplanes. Small airplanes are actually way more dangerous, like 1000 times more dangerous (3 orders of magnitude) than large airplanes. Even when compared to traveling in a car, small airplanes are still more dangerous, but here only about 1 order of magnitude (10X) or so.  The following figure is a map of all the fatal accidents in US aviation since 2008 shown as a small red dot.  Now, there is alot of them, and the overwhelming majority of them are from small aircraft... but that is the reason why we all are here... to do something about that!
+
+<!-- FIGURE priorites -->
+![Fatalty Map](img/intro/Map.png)
+*Map of US fatal airplane accidents from 2008 to the present*
+
+So, it turns out that there are some people who want to make small airplanes the safest type of airplane by not allowing them to fly at all! This scheme obviously violates our priority #1. But, if we think about things in a slightly different way, then safety doesn't go against our number one priority at all, in fact, it supports it. This is immediately obvious when you understand that crashed airplanes aren't very good airplanes anymore, and crashed pilots may not be useful anymore either. So, if you think about it this way, we can make safety our priority #2, without conflicting with our priority #1 at all. The trick will be to not interfere with normal useful aircraft operations, but to only intervene when the aircraft is in danger of immediate catastrophic uselessness (meaning in danger of a imminent crash).
