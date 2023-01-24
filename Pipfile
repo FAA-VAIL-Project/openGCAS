@@ -6,4 +6,8 @@ name = "pypi"
 [dev-packages]
 mkdocs = "*"
 mkdocs-autorefs = "*"
+mkdocs-awesome-pages-plugin = "*"
 mkdocs-material = "*"
+mkdocs-material-extensions = "*"
+mkdocstrings = "*"
+mkdocstrings-python = "*"
