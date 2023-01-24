@@ -3,7 +3,17 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[packages]
+
 [dev-packages]
+bandit = "*"
+black = "*"
+build = "*"
+check-wheel-contents = "*"
+coveralls = "*"
+docformatter = "*"
+flake8 = "*"
+isort = "*"
 mkdocs = "*"
 mkdocs-autorefs = "*"
 mkdocs-awesome-pages-plugin = "*"
@@ -11,3 +21,19 @@ mkdocs-material = "*"
 mkdocs-material-extensions = "*"
 mkdocstrings = "*"
 mkdocstrings-python = "*"
+mypy = "*"
+nuitka = "*"
+ordered-set= "*"
+pydocstyle = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-deadfixtures = "*"
+pytest-helpers-namespace = "*"
+pytest-random-order = "*"
+types-PyYAML = "*"
+types-setuptools = "*"
+wheel = "*"
+
+[requires]
+python_version = "3.10"

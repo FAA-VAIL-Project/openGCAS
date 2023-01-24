@@ -1,4 +1,4 @@
-# Priorities for the openAeroSystems group
+# Priorities for the Vehicle Autonomy and Intelligence Labratory
 ## Priority #1 - Democratizing Aviation
 First things first. People have been dreaming about flying since before the dawn of history, and we have only been able to accomplish this with any reasonable expectation of not immediately dying for around 100 years or so.  Additionally, airplanes are useful, fast, and a lot of fun.  We don't want to get rid of airplanes or airplane pilots, in fact, quite the contrary.  Instead, we want to elevate them both to an even higher plane (pun intended).  So, that's the number one priority here, bar none, that airplanes should be made better so that they can fly, be a useful and safe form of transportation, and be made available to everyone.  In short, to democratize aviation!
 
