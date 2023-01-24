@@ -13,13 +13,17 @@
       
       
       
+        <link rel="prev" href="../certification/">
+      
+      
+        <link rel="next" href="../gcas_details/">
       
       <link rel="icon" href="../img/Icon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>Raster Query System - openGCAS - Ground Collision Avoidance System</title>
+        <title>Intro To GCAS - openGCAS - Ground Collision Avoidance System</title>
       
     
     
@@ -66,11 +70,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#raster-query-system" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -99,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Raster Query System
+              Intro To GCAS
             
           </span>
         </div>
@@ -223,18 +222,20 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
           Concepts
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -278,11 +279,19 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../gcas_introduction/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Intro To GCAS
       </a>
+      
     </li>
   
 
@@ -448,8 +457,6 @@
   
   
   
-    
-  
   
 </nav>
                   </div>
@@ -465,20 +472,7 @@
 
 
 
-<h1 id="raster-query-system">Raster Query System</h1>
-<p>The Raster Query System is a singleton class containing interfaces pertaining the conversion of <code>llPoint</code> structs 
-(defined in <code>structs.h</code>) to indicies on a local raster. It accepts a reference to an <code>std::vector&lt;GDALRasterBand&gt;</code>
-named <code>rasterVec</code> containing the RasterBands for each file in <code>data/</code> as well as an <code>std::vector&lt;llPoint&gt;</code> named
-<code>llVec</code>. </p>
-<p><code>init()</code> creates the <code>std::vector&lt;GDALRasterBand&gt; rasterVec</code> vector.</p>
-<p><code>checkPoint()</code> ensures that each llPoint index in llVec is a possible value. If an impossible value is detected, it will
-pop it from the vector. This method is called in the initializer list of the RQS class to prevent any issues when copying the
-vector.</p>
-<p><code>discreteIndex()</code> creates a new <code>std::array&lt;int, 3&gt;</code> vector named <code>nPointInd</code> with the size of llVec that contains
-the index in rasterVec which the same-indexed point in llVec lives as the third index, and the i and j index on that raster
-as the first and second index.</p>
-<p>The first goal, before worrying about selections and selection interpolation density, is to ensure and test the indexability
-of each and every possible lat-long point.</p>
+
 
 
 
