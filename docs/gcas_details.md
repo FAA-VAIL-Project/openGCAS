@@ -37,30 +37,21 @@ Once the trajectory prediction has been computed, it has to be compared with the
 - the US Digital Terrain Elevation Database (DTED) or 
 - the new (and highly accurate) TerraSAR-X add-on for Digital Elevation Measurement (TanDEM-X) database
 
-Each of these data sources have advantages and disadvantages but are also a dramatic improvement over the active sensor approach.
+Each of these data sources have advantages and disadvantages but are also a dramatic improvement over the active sensor approach. However, because the databases cover a large portion of the land area of the earth, we need to build mechanisms that can efficiently query them.
 
 ![TanDEMx](img/intro/TANDemX.jpg)
 *Shaded relief image of the TanDEM-X data.  The databases show the shape and elevation of terrain around the world*
 
-TOHERE
-
-
-The purpose of TPA figure is twofold: visualize the TPA's three potential maneuvers, and to introduce the concepts of TPA points. Beginning with the TPA's three potential maneuvers, it should be noted that the figure shows the same scenario as the collision avoidance manuever shown below, but from an overhead view. There are three potential maneuvers that the TPA will consider:
-
-* Pull up, bank left
-* Pull up, wings level
-* Pull up, bank right
-
-The process by which a maneuver is selected will be defined in the section Last Man Standing.
-
-### TPA Points
+The first step in querying the terrain database is to identify which points on the ground are relevant.  Luckily, the TPA contains a list of these points that we can directly feed into the map manager.  The map manager's job is then to return the elevation at these points.  However, since we don't know exactly where we are and can't predict with 100% certainty where we will be, we should scan the areas immediately around the TPA points as well.  The TPA calculates a horizontal uncertainty for just this purpose which is also fed into the map manager.  The map manager then returns the highest terrain elevation point in each of the areas defined by the TPA points plus uncertainty.
 
 <!-- FIGURE TPA_raster -->
-![TPA Raster](img/intro/TPA_raster.png)
+![TPA Raster](img/intro/MapManager.png)
+*The Map Manager provides the highest terrain elevation in a specified area.  The areas are circles, centered at TPA points with radii provided by the horizontal uncertainty.*
 
-This section documents the process by which a TPA point is defined. To begin, a circular surface area of an arbitrary radius will be defined. This finite domain will be cross-referenced with terrain data. The *largest* data point in the terrain data (which happens to be the highest elevation) will be defined as the TPA Point for that particular location. This coarsening, discretization of terrain data is done to remove any uncertainties in the terrain data. By selecting the highest point in a given area, the system is assuming the worst case scenario at all times. This adds to the safety cushion threshold of the system, and thus, makes it more likely to save lives.
+## Determining need to avoid
+Once each of the TPA points has a corresponding terrain elevation provided by the Map Manager, the algorithm can determine whether a terrain avoidance manuever is warranted.  
 
-## Decider
+TOHERE
 
 This section describes the process by which the GCAS Monitor flags a potentially fatal scenario as TRUE, taking control of the airplane from the Complex Function (human or autopilot.)
 
