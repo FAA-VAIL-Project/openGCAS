@@ -1,4 +1,4 @@
-# Priorities for the Laboratory
+# Priorities for openGCAS
 ## Priority #1 - Democratizing Aviation
 First things first, we believe in the principle of **Aviation for All**! People have been dreaming about flying since before the dawn of history, and we have only been able to accomplish this with any reasonable expectation of not immediately dying for around 100 years or so.  Additionally, airplanes are useful, fast, and a lot of fun.  We don't want to get rid of airplanes or airplane pilots, in fact quite the contrary.  Instead, we want to enable everyone to fly, and not just in the cabin of a large airliner with a small window and no control, but to slip the surly bonds of earth and really aviate!  So, that's the number one priority here, bar none, that airplanes should be made better so that they can fly, be a useful and safe form of transportation, and be made available to everyone.  In short, to democratize aviation!
 

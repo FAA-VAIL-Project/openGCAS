@@ -30,6 +30,7 @@ The GCAS Controller, on the other hand, is in charge of actually taking control 
 
 <!-- FIGURE: CONTROLLER INTRO -->
 ![GCAS Controller](img/intro/GCASControllerIntro.png)
+*The controller trajectory of a single wings level pull-up manuever*
 
 Unfortunately, larger transport airplanes and civilian airplanes are not able to climb as well as fighter type airplanes. But, because they are generally going quite a bit slower than fighter type airplanes, they can usually turn really fast. So for these slower, lower power airplanes, the GCAS Controllers perform at least 3 maneuvers: a wings level climb, a right turning climb, and a left turning climb.  In this case, the GCAS monitor is tasked with not only needs to figure out if a ground collision is about to happen but also needs to tell the controller which maneuver it should perform. Don't worry though, figuring out which maneuver to perform is not any more complicated than figuring out if a ground collision is about to happen in the first place... It just takes a little more processing time.
 <!-- 

@@ -42,43 +42,39 @@ Each of these data sources have advantages and disadvantages but are also a dram
 ![TanDEMx](img/intro/TANDemX.jpg)
 *Shaded relief image of the TanDEM-X data.  The databases show the shape and elevation of terrain around the world*
 
-The first step in querying the terrain database is to identify which points on the ground are relevant.  Luckily, the TPA contains a list of these points that we can directly feed into the map manager.  The map manager's job is then to return the elevation at these points.  However, since we don't know exactly where we are and can't predict with 100% certainty where we will be, we should scan the areas immediately around the TPA points as well.  The TPA calculates a horizontal uncertainty for just this purpose which is also fed into the map manager.  The map manager then returns the highest terrain elevation point in each of the areas defined by the TPA points plus uncertainty.
+The first step in querying the terrain database is to identify which points on the ground are relevant.  Luckily, the TPA contains a list of these points that we can directly feed into the map manager.  The map manager's job is then to return the elevation at these points.  However, since we don't know exactly where we are and can't predict with 100% certainty where we will be, we should scan the areas immediately around the TPA points as well.  The TPA calculates a horizontal uncertainty for just this purpose which is also fed into the map manager.  The map manager then returns the highest terrain elevation point in each of the areas defined by the TPA points plus uncertainty.  Once each of the TPA points has a corresponding terrain elevation provided by the Map Manager, the algorithm can determine whether a terrain avoidance manuever is warranted.
 
 <!-- FIGURE TPA_raster -->
 ![TPA Raster](img/intro/MapManager.png)
 *The Map Manager provides the highest terrain elevation in a specified area.  The areas are circles, centered at TPA points with radii provided by the horizontal uncertainty.*
 
 ## Determining need to avoid
-Once each of the TPA points has a corresponding terrain elevation provided by the Map Manager, the algorithm can determine whether a terrain avoidance manuever is warranted.  
+So, now the algorithm has a predicted trajectory and the terrain elevations underlying the TPA.  However, in order for the system to make sure that the airplane doesn't collide with terrain during the avoidance manuever there must be a buffer added in.  The height of the buffer, called the Terrain Clearance Buffer (TCB) should be dependant on the following:
+- state uncertainty (such as GPS uncertainty)
+- TPA uncertainty (how well the TPA has been shown to model the actual recovery)
+- Terrain data uncertainty (how well the terrain databases model the actual terrain elevation)
+- Timing uncertainty (how much altitude will be lost as the Monitor processes GCAS algorithm and communicates with the Controller)
 
-TOHERE
-
-This section describes the process by which the GCAS Monitor flags a potentially fatal scenario as TRUE, taking control of the airplane from the Complex Function (human or autopilot.)
+Luckily, even with all of these inclusions, the TCB is only a couple of hundred feet.  This is usually acceptable because most pilots would not fly so close to the ground and missing the ground by a hundred feet or so would be fine by them.
 
 <!-- Figure Decider -->
 ![Decider](img/intro/Decider.png)
 
-### Defining the Takeover Threshold
+So, if the system senses that the TPA falls below the terrain elevation + TCB, the system will determine that the an avoidance manuever should be flown.  However, because of the order of priority of the requirements, GCAS will first do a check of all it's systems to make sure there are no errors before sending the avoidance command.  For instance, if the attitude system is malfunctioning, then the avoidance command will be inhibited (Requirement #1).  In addition, if the system detects that the airplane is flying toward the ground for normal operations (i.e. the airplane is landing), GCAS will also inhibit the avoidance manuever (Requirement #2).  These aren't the only cases when GCAS must be inhibited, these are based on a detailed analysis of the airplane failure modes and operations and should usually be a result of a systematic process such as SAE 4754 and SAE 4761 or the JARUS SORA process.
 
- The figure showing the decider depicts a fatal scenario where the GCAS Monitor will flag the scenario as TRUE and allow the GCAS Controller to take over the airplane. There are few critical variables in this scenario to be understood:
-
-* **Closest Point of Approach (CPA)** - *The shortest distance between the TPA's trajectory and the terrain data.*
-* **Terrain Clearance Buffer (TCB)** - *A predefined, minimum altitude threshold between the airplane and the terrain.*
- 
-You can observe the CPA in the image, which is the distance between the dotted line (TPA maneuver trajectory) and the TPA Points in red. The TCB can be seen in blue. Notice that the trajectory clears all but one of the Terrain Clearance Buffer instances. In this example, the maneuver being evaluated will flag NTA (Need To Avoid) as TRUE because it surpasses the minimum threshold for distance.
 
 ### Last Man Standing
 
-Keeping in mind that three potential maneuvers are being evaluated at all times, here is where the concept of "last man standing" becomes a pivotal element in the system. By default, the Boolean value of NTA (Need To Avoid) of each controller is FALSE. In the event of a fatal scenario, each controller has a independent DNA (Determine Need to Avoid) function. As a fatal scenario begins to unfold, each controller's NTA will independently flag as TRUE if the defined threshold (TCB) is surpassed. The *final controller's NTA* to be flagged as TRUE will be used for the collision avoidance maneuver. This is done to decrease unnecessary nuisance in the system if an event does not need to be avoided.
+If there is more than one potential avoidance trajectory, the system will wait until all trajectories are exhausted before issuing an avoidance command. Additionally, this "last man standing" manuever will be commanded. This is accomplished by duplicating the process of predicting a trajectory, querying the terrain database, adding a TCB, and checking for error conditions for each of the possible avoidance trajectories.  Then in the event that the system decides a collision is likely for a specific trajectory, a Need to Avoid flag for that trajectory will be set.  The system then waits until all the NTA flags are set and commands the manuever of the last one to be set.  If there is a tie between which is the last to be set, a pre-defined priority is used,usually prioritizing the level pull, then a left turn over the right.  The following is a simple pseudocode for the Need to Avoid function.
 
 ### Pseudocode for DNA
 
 ```
-  bool determineNeedToAvoid(TPA_trajectory,
+  bool NeedToAvoid(TPA_trajectory,
               TPA_point,
               terrainClearanceBuffer)
   {
-    if(TPA_trajectory - TPA_point < terrainClearanceBuffer)
+    if(TPA_trajectory - terrain_elevation < terrainClearanceBuffer)
     {
       // we need to avoid 
       // potentially fatal scenario
@@ -92,10 +88,3 @@ Keeping in mind that three potential maneuvers are being evaluated at all times,
     }
   }
 ```
-
-## GCAS Controller
-
-<!-- Figure GCAS_controller -->
-![GCAS Controller](img/intro/GCAS_controller.png)
-
-The GCAS Controller figure above shows the real-time controller for each potential scenario running simultaneously. To reiterate, each scenario is being evaluated individually. The last controller to be flagged NTA will be the "Last Man Standing." This particular controller will take control of the airplane and avoid the fatal event.
