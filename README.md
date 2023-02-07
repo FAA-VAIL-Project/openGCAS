@@ -11,14 +11,17 @@ Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)**
 
 ## 1. Features
 
-**TODO** = listing of the most important features of the software openGCAS -
+- Trajectory prediction models for many types of airplanes starting with a Cessna 182
+- Allows incorporation of many different raster and compressed terrain data models
+- Software in the loop testing using [JSB Sim](https://jsbsim.sourceforge.net/) for the airplane dynamics engine.
+- Unit testing of the trajectory prediction and terrain data management functions
 
 ## 2. Directory and File Structure of this Repository
 
 ### 2.1 Directories
 
 | Directory         | Content                                                |
-|-------------------|--------------------------------------------------------|
+| ----------------- | ------------------------------------------------------ |
 | .github/workflows | [GitHub Action](https://github.com/actions) workflows. |
 | data              | Non-source files, like INI files.                      |
 | docs              | Documentation files.                                   |
@@ -29,7 +32,7 @@ Please see the **[Documentation](https://faa-vail-project.github.io/openGCAS/)**
 ### 2.2 Files
 
 | File          | Functionality                                                           |
-|---------------|-------------------------------------------------------------------------|
+| ------------- | ----------------------------------------------------------------------- |
 | .gitignore    | Configuration of files and folders to be ignored.                       |
 | CMakeList.txt | CMake configuration file.                                               |
 | Dockerfile    | Docker image configuration file.                                        |
